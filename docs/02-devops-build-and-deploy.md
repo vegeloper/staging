@@ -196,3 +196,112 @@ Stop without deleting data:
 ```bash
 docker compose -f compose.yaml -f compose.prod.yaml --profile full stop
 ```
+
+---
+
+## 9. Edge: Caddy vs Cloudflare vs nginx
+
+Default in `compose.prod.yaml` is **Caddy** on host **80/443** (Let’s Encrypt). `APP_ORIGIN` is always the **browser** URL (`https://HOST`). `TRUST_PROXY=true` only behind an edge that **overwrites** `X-Forwarded-For`.
+
+Required upstream headers (any proxy):
+
+```
+Host: HOST
+X-Forwarded-Proto: https
+X-Forwarded-For: <client ip>
+```
+
+Never publish Postgres. Never publish `app:3000` on `0.0.0.0`.
+
+### Caddy + DNS-only (grey cloud) — what staging used
+
+Cloudflare / DNS manager: **proxy OFF**. Caddy owns TLS.
+
+```bash
+# SERVER
+cd /opt/dotone-trip
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
+```
+
+### Stop Caddy (keep hardened app/postgres)
+
+`compose.prod.yaml` **un-publishes** app ports. Host nginx/Cloudflare origin needs `127.0.0.1:3000` again. Create `/opt/dotone-trip/compose.edge.yaml` (do not commit secrets):
+
+```yaml
+services:
+  app:
+    ports:
+      - "127.0.0.1:3000:3000"
+```
+
+```bash
+# SERVER — stop Caddy; do not start proxy
+cd /opt/dotone-trip
+docker compose -f compose.yaml -f compose.prod.yaml --profile full stop proxy
+docker compose -f compose.yaml -f compose.prod.yaml -f compose.edge.yaml --profile full up -d --no-build postgres migrate app
+```
+
+Port 80/443 on the host must be **free** for nginx/Cloudflare origin (or CF only talks to 443 on nginx).
+
+### Cloudflare orange cloud (proxied)
+
+Do **not** run Caddy ACME. Orange cloud + Caddy on 80/443 = failed certificates / double proxy.
+
+| Cloudflare SSL/TLS | Origin |
+| --- | --- |
+| **Full (strict)** | nginx (or other) HTTPS with a valid cert (origin CA or public) |
+| **Full** | HTTPS on origin, cert can be self-signed |
+| **Flexible** | origin HTTP only — avoid if you can |
+
+DNS: orange cloud ON. `.env` still `APP_ORIGIN=https://HOST`, `TRUST_PROXY=true`. Cookie `Secure` follows `APP_ORIGIN`, not CF mode.
+
+Then use “Stop Caddy” + nginx (below). Origin port in CF: 80 (Flexible) or 443 (Full / Full strict).
+
+### Host nginx (already on the machine)
+
+Point at loopback only:
+
+```nginx
+# /etc/nginx/sites-available/dotone-trip
+server {
+    listen 80;
+    listen 443 ssl http2;          # omit listen 443 if CF Flexible
+    server_name HOST;
+    # ssl_certificate     /path/to/fullchain.pem;
+    # ssl_certificate_key /path/to/privkey.pem;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_read_timeout 60s;
+    }
+}
+```
+
+If Cloudflare terminates TLS and origin is HTTP, force proto (do not send `http` to the app for URL/CSRF):
+
+```nginx
+proxy_set_header X-Forwarded-Proto https;
+```
+
+```bash
+# SERVER
+sudo ln -s /etc/nginx/sites-available/dotone-trip /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+Same pattern for Caddy-as-company-unit, Traefik, F5: `proxy_pass` / pool = `127.0.0.1:3000`, those three headers, `TRUST_PROXY=true`.
+
+### Avoid
+
+- Grey-cloud Caddy **and** orange cloud at once  
+- `TRUST_PROXY=true` with app reachable on the public internet  
+- `compose.yaml --profile full` in production without locking `POSTGRES_BIND_ADDRESS=127.0.0.1` (Postgres would still be published on loopback — never `0.0.0.0`)  
+- `down -v` when swapping the edge  
+- Changing only nginx `server_name` and not `APP_ORIGIN` / `APP_HOST`  

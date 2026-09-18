@@ -279,7 +279,7 @@ The UI “hosted somewhere else” is this web container (or several replicas of
 
 ### Company edge instead of Caddy
 
-Skip `compose.prod.yaml`’s `proxy` service (use `compose.yaml --profile full` and keep `APP_BIND_ADDRESS=127.0.0.1`). Terminate TLS on the existing F5 / nginx / Cloudflare.
+Skip the `proxy` service. Keep app on **127.0.0.1:3000** (see `docs/02-devops-build-and-deploy.md` §9: `compose.edge.yaml`). Terminate TLS on F5 / nginx / Cloudflare.
 
 Required forwarded headers:
 
@@ -288,6 +288,8 @@ Required forwarded headers:
 - `X-Forwarded-For: <client ip>` (set by the edge, not trusted from the client)
 
 Set `TRUST_PROXY=true` and `APP_ORIGIN=https://trip.example.com`.
+
+**Cloudflare:** grey cloud = Caddy Let’s Encrypt. Orange cloud = **stop Caddy**; CF SSL **Full (strict)** (or Full); origin nginx → `127.0.0.1:3000`. Do not run Caddy ACME and orange cloud together.
 
 ### Local laptop (not production)
 

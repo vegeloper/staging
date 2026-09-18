@@ -186,11 +186,14 @@ Need Compose **v2.24+**. Do **not** `apt install docker.io`. Node is **not** req
 
 ## J. VPS — clone + env (new secrets)
 
+Git clone is **optional**. Runtime does not need `app/` on the server. For a zip of compose + Caddy + images only, skip this clone and use **§Q**.
+
 ```bash
 git clone --branch BRANCH --single-branch REPO_URL /opt/dotone-trip
 cp /opt/dotone-trip/.env.example /opt/dotone-trip/.env
 docker run --rm -v /opt/dotone-trip:/app -w /app node:22-bookworm-slim node scripts/generate-prod-secrets.mjs
 ```
+
 
 Save the printed secrets off-server. `nano /opt/dotone-trip/.env`:
 
@@ -234,18 +237,17 @@ First `next build` takes minutes. Do not Ctrl+C unless stuck 15+ minutes with no
 ```powershell
 # LOCAL — after section F succeeded
 docker save -o "$env:USERPROFILE\Desktop\dotone-trip-images.tar" dotone-trip-app:latest dotone-trip-migrate:latest
-scp "$env:USERPROFILE\Desktop\dotone-trip-images.tar" root@VPS_IP:/opt/dotone-trip/
+scp "$env:USERPROFILE\Desktop\dotone-trip-images.tar" root@VPS_IP:/tmp/
 ```
 
 ```bash
-# VPS
-docker load -i /opt/dotone-trip/dotone-trip-images.tar
+# VPS — tar in /tmp, never inside /opt/dotone-trip
+docker load -i /tmp/dotone-trip-images.tar
+rm -f /tmp/dotone-trip-images.tar
 cd /opt/dotone-trip
 docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
-rm -f /opt/dotone-trip/dotone-trip-images.tar
 ```
 
-Leave the `.tar` in `/opt/dotone-trip` only until `docker load` finishes. A leftover tar is copied into image builds (~1 GB context).
 
 Optional 2 GB swap if you still try a small-box build (not enough for `next build` on 1 GB):
 
@@ -338,12 +340,289 @@ Prefer `--no-deps` for jobs when Postgres is already healthy.
 
 New host, **new** `ops:secrets`. Do not reuse staging pepper / PII / DB password.
 
-1. DNS `NEW_HOST` → production (or staging) IP; 80/443 open; DNS-only if using Caddy  
+1. DNS `NEW_HOST` → production IP. **Grey cloud** if Caddy does TLS; **orange cloud** only if Caddy is **stopped** (see below)  
 2. **VPS** `.env`: `APP_ORIGIN=https://NEW_HOST`, `APP_HOST=NEW_HOST`, `TRUST_PROXY=true`  
 3. Images: K1, K2, or K3  
-4. `compose.yaml` + `compose.prod.yaml` `--profile full` `up -d` (`--build` only on a strong box)  
+4. Edge: Caddy (`compose.prod.yaml` `proxy`) **or** company nginx/Cloudflare — not both ACME  
 5. Seed once with section M  
 6. `curl.exe` `/api/health` and `/api/ready` on `https://NEW_HOST`  
 7. Forms + admin + Secure cookie  
 
-Handoff files: `Dockerfile`, `compose.yaml`, `compose.prod.yaml`, `deploy/Caddyfile`, `.env.example`, `docs/DEPLOYMENT.md`, plus `docs/02-devops-build-and-deploy.md` or `docs/03-devops-deploy-from-tar.md`.
+**Caddy (grey DNS):** `compose.yaml` + `compose.prod.yaml` `--profile full` `up -d --no-build`.
+
+**Cloudflare orange or existing nginx:** stop `proxy`; publish app only on loopback; nginx `proxy_pass http://127.0.0.1:3000`. Commands and nginx snippet: `docs/02-devops-build-and-deploy.md` §9.
+
+Handoff without git on the VPS: **§Q** (compose + Caddy + images zip/tar). Git clone is optional.
+
+Handoff files if they build from source: `Dockerfile`, `compose.yaml`, `compose.prod.yaml`, `deploy/Caddyfile`, `.env.example`, `docs/DEPLOYMENT.md`, plus `docs/02-devops-build-and-deploy.md` or `docs/03-devops-deploy-from-tar.md`.
+
+---
+
+## P. Later releases (site already live)
+
+Do **not** generate new secrets. Do **not** seed. Do **not** `compose down -v`. Postgres volume stays.
+
+| Change | Extra step |
+| --- | --- |
+| UI / client / API only | rebuild `app` image, roll `app` |
+| `db/schema.ts` / `drizzle/*.sql` | new **`dotone-trip-migrate`** image (§P.5 / §Q.5), migrate **before** new `app` |
+| `scripts/db-seed.mjs` | new migrate image (same Dockerfile target), then **seed once** — resets `admin`/`operator` hashes |
+
+### 1. LOCAL — develop and prove
+
+```powershell
+# repo root, Postgres already up from section C
+npx next dev --port 3000
+npm test
+$env:SEED_ADMIN_PASSWORD='<this env admin password>'
+npm run test:e2e
+```
+
+If schema changed:
+
+```powershell
+npm run db:generate
+# review new files under drizzle/ — do not hand-edit applied SQL
+git add drizzle db/schema.ts
+```
+
+Commit, push `BRANCH`. Stop `next dev`. Rebuild images:
+
+```powershell
+docker compose --profile full build
+```
+
+Do **not** use `compose.prod.yaml` on the laptop.
+
+### 2. Ship images (same as K)
+
+**Strong SERVER (≥4 GB)** — pull git, build there:
+
+```bash
+# VPS / SERVER
+cd /opt/dotone-trip
+git fetch && git checkout BRANCH && git pull
+docker compose -f compose.yaml -f compose.prod.yaml --profile full build
+```
+
+**Small SERVER** — tar from LOCAL (do not `next build` on 1 GB). No `git pull` if you ship a new **migrate** image (SQL is inside it). Only scp compose/Caddy if those files changed (§Q).
+
+```powershell
+# LOCAL
+docker save -o "$env:USERPROFILE\Desktop\dotone-trip-images.tar" dotone-trip-app:latest dotone-trip-migrate:latest
+scp "$env:USERPROFILE\Desktop\dotone-trip-images.tar" root@VPS_IP:/tmp/
+```
+
+```bash
+# VPS
+docker load -i /tmp/dotone-trip-images.tar
+rm -f /tmp/dotone-trip-images.tar
+```
+
+**Registry:** push/pull/tag as in K3. No git on SERVER unless you build there.
+
+### 3. VPS — migrate then roll (running stack)
+
+```bash
+cd /opt/dotone-trip
+docker compose -f compose.yaml -f compose.prod.yaml --profile full run --rm --no-deps migrate
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
+```
+
+`--no-deps` so Postgres/`app` are not recreated. UI-only: migrate is a no-op (`[✓]`) — still safe.
+
+If you use `compose.edge.yaml` (no Caddy), add `-f compose.edge.yaml` to both lines and only `up` `postgres migrate app`.
+
+### 4. LOCAL — smoke the live host
+
+```powershell
+curl.exe -fsS https://HOST/api/health
+curl.exe -fsS https://HOST/api/ready
+```
+
+Browser: changed page + one form or admin path you touched.
+
+### Avoid
+
+```bash
+docker compose --profile seed up seed          # resets admin/operator hashes
+docker compose down -v                        # deletes submissions
+docker compose --profile full up --build      # on a 1 GB box — OOM
+# do not replace .env / PII_ENCRYPTION_KEY / AUTH_PASSWORD_PEPPER
+```
+
+Rollback web: `docker load` / retag the **previous** `dotone-trip-app` image, then `up -d --no-build`. Do not roll back a destructive SQL migration without a tested down-migration.
+
+### 5. LOCAL + VPS — new migrate image (schema or seed)
+
+`migrate` and `seed` are the **same** image (`Dockerfile` target `migrator`). It already contains `drizzle/*.sql` and `scripts/db-seed.mjs`. Copying those files onto the VPS does **nothing**. You must **rebuild and load** `dotone-trip-migrate`.
+
+Build **only** the migrator (no `next build`) when SQL/seed changed and the UI did not:
+
+```powershell
+# LOCAL — repo root, Docker Desktop up
+# 1) schema: generate SQL, apply on local Postgres first
+npm run db:generate
+# open drizzle/ — new 00xx_*.sql only; do not edit already-applied files
+docker compose --profile migrate up migrate
+# expect [✓] migrations applied successfully!
+```
+
+```powershell
+# LOCAL — 2) bake the new migrator (profile required)
+docker compose --profile migrate build migrate
+docker image ls dotone-trip-migrate
+```
+
+If the Next app also reads new columns, rebuild **app** too:
+
+```powershell
+docker compose --profile full build
+```
+
+```powershell
+# LOCAL — 3) ship migrate-only (or both if you also rebuilt app)
+docker save -o "$env:USERPROFILE\Desktop\dotone-trip-migrate.tar" dotone-trip-migrate:latest
+scp "$env:USERPROFILE\Desktop\dotone-trip-migrate.tar" root@VPS_IP:/tmp/
+# if app rebuilt:
+# docker save -o "$env:USERPROFILE\Desktop\dotone-trip-images.tar" dotone-trip-app:latest dotone-trip-migrate:latest
+# scp ... /tmp/
+```
+
+```bash
+# VPS — 4) load, then migrate while app/postgres stay up
+docker load -i /tmp/dotone-trip-migrate.tar
+docker tag dotone-trip-migrate:latest dotone-trip-seed:latest
+rm -f /tmp/dotone-trip-migrate.tar
+cd /opt/dotone-trip
+docker compose -f compose.yaml -f compose.prod.yaml --profile full run --rm --no-deps migrate
+```
+
+Expect `[✓] migrations applied successfully!`. **Then** roll `app` only if you shipped a new app image:
+
+```bash
+# VPS
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
+```
+
+Order: **new migrate image → run migrate → then new app**. Old `app` + new columns is OK if the migration is additive. New `app` + old schema can 500.
+
+**Seed script change** (`scripts/db-seed.mjs` — still only `admin`/`operator` upserts, not form rows):
+
+```powershell
+# LOCAL
+docker compose --profile migrate build migrate
+docker save -o "$env:USERPROFILE\Desktop\dotone-trip-migrate.tar" dotone-trip-migrate:latest
+scp "$env:USERPROFILE\Desktop\dotone-trip-migrate.tar" root@VPS_IP:/tmp/
+```
+
+```bash
+# VPS — overwrites admin/operator password hashes. Put SEED_* in .env for this command only.
+docker load -i /tmp/dotone-trip-migrate.tar
+docker tag dotone-trip-migrate:latest dotone-trip-seed:latest
+rm -f /tmp/dotone-trip-migrate.tar
+cd /opt/dotone-trip
+docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no-deps seed
+# then delete SEED_* from .env
+```
+
+Do **not** seed on every UI release. Form submissions are not seed data.
+
+**Avoid:** `scp drizzle/` to the VPS; `up seed` without the prod overlay; `down -v`; skipping local `docker compose --profile migrate up migrate` before shipping.
+
+---
+
+## Q. Handoff without GitHub on the VPS
+
+The live process is the **images**. A git clone of `app/`, `package.json`, `Dockerfile`, tests is **not** required if you `up --no-build`.
+
+| On SERVER | Not on SERVER |
+| --- | --- |
+| `dotone-trip-app` + `dotone-trip-migrate` images | `app/`, `components/`, `node_modules` |
+| `compose.yaml`, `compose.prod.yaml` | `Dockerfile` (only if they **build** on the box) |
+| `deploy/Caddyfile` | Playwright, `tests/` |
+| `.env` (created on SERVER) | LOCAL `.env` |
+| `data/resumes/` | |
+| optional: `scripts/generate-prod-secrets.mjs`, `compose.edge.yaml`, `docs/03-*.md` | |
+
+Schema SQL and `db-seed.mjs` live **inside** `dotone-trip-migrate` (baked at `docker compose --profile migrate build migrate`). A new `.sql` or seed edit on disk on the VPS is ignored. Full command path: **§P.5**.
+
+### 1. LOCAL — pack the bundle (after §F images exist)
+
+```powershell
+$bundle = "$env:USERPROFILE\Desktop\dotone-trip-handoff"
+New-Item -ItemType Directory -Force -Path "$bundle\deploy","$bundle\scripts" | Out-Null
+Copy-Item compose.yaml, compose.prod.yaml, .env.example -Destination $bundle
+Copy-Item deploy\Caddyfile -Destination "$bundle\deploy\"
+Copy-Item scripts\generate-prod-secrets.mjs -Destination "$bundle\scripts\"
+# optional
+Copy-Item docs\03-devops-deploy-from-tar.md -Destination $bundle -ErrorAction SilentlyContinue
+Compress-Archive -Path "$bundle\*" -DestinationPath "$env:USERPROFILE\Desktop\dotone-trip-handoff.zip" -Force
+docker save -o "$env:USERPROFILE\Desktop\dotone-trip-images.tar" dotone-trip-app:latest dotone-trip-migrate:latest
+```
+
+Give DevOps: `dotone-trip-handoff.zip` + `dotone-trip-images.tar` (or a registry tag). Not the source tree. Not `.env`.
+
+```powershell
+scp "$env:USERPROFILE\Desktop\dotone-trip-handoff.zip" "$env:USERPROFILE\Desktop\dotone-trip-images.tar" root@VPS_IP:/tmp/
+```
+
+### 2. VPS — unpack, secrets, load, up
+
+```bash
+mkdir -p /opt/dotone-trip
+apt-get install -y unzip   # skip if unzip exists
+unzip -o /tmp/dotone-trip-handoff.zip -d /opt/dotone-trip
+mkdir -p /opt/dotone-trip/data/resumes
+cp /opt/dotone-trip/.env.example /opt/dotone-trip/.env
+cd /opt/dotone-trip
+docker run --rm -v /opt/dotone-trip:/app -w /app node:22-bookworm-slim node scripts/generate-prod-secrets.mjs
+```
+
+Fill `.env` as in §J (`APP_ORIGIN`, `APP_HOST`, matching `POSTGRES_PASSWORD` / `DATABASE_URL`, new pepper + PII). Then:
+
+```bash
+docker load -i /tmp/dotone-trip-images.tar
+docker tag dotone-trip-migrate:latest dotone-trip-seed:latest
+rm -f /tmp/dotone-trip-images.tar /tmp/dotone-trip-handoff.zip
+cd /opt/dotone-trip
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
+```
+
+HTTPS + seed: §L then §M. Do not `up --build`. Do not leave the tar under `/opt/dotone-trip`.
+
+### 3. Later release — images only (compose/Caddy unchanged)
+
+```powershell
+# LOCAL — after §P.1 rebuild
+docker save -o "$env:USERPROFILE\Desktop\dotone-trip-images.tar" dotone-trip-app:latest dotone-trip-migrate:latest
+scp "$env:USERPROFILE\Desktop\dotone-trip-images.tar" root@VPS_IP:/tmp/
+```
+
+```bash
+# VPS — no git
+docker load -i /tmp/dotone-trip-images.tar
+rm -f /tmp/dotone-trip-images.tar
+cd /opt/dotone-trip
+docker compose -f compose.yaml -f compose.prod.yaml --profile full run --rm --no-deps migrate
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
+```
+
+UI-only: new `app` is enough; old migrate + `run migrate` is a no-op. Schema or seed-script change: **§P.5** (rebuild `migrate`, `docker save` that image, `run --rm --no-deps migrate` **before** rolling `app`; seed only if `db-seed.mjs` changed).
+
+### 4. Compose or Caddyfile changed
+
+```powershell
+# LOCAL
+scp compose.yaml root@VPS_IP:/opt/dotone-trip/compose.yaml
+scp compose.prod.yaml root@VPS_IP:/opt/dotone-trip/compose.prod.yaml
+scp deploy\Caddyfile root@VPS_IP:/opt/dotone-trip/deploy/Caddyfile
+```
+
+Then §Q.3 `up -d --no-build` (and `reload`/recreate `proxy` if Caddyfile changed).
+
+### Avoid
+
+- Cloning the whole repo “just in case” on a 1 GB disk if you already have images  
+- Building on the VPS without the full tree (`Dockerfile` + source) — use images instead  
+- Copying LOCAL `.env` into the zip

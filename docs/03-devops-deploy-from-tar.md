@@ -11,7 +11,7 @@ Developers already built `dotone-trip-app:latest` and `dotone-trip-migrate:lates
 - `dotone-trip-images.tar` (or two loads: `app` + `migrate`)  
 - Compose files as above  
 - Hostname `HOST` DNS → this server, **80/443** open  
-- Secrets from `ops:secrets` (or the env file Dev handed you **out of band** — not Git)
+- Secrets: Dev may send `.env` **out of band** (not Git). If they did not, **generate them yourself** in §1b. Do not invent short passwords. Do not reuse another environment’s keys.
 
 ```bash
 # SERVER
@@ -31,13 +31,50 @@ mkdir -p data/resumes
 cp .env.example .env
 ```
 
-If you do not have Node:
+### 1b. Secrets — generate if Dev did not hand off `.env`
+
+Do **not** wait for a filled `.env`. Do **not** copy another server’s `AUTH_PASSWORD_PEPPER` / `PII_ENCRYPTION_KEY` / `POSTGRES_PASSWORD`. Losing `PII_ENCRYPTION_KEY` after data exists makes national IDs unreadable.
+
+**Preferred (SERVER, no Node install)** — same generator as `npm run ops:secrets`:
 
 ```bash
+cd /opt/dotone-trip
 docker run --rm -v /opt/dotone-trip:/app -w /app node:22-bookworm-slim node scripts/generate-prod-secrets.mjs
 ```
 
-Edit `.env`:
+**If Node 22+ is on a laptop (LOCAL), not the server:**
+
+```bash
+# LOCAL, repo root (or a checkout that contains scripts/generate-prod-secrets.mjs)
+npm run ops:secrets
+```
+
+Prints:
+
+```
+POSTGRES_PASSWORD=          # 64 hex chars — also paste into DATABASE_URL
+AUTH_PASSWORD_PEPPER=       # 32-byte Base64 — password hashing; unique per env
+PII_ENCRYPTION_KEY=         # 32-byte Base64 — national ID; unique per env; do not rotate blindly
+SEED_ADMIN_PASSWORD=        # login for user admin — secret store only until step 5
+SEED_OPERATOR_PASSWORD=     # login for user operator
+```
+
+Save the block in the company secret store. **Never commit it. Never paste it into chat/tickets.**
+
+**No Docker / no Node** (SERVER or LOCAL) — equivalent CSPRNG:
+
+```bash
+# 32 bytes hex (Postgres password)
+openssl rand -hex 32
+# 32 bytes Base64 (pepper and PII key) — run twice
+openssl rand -base64 32
+# 12 bytes hex (seed passwords) — run twice
+openssl rand -hex 12
+```
+
+Do not use `/dev/urandom` cut short, `date`, or a human-chosen string.
+
+Then edit `/opt/dotone-trip/.env` on the **SERVER**:
 
 ```
 POSTGRES_BIND_ADDRESS=127.0.0.1
@@ -45,15 +82,17 @@ APP_ORIGIN=https://HOST
 APP_HOST=HOST
 TRUST_PROXY=true
 DATABASE_SSL=disable
-POSTGRES_PASSWORD=<secret>
-DATABASE_URL=postgresql://dotone_app:<SAME>@127.0.0.1:5432/dotone_trip
-AUTH_PASSWORD_PEPPER=<secret>
-PII_ENCRYPTION_KEY=<secret>
+POSTGRES_PASSWORD=<generated hex>
+DATABASE_URL=postgresql://dotone_app:<SAME_HEX>@127.0.0.1:5432/dotone_trip
+AUTH_PASSWORD_PEPPER=<generated base64>
+PII_ENCRYPTION_KEY=<generated base64>
 ```
 
-Leave `SEED_*` unset until step 5.
+Leave `SEED_*` **out** of `.env` until step 5. `POSTGRES_PASSWORD` and the password inside `DATABASE_URL` must match.
 
-Change host later: edit `APP_ORIGIN` + `APP_HOST` only, then step 4 `up -d --no-build`. No seed.
+If Postgres **already has data** from a previous launch, do **not** generate a new `POSTGRES_PASSWORD` / pepper / PII key unless you are wiping that volume on purpose.
+
+Change host later: edit `APP_ORIGIN` + `APP_HOST` only, then step 3 `up -d --no-build`. No new secrets. No seed.
 
 ---
 
@@ -117,7 +156,7 @@ docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no
 
 ## 5. SERVER — seed once
 
-Add to `.env`: `SEED_ADMIN_PASSWORD`, `SEED_OPERATOR_PASSWORD`.
+Use the `SEED_*` values from **this environment’s** `ops:secrets` / openssl output (step 1b). Add them to `.env` for this command only:
 
 ```bash
 cd /opt/dotone-trip
@@ -153,3 +192,33 @@ docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-bu
 ```
 
 No seed. No `down -v`.
+
+---
+
+## 8. No Caddy / Cloudflare / nginx
+
+Caddy is the `proxy` service in `compose.prod.yaml`. Skip it if Cloudflare is **proxied** (orange) or the company already has nginx/F5.
+
+`.env`: `APP_ORIGIN=https://HOST`, `TRUST_PROXY=true`. Always.
+
+**Stop Caddy + bind app to loopback** — write `/opt/dotone-trip/compose.edge.yaml`:
+
+```yaml
+services:
+  app:
+    ports:
+      - "127.0.0.1:3000:3000"
+```
+
+```bash
+# SERVER
+cd /opt/dotone-trip
+docker compose -f compose.yaml -f compose.prod.yaml --profile full stop proxy
+docker compose -f compose.yaml -f compose.prod.yaml -f compose.edge.yaml --profile full up -d --no-build postgres migrate app
+```
+
+**Cloudflare orange:** do not run Caddy Let’s Encrypt. SSL **Full (strict)** + origin cert on nginx, or **Full**. Avoid **Flexible**. Origin = `127.0.0.1:3000` behind nginx.
+
+**nginx** (host): `proxy_pass http://127.0.0.1:3000;` plus `Host`, `X-Forwarded-Proto https`, `X-Forwarded-For`. See `docs/02-devops-build-and-deploy.md` §9 for the server block.
+
+Do not `down -v`. Do not publish `:3000` on `0.0.0.0`.
