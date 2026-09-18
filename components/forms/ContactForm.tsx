@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import type { FieldErrors } from "react-hook-form";
+import type {
+  FieldErrors,
+  FieldPath,
+  FieldValues,
+  UseFormSetError,
+} from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -46,20 +51,14 @@ async function submitJson(url: string, body: unknown) {
    Server errors
 ======================================== */
 
-export function applyServerFieldErrors<T extends Record<string, unknown>>(
+export function applyServerFieldErrors<T extends FieldValues>(
   fields: Record<string, string> | undefined,
-  setError: (
-    name: keyof T,
-    error: {
-      type: string;
-      message: string;
-    },
-  ) => void,
+  setError: UseFormSetError<T>,
 ) {
   if (!fields) return;
 
   for (const [name, message] of Object.entries(fields)) {
-    setError(name as keyof T, {
+    setError(name as FieldPath<T>, {
       type: "server",
       message,
     });

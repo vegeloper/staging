@@ -1,6 +1,10 @@
 .git
 .gitignore
 .next
+tests
+playwright.config.ts
+playwright-report
+test-results
 .vinext
 dist
 node_modules

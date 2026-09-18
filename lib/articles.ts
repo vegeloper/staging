@@ -174,7 +174,7 @@ export function getRelatedArticles(id: string, limit = 3) {
   const preferred = ["online-taxi", "fifty-thousand", "org-guide"];
   const picked = preferred
     .map((articleId) => articles.find((article) => article.id === articleId))
-    .filter((article): article is Article => Boolean(article) && article.id !== id);
+    .filter((article): article is Article => article !== undefined && article.id !== id);
   const extras = articles.filter(
     (article) => article.id !== id && !preferred.includes(article.id),
   );

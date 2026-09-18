@@ -43,7 +43,7 @@ export default function JoinForms() {
           فرصت‌های اداری
         </button>
       </div>
-      {tab === "drivers" ? <DriverForm standalone={false} /> : <CareerForm standalone={false} />}
+      {tab === "drivers" ? <DriverForm /> : <CareerForm />}
     </FormShell>
   );
 }
