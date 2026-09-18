@@ -5,6 +5,12 @@
 
 This guide is the source of truth. If a shortcut is not written here, it is not a supported production path.
 
+Command runbooks from the local→staging dry run:
+
+- [01 — local + staging walkthrough](01-local-and-staging-walkthrough.md)
+- [02 — DevOps: build from source](02-devops-build-and-deploy.md)
+- [03 — DevOps: deploy from image tar](03-devops-deploy-from-tar.md)
+
 ---
 
 ## 1. Read this first
