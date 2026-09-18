@@ -8,7 +8,7 @@ afterEach(() => {
   process.env.APP_ORIGIN = originalOrigin;
 });
 
-function request(url, origin, method = "POST") {
+function request(url: string, origin?: string, method = "POST") {
   const headers = origin ? { origin } : undefined;
   return new Request(url, { method, headers });
 }
