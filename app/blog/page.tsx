@@ -9,16 +9,10 @@ export default function page() {
     <>
       <Header variant="light" />
 
-<<<<<<< HEAD
-      <div className="max-lg:mt-[5vh]">
+      <div className="mt-20 max-lg:mt-[5vh]">
         <PopularArticles />
-      </div>
-=======
-      <div className="mt-20">
-         <PopularArticles />
->>>>>>> origin/client_ui
-      <LatestArticles />
-      <LatestArticles compact />
+        <LatestArticles />
+        <LatestArticles compact />
       </div>
       <Footer/>
     </>

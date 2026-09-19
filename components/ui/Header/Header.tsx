@@ -46,22 +46,6 @@ const navItems: NavItem[] = [
     href: "/services",
     children: [
       {
-<<<<<<< HEAD
-        label: "سفر شهری",
-        href: "/services",
-      },
-      {
-        label: "سفر بین‌شهری",
-        href: "/services",
-      },
-      {
-        label: "خدمات سازمانی",
-        href: "/services",
-      },
-      {
-        label: "سرویس ویژه",
-        href: "/services",
-=======
         label: "حمل و نقل شهری",
         href: "/services",
       },
@@ -72,7 +56,6 @@ const navItems: NavItem[] = [
       {
         label: "خدمات اختصاصی",
         href: "/oncall",
->>>>>>> origin/client_ui
       },
     ],
   },
@@ -101,24 +84,13 @@ const navItems: NavItem[] = [
         href: "/join-us",
       },
 
-<<<<<<< HEAD
-      // {
-      //   label: "همکاری با رانندگان",
-      //   href: "/join-us/drivers",
-      // },
-      {
-        label: "همکاری با تریپ",
-        href: "/join-us/organizational",
-=======
-
       {
         label: "همکاری با رانندگان",
         href: "/join-us/drivers",
       },
       {
         label: "همکاری با تریپ",
-        href: "https://apply.dotone.ir/ ",
->>>>>>> origin/client_ui
+        href: "https://apply.dotone.ir/",
       },
     ],
   },
