@@ -5,11 +5,11 @@ Do not `next build` on a 1 GB node.
 
 Topology: one web container (UI + `/api`) + Postgres + one-shot migrate/seed + Caddy (`compose.prod.yaml`). Browsers talk only to `https://HOST`. Never split UI and API origins.
 
-**No git / no source / images from CI?** Start with **`docs/01-devops-deploy-from-tar.md`** (this pack). You do not need the application source on the SERVER.
+**No git / no source / images from CI?** You do not need this repo on the SERVER. Ask for two files and follow `docs/03-devops-deploy-from-tar.md`:
 
 | File | Put on SERVER | Contains |
 | --- | --- | --- |
-| `dotone-trip-handoff-devops.zip` | `/tmp` → unzip to **`/opt/dotone-trip`** | `compose.yaml`, `compose.prod.yaml`, `deploy/Caddyfile`, `.env.example`, `scripts/generate-prod-secrets.mjs`, `docs/01-devops-deploy-from-tar.md` (this runbook is optional) |
+| `dotone-trip-handoff.zip` | `/tmp` → unzip to **`/opt/dotone-trip`** | `compose.yaml`, `compose.prod.yaml`, `deploy/Caddyfile`, `.env.example`, `scripts/generate-prod-secrets.mjs` (optional: this runbook / `docs/03-*.md`) |
 | `dotone-trip-images.tar` | `/tmp` → `docker load` → **delete** | `dotone-trip-app:latest` (UI + `/api`) and `dotone-trip-migrate:latest` (SQL + seed). Tag migrate as `dotone-trip-seed:latest` if needed |
 
 Create `.env` **on the SERVER** from `.env.example`. Do not ship LOCAL `.env`. Do not leave the tar under `/opt/dotone-trip`. Registry instead of a tar: pull those two image names and tag `:latest`; you still need the zip on `/opt/dotone-trip`.
@@ -59,7 +59,7 @@ AUTH_PASSWORD_PEPPER=<generated>
 PII_ENCRYPTION_KEY=<generated>
 ```
 
-`HOST` = hostname only (`trip.company.com`). `APP_ORIGIN` = `https://HOST` (no trailing slash).
+`HOST` = hostname only (`trip.company.com`). `APP_ORIGIN` = `https://HOST` (no trailing slash). Leave `RESUME_HOST_PATH` unset so Compose uses named volume `dotone-trip-resumes-data`.
 
 Changing domain later = change **both** `APP_ORIGIN` and `APP_HOST`, then:
 
@@ -139,19 +139,31 @@ cd /opt/dotone-trip
 docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
 ```
 
-Use `--build` only for Ship C. Expect: `postgres` healthy, `migrate` exit **0**, `app` healthy, `proxy` started.
+Use `--build` only for Ship C. Expect: `postgres` healthy, `resume-init` exit **0**, `migrate` exit **0**, `app` healthy, `proxy` started.
 
-Career PDFs write to volume `dotone-trip-resumes-data` (uid **1000**). A root-owned host bind of `./data/resumes` makes `POST /api/forms/careers` return **500**. If the running compose still bind-mounts that path:
+Career PDFs write to volume `dotone-trip-resumes-data`. `resume-init` chowns the mount to uid **1000** on `up` — no manual `chown`. Leave `RESUME_HOST_PATH` unset. If an old `.env` still has `RESUME_HOST_PATH=./data/resumes`, contact/admin can work while `POST /api/forms/careers` returns **500**. Logs: `Cannot write resume to /app/data/resumes (EACCES)`. Confirm:
 
 ```bash
-# SERVER — remount /app/data/resumes as uid 1000 (chown alone is not enough)
+docker compose -f compose.yaml -f compose.prod.yaml exec app sh -c "ls -ld /app/data/resumes; touch /app/data/resumes/.write-test && rm /app/data/resumes/.write-test"
+```
+
+Broken: `root root` + `Permission denied`. Fixed: `node node`. Then (do **not** `--no-deps` — that skips `resume-init`):
+
+```bash
+cd /opt/dotone-trip
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
+```
+
+Emergency if this `compose.yaml` has no `resume-init`:
+
+```bash
 mkdir -p /opt/dotone-trip/data/resumes
 chown -R 1000:1000 /opt/dotone-trip/data/resumes
 chmod 775 /opt/dotone-trip/data/resumes
 docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build --force-recreate app
 ```
 
-`--force-recreate app` restarts only the web container so it picks up the writable mount. Edge (no Caddy): add `-f compose.edge.yaml` and `up` only `app`.
+Do not `down -v`. Do not `:ro` on `/app/data/resumes`. Do not `cap_drop` / `read_only` on `resume-init`. Edge: add `-f compose.edge.yaml`; list `postgres migrate app` — Compose still starts `resume-init` because `app` depends on it.
 
 ```bash
 curl -fsS https://HOST/api/health
@@ -209,7 +221,7 @@ Key changes:
 - Add `-f compose.edge.yaml` to **both** commands.
 - In the `up` command, bring up **only** `postgres migrate app` (not the full stack).
 
-If `POST /api/forms/careers` is **500** after a roll: §5 `chown` + `--force-recreate app` (do not `down -v`).
+If `POST /api/forms/careers` is **500** after a roll (`EACCES` in `logs app`): §5 — `up -d --no-build` so `resume-init` runs; do not `--no-deps`; do not `down -v`.
 
 Rollback web: retag previous app digest and `up -d --no-build`. Do not roll back a destructive SQL migration without a tested down-migration.
 

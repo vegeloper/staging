@@ -211,24 +211,43 @@ AUTH_PASSWORD_PEPPER=<new>
 PII_ENCRYPTION_KEY=<new>
 ```
 
-Uncomment `APP_HOST`. Leave `SEED_*` commented until seed.
+Uncomment `APP_HOST`. Leave `SEED_*` commented until seed. Leave `RESUME_HOST_PATH` unset.
 
 ```bash
 ufw status
 cd /opt/dotone-trip
 ```
 
-Resume PDFs go in the Docker volume `dotone-trip-resumes-data` (writable by uid **1000**). Do **not** bind-mount a root-owned `./data/resumes` — `POST /api/forms/careers` then returns **500**. Emergency if the live box still uses a host bind:
+Resume PDFs: named volume `dotone-trip-resumes-data`. `resume-init` (profile `full`, `busybox:1.37` as root) `chown`s the mount to uid **1000** before `app` starts — no manual `chown`. Leave `RESUME_HOST_PATH` **unset** in `.env` (an old `.env.example` set `RESUME_HOST_PATH=./data/resumes`; that host bind is `root:root` and careers **500**).
+
+Other forms + admin can work while `POST /api/forms/careers` returns **500**. Logs:
+
+```
+form_submit_failed careers Error: Cannot write resume to /app/data/resumes (EACCES). The upload directory must be writable by uid 1000.
+```
 
 ```bash
-# VPS — only if compose still bind-mounts ./data/resumes
+# VPS — confirm
+docker compose -f compose.yaml -f compose.prod.yaml exec app sh -c "id; ls -ld /app/data/resumes; touch /app/data/resumes/.write-test && rm /app/data/resumes/.write-test"
+```
+
+Broken: `drwxr-xr-x … root root` and `Permission denied`. Fixed: `drwxrwxr-x … node node`. Then `up` **without** `--no-deps` so `resume-init` runs (it must exit **0**):
+
+```bash
+cd /opt/dotone-trip
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
+```
+
+Expect careers **201**. `--no-deps` skips `resume-init`. Do not `down -v`. Do not put `:ro` on `/app/data/resumes`. Do not `cap_drop` / `read_only` on `resume-init`. Edge (no Caddy): add `-f compose.edge.yaml`; `app` still pulls in `resume-init` via `depends_on`.
+
+Emergency only if this `compose.yaml` has **no** `resume-init` service:
+
+```bash
 mkdir -p /opt/dotone-trip/data/resumes
 chown -R 1000:1000 /opt/dotone-trip/data/resumes
 chmod 775 /opt/dotone-trip/data/resumes
 docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build --force-recreate app
 ```
-
-`--force-recreate app` restarts only the web container so it remounts `/app/data/resumes`. `chown` on the host is not enough while the old root-owned mount is still attached. Expect `POST /api/forms/careers` **201** after this. Edge (no Caddy): add `-f compose.edge.yaml` and `up` only `app`.
 
 ---
 
@@ -458,7 +477,7 @@ Key changes:
 - Add `-f compose.edge.yaml` to **both** commands.
 - In the `up` command, bring up **only** `postgres migrate app` (not the full stack).
 
-If `POST /api/forms/careers` is **500** after a roll (root-owned bind): fix perms then recreate `app` — same block as §J.
+If `POST /api/forms/careers` is **500** after a roll (logs `EACCES` on `/app/data/resumes`): §J — `up -d --no-build` so `resume-init` runs; do not `--no-deps`.
 
 ### 4. LOCAL — smoke the live host
 
@@ -598,7 +617,7 @@ CI / registry instead of a tar: skip `dotone-trip-images.tar`; pull and tag the 
 | `compose.yaml`, `compose.prod.yaml` | `Dockerfile` (only if they **build** on the box) |
 | `deploy/Caddyfile` | Playwright, `tests/` |
 | `.env` (created on SERVER) | LOCAL `.env` |
-| volume `dotone-trip-resumes-data` (career PDFs) | root-owned `./data/resumes` bind (causes careers **500**) |
+| volume `dotone-trip-resumes-data` + `resume-init` (career PDFs, uid 1000) | `RESUME_HOST_PATH=./data/resumes` bind owned `root:root` (careers **500** / `EACCES`) |
 | optional: `scripts/generate-prod-secrets.mjs`, `compose.edge.yaml`, `docs/03-*.md` | |
 
 Schema SQL and `db-seed.mjs` live **inside** `dotone-trip-migrate` (baked at `docker compose --profile migrate build migrate`). A new `.sql` or seed edit on disk on the VPS is ignored. Full command path: **§P.5**.
@@ -646,7 +665,7 @@ docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-bu
 
 HTTPS + seed: §L then §M. Do not `up --build`. Do not leave the tar under `/opt/dotone-trip`.
 
-If career PDF upload returns **500**, the upload dir is not writable by uid 1000. Use the §J `chown` + `--force-recreate app` block (do not `down -v`).
+If career PDF upload returns **500** (`EACCES` in `logs app`): §J. Current compose: `up -d --no-build` (not `--no-deps`) so `resume-init` chowns uid 1000. Do not `down -v`.
 
 ### 3. Later release — images only (compose/Caddy unchanged)
 

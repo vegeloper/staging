@@ -1,8 +1,6 @@
-# 01 — DevOps: deploy from delivered Docker tar
+# DevOps: deploy from delivered Docker tar
 
-**Start here.** You already have `dotone-trip-images.tar` (or registry tags). Walk this file in order and bring the stack up. Do **not** build on this server. `docs/02-devops-build-and-deploy.md` is only if you later build from source.
-
-Developers (or CI) already built the images. You get this zip plus the image tar. No git and no application source are required.
+Developers (or CI) already built the images. You get a **small zip** plus a **image tar** (or registry tags). **Do not build on this server.** No git and no application source are required.
 
 **SERVER** = Linux host with Docker Engine 24+ and Compose **v2.24+**. Compose is **not** inside the image tar — it comes from the zip (or a git checkout of those few files only).
 
@@ -10,7 +8,7 @@ Developers (or CI) already built the images. You get this zip plus the image tar
 
 | File | What it is |
 | --- | --- |
-| `dotone-trip-handoff-devops.zip` | This compose bundle (sometimes already unzipped as folder `dotone-trip-handoff-devops`) |
+| `dotone-trip-handoff.zip` | Compose bundle (sometimes already unzipped as folder `dotone-trip-handoff`) |
 | `dotone-trip-images.tar` | Pre-built images. Not a zip. Or instead: two registry tags from a build service |
 
 **After you unzip the zip into `/opt/dotone-trip`:**
@@ -36,7 +34,7 @@ Developers (or CI) already built the images. You get this zip plus the image tar
 
 ## 0. Deliverable check
 
-- `dotone-trip-handoff-devops.zip` (or the compose files already in `/opt/dotone-trip`)  
+- `dotone-trip-handoff.zip` (or the compose files already in `/opt/dotone-trip`)  
 - `dotone-trip-images.tar` (or registry pulls for `app` + `migrate`)  
 - Hostname `HOST` DNS → this server, **80/443** open  
 - Secrets: Dev may send `.env` **out of band** (not Git). If they did not, **generate them yourself** in §1b. Do not invent short passwords. Do not reuse another environment’s keys.
@@ -115,7 +113,7 @@ AUTH_PASSWORD_PEPPER=<generated base64>
 PII_ENCRYPTION_KEY=<generated base64>
 ```
 
-Leave `SEED_*` **out** of `.env` until step 5. `POSTGRES_PASSWORD` and the password inside `DATABASE_URL` must match.
+Leave `SEED_*` **out** of `.env` until step 5. Leave `RESUME_HOST_PATH` unset. `POSTGRES_PASSWORD` and the password inside `DATABASE_URL` must match.
 
 If Postgres **already has data** from a previous launch, do **not** generate a new `POSTGRES_PASSWORD` / pepper / PII key unless you are wiping that volume on purpose.
 
@@ -153,19 +151,24 @@ cd /opt/dotone-trip
 docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
 ```
 
-Expect: `postgres` healthy, `migrate` exit **0**, `app` healthy, `proxy` started.
+Expect: `postgres` healthy, `resume-init` exit **0**, `migrate` exit **0**, `app` healthy, `proxy` started.
 
-Career PDFs live in volume `dotone-trip-resumes-data`. If `POST /api/forms/careers` is **500** and compose still bind-mounts `./data/resumes`, the directory is root-owned. Do not leave a root-owned bind on a `read_only` app container:
+Career PDFs live in volume `dotone-trip-resumes-data`. `resume-init` chowns uid **1000** on every `up -d --no-build`. Leave `RESUME_HOST_PATH` unset. Copying an old `.env.example` with `RESUME_HOST_PATH=./data/resumes` makes that bind `root:root`; other forms work, careers **500**, logs `EACCES` on `/app/data/resumes`. Confirm:
 
 ```bash
-# SERVER — remount /app/data/resumes as uid 1000 (chown alone is not enough)
+docker compose -f compose.yaml -f compose.prod.yaml exec app sh -c "ls -ld /app/data/resumes; touch /app/data/resumes/.write-test && rm /app/data/resumes/.write-test"
+```
+
+Broken: `root root` + `Permission denied`. Fixed: `node node`. Re-run `up -d --no-build` **without** `--no-deps` so `resume-init` runs. Emergency if compose has no `resume-init`:
+
+```bash
 mkdir -p /opt/dotone-trip/data/resumes
 chown -R 1000:1000 /opt/dotone-trip/data/resumes
 chmod 775 /opt/dotone-trip/data/resumes
 docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build --force-recreate app
 ```
 
-`--force-recreate app` restarts only the web container so it picks up the writable mount. Edge (no Caddy): add `-f compose.edge.yaml` and `up` only `app`.
+Do not `down -v`. Do not `:ro` on `/app/data/resumes`. Do not harden `resume-init` with `cap_drop` / `read_only`. Edge: add `-f compose.edge.yaml`; `app` still starts `resume-init`.
 
 If migrate exits 1 but `docker compose ... logs migrate` already shows `[✓] migrations applied successfully!`, the job container is stale; schema is OK. Continue if `/api/ready` is green.
 
@@ -243,7 +246,7 @@ Key changes:
 - Add `-f compose.edge.yaml` to **both** commands.
 - In the `up` command, bring up **only** `postgres migrate app` (not the full stack).
 
-If `POST /api/forms/careers` is **500** after a new tar: §3 `chown` + `--force-recreate app` (do not `down -v`).
+If `POST /api/forms/careers` is **500** after a new tar (`EACCES` in `logs app`): §3 — `up -d --no-build` so `resume-init` runs; do not `--no-deps`; do not `down -v`.
 
 ---
 

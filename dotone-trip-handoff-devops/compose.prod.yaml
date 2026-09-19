@@ -35,7 +35,8 @@ services:
     tmpfs:
       - /tmp:uid=1000,gid=1000,mode=01777
       - /app/.next/cache:uid=1000,gid=1000
-    # /app/data/resumes stays writable via the named volume in compose.yaml.
+    # /app/data/resumes stays writable via the volume in compose.yaml.
+    # resume-init (not this overlay) chowns uid 1000 — do not cap_drop / read_only that job.
     # Do not add `:ro` on that mount — career PDF uploads write there.
     logging: *default-logging
     depends_on:
