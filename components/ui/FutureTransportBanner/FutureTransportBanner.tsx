@@ -4,6 +4,7 @@ import styles from "./FutureTransportBanner.module.css";
 import taxiIcon from "@/public/figma/taxi.png";
 
 import bannerImage from "@/public/figma/watermark.png"; 
+import Link from "next/link";
 
 export default function FutureTransportBanner() {
   return (
@@ -24,9 +25,9 @@ export default function FutureTransportBanner() {
                 <Image src={taxiIcon} width={20} height={20} alt="درخواست سفر"/>
             </a>
 
-            <a href="/forms#contact" className={styles.secondaryBtn}>
+            <Link href="/contact-us" className={styles.secondaryBtn}>
               تماس با ما
-            </a>
+            </Link>
           </div>
         </div>
 

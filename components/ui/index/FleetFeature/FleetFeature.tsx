@@ -15,8 +15,8 @@ type FleetFeatureProps = {
   image: string | StaticImageData;
   imageAlt?: string;
 
-  buttonText: string;
-  buttonHref: string;
+  buttonText?: string;
+  buttonHref?: string;
 
   imageSide?: "right" | "left";
 };
@@ -77,12 +77,12 @@ export default function FleetFeature({
         </ul>
 
         <div className={styles.buttonWrapper}>
-          <Link
+          {buttonHref&&buttonText?(      <Link
             href={buttonHref}
             className={styles.button}
           >
             {buttonText}
-          </Link>
+          </Link>):(<></>)}
         </div>
       </div>
     </section>

@@ -6,6 +6,7 @@ import DeviceImage from "@/public/figma/device.png";
 import appleIcon from "@/public/figma/apple.png";
 import myketIcon from "@/public/figma/myket.png";
 import bazarIcon from "@/public/figma/bazar.png";
+import Link from "next/link";
 
 export default function DownloadBanner() {
   return (
@@ -32,20 +33,20 @@ export default function DownloadBanner() {
           </p>
 
           <div className={styles.buttonsGroup}>
-            <a href="#" className={styles.downloadBtn}>
+            <Link href="https://myket.ir/app/com.dotone.passenger" className={styles.downloadBtn}>
               <Image src={myketIcon} alt="مایکت" width={24} height={24} />
               <span>مایکت</span>
-            </a>
+            </Link>
 
-            <a href="#" className={styles.downloadBtn}>
-              <Image src={bazarIcon} alt="کافه بازار" width={24} height={24} />
+            <Link href="#" className={styles.downloadBtn}>
+              <Image src={bazarIcon} alt="https://cafebazaar.ir/app/com.dotone.passenger?ref=share" width={24} height={24} />
               <span>کافه بازار</span>
-            </a>
+            </Link>
 
-            <a href="#" className={styles.downloadBtn}>
+            <Link href="https://app.trip.dotone.ir/#/splash" className={styles.downloadBtn}>
               <Image src={appleIcon} alt="وب اپلیکیشن" width={24} height={24} />
               <span>وب اپلیکیشن (کاربران ios)</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

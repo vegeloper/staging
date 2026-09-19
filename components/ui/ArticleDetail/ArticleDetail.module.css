@@ -1,28 +1,68 @@
+/* ========================================
+   Section
+======================================== */
+
 .section {
   width: 100%;
+  max-width: 100%;
   margin: 0 auto;
+
   padding: 20vh 8.06vw 8.06vw;
+
   box-sizing: border-box;
+  overflow-x: clip;
+
   font-family: inherit;
 }
 
+.section *,
+.section *::before,
+.section *::after {
+  box-sizing: border-box;
+}
+
+
+/* ========================================
+   Header
+======================================== */
+
 .header {
+  width: 100%;
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
+
+/* ========================================
+   Back
+======================================== */
+
 .back {
   display: inline-flex;
   align-items: center;
+
   gap: 8px;
+
   margin-bottom: 16px;
+
   color: #414141;
+
   text-decoration: none;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 14px;
   font-weight: 400;
   line-height: 180%;
+
   white-space: nowrap;
 }
 
@@ -34,40 +74,86 @@
 
 .backArrow {
   display: block;
+
   width: 20px;
   height: 20px;
+
+  flex-shrink: 0;
 }
+
+
+/* ========================================
+   Badge
+======================================== */
 
 .badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   min-height: 24px;
+
   padding: 2px 10px;
-  border-radius: 999px;
+
   border: 1px solid #171717;
+  border-radius: 999px;
+
   background: transparent;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 12px;
   font-weight: 500;
   line-height: 180%;
+
   color: #171717;
 }
 
+
+/* ========================================
+   Main Title
+======================================== */
+
 .title {
+  width: 100%;
+  max-width: 1100px;
+
   margin: 12px 0 0;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
-  font-size: 48px;
+
+  overflow-wrap: break-word;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
+  font-size: clamp(32px, 3.35vw, 48px);
   font-weight: 500;
-  line-height: 56px;
+  line-height: 1.45;
+
   letter-spacing: 0;
+
   color: #000;
 }
 
+
+/* ========================================
+   Meta
+======================================== */
+
 .metaRow {
+  width: 100%;
+
   display: flex;
   align-items: center;
-  width: 100%;
+
   margin-top: 16px;
 }
 
@@ -75,25 +161,42 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+
   gap: 16px;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  min-width: 0;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 14px;
   font-weight: 400;
   line-height: 180%;
+
   color: #414141;
 }
 
 .meta span {
   display: inline-flex;
   align-items: center;
+
   gap: 6px;
+
   white-space: nowrap;
 }
 
 .meta img {
   display: block;
+
   width: 20px;
   height: 20px;
+
+  flex-shrink: 0;
+
   filter: brightness(0);
   opacity: 0.72;
 }
@@ -101,37 +204,83 @@
 .metaDash {
   width: 20px;
   height: 1px;
+
+  flex-shrink: 0;
+
   background: #171717;
 }
 
+
+/* ========================================
+   Hero
+======================================== */
+
 .hero {
   position: relative;
-  overflow: hidden;
+
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
   aspect-ratio: 16 / 7;
-  min-height: 280px;
+
   margin-top: 28px;
+
+  overflow: hidden;
+
   border-radius: 24px;
+
+  background: #f4f4f4;
 }
 
 .heroImage {
   object-fit: cover;
 }
 
+
+/* ========================================
+   Content Layout
+======================================== */
+
 .layout {
+  width: 100%;
+  min-width: 0;
+
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(240px, 320px);
+
   gap: 48px;
+
   align-items: start;
+
   margin-top: 36px;
 }
 
+
+/* ========================================
+   Article Body
+======================================== */
+
 .body {
   min-width: 0;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+  max-width: 100%;
+
+  overflow-wrap: break-word;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 16px;
   font-weight: 400;
-  line-height: 180%;
+  line-height: 2;
+
   color: #414141;
 }
 
@@ -140,55 +289,118 @@
 }
 
 .body h2 {
-  margin: 28px 0 16px;
+  margin: 32px 0 16px;
+
   font-size: 20px;
   font-weight: 700;
-  line-height: 180%;
+  line-height: 1.8;
+
   color: #000;
 }
 
+.body h2:first-child {
+  margin-top: 0;
+}
+
+
+/* ========================================
+   Aside
+======================================== */
+
 .aside {
+  width: 100%;
   min-width: 0;
 }
 
 .asideTitle {
   margin: 0 0 24px;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 16px;
   font-weight: 700;
   line-height: 180%;
+
   color: #000;
 }
 
+
+/* ========================================
+   Related List
+======================================== */
+
 .list {
+  width: 100%;
+
   display: flex;
   flex-direction: column;
+
   gap: 24px;
+
   margin: 0;
   padding: 0;
+
   list-style: none;
 }
 
+.list li {
+  width: 100%;
+  min-width: 0;
+}
+
 .item {
+  width: 100%;
+  min-width: 0;
+
   display: grid;
-  grid-template-columns: 72px minmax(0, 1fr);
+
+  grid-template-columns:
+    72px minmax(0, 1fr);
+
   gap: 16px;
+
+  align-items: start;
+
   text-decoration: none;
+
   color: inherit;
 }
 
+
+/* ========================================
+   Related Image
+======================================== */
+
 .thumb {
+  display: block;
+
   width: 72px;
   height: 72px;
+
+  flex-shrink: 0;
+
   border-radius: 16px;
+
   object-fit: cover;
 }
+
+
+/* ========================================
+   Related Copy
+======================================== */
 
 .itemCopy {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
   gap: 8px;
+
   min-width: 0;
 }
 
@@ -196,77 +408,483 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   min-height: 24px;
+
   padding: 2px 10px;
-  border-radius: 999px;
+
   border: 1px solid transparent;
+  border-radius: 999px;
+
   background: #f5f5f5;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 12px;
   font-weight: 500;
   line-height: 180%;
+
   color: #171717;
 }
 
 .itemBadgeGhost {
-  background: transparent;
   border-color: #171717;
+
+  background: transparent;
 }
 
 .itemTitle {
   display: -webkit-box;
+
+  max-width: 100%;
+
   overflow: hidden;
+
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  overflow-wrap: break-word;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 14px;
   font-weight: 400;
   line-height: 180%;
+
   color: #414141;
 }
 
+
+/* ========================================
+   Laptop
+======================================== */
+
+@media (max-width: 1200px) {
+  .section {
+    padding-right: 6vw;
+    padding-left: 6vw;
+  }
+
+  .layout {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(230px, 290px);
+
+    gap: 36px;
+  }
+
+  .title {
+    font-size: clamp(30px, 3.5vw, 42px);
+  }
+}
+
+
+/* ========================================
+   Small Laptop / Large Tablet
+======================================== */
+
 @media (max-width: 1024px) {
+  .section {
+    padding-top: 150px;
+    padding-right: 40px;
+    padding-left: 40px;
+    padding-bottom: 70px;
+  }
+
+  .title {
+    max-width: 900px;
+
+    font-size: 36px;
+  }
+
+  .hero {
+    aspect-ratio: 16 / 8;
+
+    border-radius: 22px;
+  }
+
   .layout {
     gap: 32px;
-  }
-}
 
-@media (max-width: 900px) {
-  .section {
-    padding-top: 140px;
-  }
-
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .aside {
-    order: 1;
-    padding-top: 8px;
-    border-top: 1px solid #ececec;
-  }
-}
-
-@media (max-width: 768px) {
-  .hero {
-    min-height: 200px;
-    border-radius: 20px;
-  }
-
-  .body {
-    font-size: 15px;
-  }
-
-  .body h2 {
-    font-size: 18px;
+    grid-template-columns:
+      minmax(0, 1fr)
+      250px;
   }
 
   .item {
-    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-columns:
+      64px minmax(0, 1fr);
+
+    gap: 12px;
   }
 
   .thumb {
     width: 64px;
     height: 64px;
+
+    border-radius: 14px;
+  }
+}
+
+
+/* ========================================
+   Tablet
+======================================== */
+
+@media (max-width: 900px) {
+  .section {
+    padding:
+      130px
+      32px
+      64px;
+  }
+
+  .title {
+    max-width: 100%;
+
+    font-size: 32px;
+    line-height: 1.55;
+  }
+
+  .hero {
+    aspect-ratio: 16 / 8.5;
+
+    margin-top: 24px;
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+
+    gap: 48px;
+
+    margin-top: 32px;
+  }
+
+  .aside {
+    width: 100%;
+
+    padding-top: 28px;
+
+    border-top: 1px solid #ececec;
+  }
+
+  .asideTitle {
+    margin-bottom: 20px;
+
+    font-size: 18px;
+  }
+
+  /*
+    مطالب محبوب در تبلت دو ستونه
+  */
+  .list {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 24px 28px;
+  }
+
+  .item {
+    grid-template-columns:
+      72px minmax(0, 1fr);
+
+    gap: 14px;
+  }
+
+  .thumb {
+    width: 72px;
+    height: 72px;
+  }
+}
+
+
+/* ========================================
+   Mobile
+======================================== */
+
+@media (max-width: 768px) {
+  .section {
+    padding:
+      110px
+      20px
+      50px;
+  }
+
+  .back {
+    margin-bottom: 14px;
+
+    font-size: 13px;
+  }
+
+  .backArrow {
+    width: 18px;
+    height: 18px;
+  }
+
+  .badge {
+    min-height: 23px;
+
+    padding: 2px 9px;
+
+    font-size: 11px;
+  }
+
+  .title {
+    margin-top: 10px;
+
+    font-size: clamp(25px, 7vw, 30px);
+    line-height: 1.6;
+  }
+
+  .metaRow {
+    margin-top: 14px;
+  }
+
+  .meta {
+    gap: 10px 14px;
+
+    font-size: 12px;
+  }
+
+  .meta img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .metaDash {
+    display: none;
+  }
+
+  .hero {
+    width: 100%;
+
+    aspect-ratio: 16 / 10;
+
+    min-height: 0;
+
+    margin-top: 22px;
+
+    border-radius: 18px;
+  }
+
+  .layout {
+    gap: 40px;
+
+    margin-top: 28px;
+  }
+
+  .body {
+    font-size: 14px;
+    line-height: 2;
+  }
+
+  .body p {
+    margin-bottom: 18px;
+  }
+
+  .body h2 {
+    margin: 26px 0 12px;
+
+    font-size: 18px;
+    line-height: 1.8;
+  }
+
+  .aside {
+    padding-top: 24px;
+  }
+
+  .asideTitle {
+    margin-bottom: 18px;
+
+    font-size: 17px;
+  }
+
+  /*
+    در موبایل دوباره تک ستونه
+  */
+  .list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0;
+  }
+
+  .list li {
+    padding: 16px 0;
+
+    border-bottom: 1px solid #eeeeee;
+  }
+
+  .list li:first-child {
+    padding-top: 0;
+  }
+
+  .list li:last-child {
+    padding-bottom: 0;
+
+    border-bottom: 0;
+  }
+
+  .item {
+    grid-template-columns:
+      68px minmax(0, 1fr);
+
+    gap: 14px;
+  }
+
+  .thumb {
+    width: 68px;
+    height: 68px;
+
+    border-radius: 14px;
+  }
+
+  .itemBadge {
+    min-height: 22px;
+
+    padding: 1px 9px;
+
+    font-size: 11px;
+  }
+
+  .itemTitle {
+    font-size: 13px;
+  }
+}
+
+
+/* ========================================
+   Small Mobile
+======================================== */
+
+@media (max-width: 480px) {
+  .section {
+    width: 100%;
+
+    padding:
+      100px
+      16px
+      42px;
+  }
+
+  .header {
+    width: 100%;
+  }
+
+  .title {
+    font-size: 24px;
+    line-height: 1.65;
+  }
+
+  .meta {
+    width: 100%;
+
+    gap: 8px 12px;
+
+    font-size: 11px;
+  }
+
+  .meta span {
+    gap: 5px;
+  }
+
+  .meta img {
+    width: 17px;
+    height: 17px;
+  }
+
+  .hero {
+    aspect-ratio: 4 / 3;
+
+    margin-top: 20px;
+
+    border-radius: 16px;
+  }
+
+  .layout {
+    margin-top: 24px;
+
+    gap: 34px;
+  }
+
+  .body {
+    font-size: 14px;
+    line-height: 2;
+  }
+
+  .body h2 {
+    font-size: 17px;
+  }
+
+  .item {
+    grid-template-columns:
+      64px minmax(0, 1fr);
+
+    gap: 12px;
+  }
+
+  .thumb {
+    width: 64px;
+    height: 64px;
+
+    border-radius: 13px;
+  }
+
+  .itemCopy {
+    gap: 6px;
+  }
+}
+
+
+/* ========================================
+   Very Small Mobile
+======================================== */
+
+@media (max-width: 360px) {
+  .section {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .meta {
+    font-size: 10px;
+  }
+
+  .hero {
+    border-radius: 14px;
+  }
+
+  .item {
+    grid-template-columns:
+      58px minmax(0, 1fr);
+
+    gap: 10px;
+  }
+
+  .thumb {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 12px;
+  }
+
+  .itemTitle {
+    font-size: 12px;
   }
 }

@@ -42,11 +42,11 @@ const footerLinks = [
   {
     title: "اخبار و مجله",
     links: [
-      { label: "آخرین اخبار", href: "/articles" },
-      { label: "رویدادها", href: "/articles" },
+      { label: "آخرین اخبار", href: "/blog" },
+      { label: "رویدادها", href: "/blog" },
       { label: "توسعه ناوگان", href: "/vehicles" },
-      { label: "مقالات", href: "/articles" },
-      { label: "راهنمای سفر", href: "/articles" },
+      { label: "مقالات", href: "/blog" },
+      { label: "راهنمای سفر", href: "/blog" },
     ],
   },
   {

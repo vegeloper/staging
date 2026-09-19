@@ -214,7 +214,7 @@ export default function LatestArticles({
             <ul className={styles.featuredGrid}>
               {featured.map((article) => (
                 <li key={article.id}>
-                  <Link className={styles.card} href={article.href ?? `/articles/${article.id}`}>
+                  <Link className={styles.card} href={article.href ?? `/blog/${article.id}`}>
                     <span className={styles.cardImageWrap}>
                       <Image
                         src={article.image.src}
@@ -246,7 +246,7 @@ export default function LatestArticles({
             <ul className={styles.list}>
               {rest.map((article) => (
                 <li key={article.id} className={styles.listItem}>
-                  <Link className={styles.item} href={article.href ?? `/articles/${article.id}`}>
+                  <Link className={styles.item} href={article.href ?? `/blog/${article.id}`}>
                     <Image
                       src={article.image.src}
                       alt=""

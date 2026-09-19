@@ -5,6 +5,7 @@ import HeroImage from "@/public/figma/vehicleHero.png";
 import StarIcon from "@/public/figma/star.png";
 import tickIcon from "@/public/figma/tick.png";
 import carIcon from "@/public/figma/car4.png";
+import Link from "next/link";
 
 export default function FleetShowcase() {
   return (
@@ -58,10 +59,10 @@ export default function FleetShowcase() {
 
         {/* === بخش دکمه‌ها === */}
         <div className={styles.actions}>
-          <button className={`${styles.btn} ${styles.btnPrimary}`}>
+          <Link href={"/vehicles"} className={`${styles.btn} ${styles.btnPrimary}`}>
             <Image src={carIcon} alt="آیکون خودرو" width={20} height={20} />
             مشاهده خودروها
-          </button>
+          </Link>
 
           <button className={`${styles.btn} ${styles.btnSecondary}`}>
             مشاهده خدمات

@@ -16,7 +16,7 @@ export default function ArticleDetail({
   article,
   related = [],
   relatedTitle = "مطالب محبوب:",
-  backHref = "/articles",
+  backHref = "/blog",
   backLabel = "بازگشت",
 }: ArticleDetailProps) {
   return (

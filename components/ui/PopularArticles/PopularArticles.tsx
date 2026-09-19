@@ -173,7 +173,7 @@ export default function PopularArticles({
             </button>
           </div>
 
-          <Link className={styles.featured} href={featured.href ?? `/articles/${featured.id}`}>
+          <Link className={styles.featured} href={featured.href ?? `/blog/${featured.id}`}>
             <Image
               src={featured.image.src}
               alt={featured.image.alt}

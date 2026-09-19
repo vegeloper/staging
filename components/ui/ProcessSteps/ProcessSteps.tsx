@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import styles from "./ProcessSteps.module.css";
+import Link from "next/link";
 
 export type ProcessStep = {
   id: string;
@@ -57,7 +58,7 @@ export default function ProcessSteps({
   title = "فرآیند شروع همکاری سازمانی",
   description,
   steps = defaultSteps,
-  ctaLabel = "شروع عملکرد سازمانی",
+  ctaLabel = "درخواست مشاوره",
   ctaHref = "#",
 }: ProcessStepsProps) {
   const topSteps = steps.slice(0, 3);
@@ -89,9 +90,9 @@ export default function ProcessSteps({
 
         {ctaLabel && (
           <div className={styles.ctaWrap}>
-            <a className={styles.cta} href={ctaHref}>
+            <Link  className={styles.cta} href={ctaHref}>
               {ctaLabel}
-            </a>
+            </Link>
           </div>
         )}
       </div>

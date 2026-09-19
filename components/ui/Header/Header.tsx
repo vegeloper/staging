@@ -46,6 +46,7 @@ const navItems: NavItem[] = [
     href: "/services",
     children: [
       {
+<<<<<<< HEAD
         label: "سفر شهری",
         href: "/services",
       },
@@ -60,6 +61,18 @@ const navItems: NavItem[] = [
       {
         label: "سرویس ویژه",
         href: "/services",
+=======
+        label: "حمل و نقل شهری",
+        href: "/services",
+      },
+      {
+        label: "حمل‌ونقل سازمانی",
+        href: "/b2b",
+      },
+      {
+        label: "خدمات اختصاصی",
+        href: "/oncall",
+>>>>>>> origin/client_ui
       },
     ],
   },
@@ -83,11 +96,12 @@ const navItems: NavItem[] = [
     label: "درباره تریپ",
     href: "/about",
     children: [
-      {
-        label: "درباره دات‌وان تریپ",
-        href: "/about",
+            {
+        label: "به ما بپیودید",
+        href: "/join-us",
       },
 
+<<<<<<< HEAD
       // {
       //   label: "همکاری با رانندگان",
       //   href: "/join-us/drivers",
@@ -95,6 +109,16 @@ const navItems: NavItem[] = [
       {
         label: "همکاری با تریپ",
         href: "/join-us/organizational",
+=======
+
+      {
+        label: "همکاری با رانندگان",
+        href: "/join-us/drivers",
+      },
+      {
+        label: "همکاری با تریپ",
+        href: "https://apply.dotone.ir/ ",
+>>>>>>> origin/client_ui
       },
     ],
   },
@@ -320,7 +344,7 @@ export default function Header({
 
           <div className={styles.mobileActions}>
             <Link
-              href="/join-us/organizational"
+              href="https://apply.dotone.ir/"
               className={styles.mobilePrimary}
               onClick={() => setMenuOpen(false)}
             >
@@ -383,7 +407,7 @@ export default function Header({
 
         <div className={styles.navActions}>
           <Link
-            href="/join-us/organizational"
+            href="https://apply.dotone.ir/"
             className="button button-brand"
           >
             همکاری با تریپ

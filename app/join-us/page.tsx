@@ -27,6 +27,8 @@ const cooperationCards: CooperationCard[] = [
     image: driverImage,
     imageAlt: "همکاری به عنوان راننده",
     position: "bottom",
+    href:"/join-us/drivers"
+
   },
 
   {
@@ -37,6 +39,8 @@ const cooperationCards: CooperationCard[] = [
     image: careerImage,
     imageAlt: "فرصت‌های شغلی",
     position: "top",
+    href:"/join-us/organizational"
+
   },
   {
     title: "همکاری به‌صورت مشارکتی",
@@ -46,6 +50,7 @@ const cooperationCards: CooperationCard[] = [
     image: partnershipImage,
     imageAlt: "همکاری به صورت مشارکتی",
     position: "bottom",
+    href:""
   },
 ];
 export const driverJobs: DriverHiringCardProps[] = [
@@ -212,7 +217,7 @@ export default function page() {
         subtitle="فرصت‌های همکاری رانندگان در شهرهای مختلف را ببینید و بر اساس وضعیت شهر خود، برای استخدام یا پیش‌ثبت‌نام اقدام کنید."
         jobs={driverJobs}
         showAllText="مشاهده همه"
-        showAllHref="/hiring"
+        showAllHref="/join-us/drivers"
       />
       <PartnershipSection
         title="با ما به‌صورت مشارکتی همکاری کنید"
@@ -220,14 +225,14 @@ export default function page() {
         image={partnershipCarImage}
         imageAlt="خودروی ناوگان دات‌وان تریپ"
         buttonText="مشاهده فرصت‌های شغلی"
-        buttonHref="/jobs"
+        buttonHref="https://apply.dotone.ir/"
       />
       <CorporateJobsSection
         title="فرصت‌های شغلی سازمانی"
         subtitle="اگر به‌دنبال یک فرصت شغلی در تیم‌های سازمانی هستید، موقعیت‌های باز را ببینید و برای جایگاه مناسب خود درخواست دهید."
         jobs={corporateJobs}
         showAllText="مشاهده فرصت‌های شغلی"
-        showAllHref="/jobs"
+        showAllHref="/join-us/organizational"
       />
       <FAQ
         description="تبلیغات روی نمایشگرهای دات‌وان چگونه نمایش داده می‌شود؟"

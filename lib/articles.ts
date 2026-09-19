@@ -163,7 +163,7 @@ export const articles: Article[] = [
 ];
 
 export function articleHref(article: Pick<Article, "id" | "href">) {
-  return article.href ?? `/articles/${article.id}`;
+  return article.href ?? `/blog/${article.id}`;
 }
 
 export function getArticle(id: string) {

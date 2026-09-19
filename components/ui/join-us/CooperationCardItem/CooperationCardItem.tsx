@@ -1,5 +1,6 @@
 import Image, { StaticImageData } from "next/image";
 import styles from "./CooperationCardItem.module.css";
+import Link from "next/link";
 
 export type CooperationCard = {
   title: string;
@@ -9,6 +10,7 @@ export type CooperationCard = {
   imageAlt?: string;
   position?: "top" | "bottom";
   onClick?: () => void;
+  href:string
 };
 
 type CooperationCardItemProps = {
@@ -42,13 +44,12 @@ export default function CooperationCardItem({
 
         <p className={styles.description}>{card.description}</p>
 
-        <button
-          type="button"
+        <Link
           className={styles.button}
-          onClick={card.onClick}
+        href={card.href}
         >
           {card.buttonText}
-        </button>
+        </Link>
       </div>
     </article>
   );

@@ -34,6 +34,7 @@ import NewsSection, {
 } from "@/components/ui/index/NewsSection/NewsSection";
 import FutureTransportBanner from "@/components/ui/FutureTransportBanner/FutureTransportBanner";
 import FAQ, { FAQItem } from "@/components/ui/Faq/Faq";
+import Link from "next/link";
 const A = "/figma/";
 // faq data
 export const tripFaqItems: FAQItem[] = [
@@ -166,7 +167,7 @@ const solutionCards: TravelSolutionCardProps[] = [
 
     buttonText: "مشاهده سرویس",
 
-    buttonHref: "/services/city",
+    buttonHref: "/services",
   },
 
   {
@@ -198,7 +199,7 @@ const solutionCards: TravelSolutionCardProps[] = [
 
     buttonText: "درخواست مشاوره",
 
-    buttonHref: "/corporate",
+    buttonHref: "/b2b",
   },
 
   {
@@ -213,7 +214,7 @@ const solutionCards: TravelSolutionCardProps[] = [
 
     buttonText: "با ما در ارتباط باشید",
 
-    buttonHref: "/contact",
+    buttonHref: "/oncall",
   },
 ];
 
@@ -349,7 +350,8 @@ export default function Home() {
             <BrandButton>
               <CarFront size={18} /> درخواست سفر
             </BrandButton>
-            <BrandButton subtle>درباره دات‌وان تریپ</BrandButton>
+            <Link href={"/about"}>
+              <BrandButton subtle>درباره دات‌وان تریپ</BrandButton></Link>
           </div>
         </div>
         <div className="hero-stats">
@@ -393,7 +395,7 @@ export default function Home() {
         description="خودروهای دات‌وان از نسل جدید خودروهای برقی و هیبریدی انتخاب شده‌اند تا تجربه‌ای آرام، ایمن و سازگار با محیط‌زیست را برای مسافران فراهم کنند. تمام خودروها به‌صورت یکپارچه تحت مدیریت ناوگان نگهداری و سرویس می‌شوند."
         items={modernFleetItems}
         buttonText="مشاهده ناوگان"
-        buttonHref="/fleet"
+        buttonHref="/vehicles"
       />
       <FleetFeature
         imageSide="left"
@@ -403,7 +405,7 @@ export default function Home() {
         description="رانندگان دات‌وان تنها بر اساس داشتن گواهینامه انتخاب نمی‌شوند؛ آن‌ها پس از ارزیابی، آموزش و تأیید صلاحیت وارد ناوگان می‌شوند تا کیفیت خدمات در همه سفرها حفظ شود."
         items={trainedDriverItems}
         buttonText="مشاهده شرایط همکاری"
-        buttonHref="/hiring"
+        buttonHref="/join-us/drivers"
       />
       <FleetFeature
         imageSide="right"
@@ -412,8 +414,6 @@ export default function Home() {
         title="رانندگان آموزش‌دیده"
         description="زیرساخت نرم‌افزاری دات‌وان تمام مراحل سفر را از درخواست تا پایان مسیر به‌صورت هوشمند مدیریت می‌کند تا تجربه‌ای سریع، شفاف و قابل اعتماد برای مسافر و راننده ایجاد شود."
         items={securiyItems}
-        buttonText="مشاهده شرایط همکاری"
-        buttonHref="/hiring"
       />
       <TripStartHero
         image={tripStartImage}
@@ -453,11 +453,11 @@ export default function Home() {
           imageAlt="رانندگان دات‌وان تریپ"
           primaryAction={{
             text: "مشارکت در دات‌وان تریپ",
-            href: "/join-us",
+            href: "https://apply.dotone.ir/",
           }}
           secondaryAction={{
             text: "فرصت‌های استخدام",
-            href: "/hiring",
+            href: "/join-us",
           }}
         />
       </div>
