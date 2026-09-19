@@ -145,6 +145,8 @@ docker compose --profile full up --build -d
 
 Expect: `dotone-trip-app` built, `migrate` exited 0, `app` started.
 
+If the build dies at `RUN npm ci` with `npm error code ECONNRESET` / `network aborted` (often plus `ENOTEMPTY` cleanup noise): the registry dropped the connection. This is **not** a lockfile, TypeScript, or Compose bug. A failed `npm ci` layer is **not** cached as success. Retry the **same** command — it often succeeds the second time. Do **not** edit `package-lock.json` or the Dockerfile. Use `--no-cache` only if two or three retries still fail the same way. Same rule for later `docker compose --profile full build` (§P.1) and VPS/CI builds (§K).
+
 ```powershell
 curl.exe -fsS http://127.0.0.1:3000/api/health
 curl.exe -fsS http://127.0.0.1:3000/api/ready
@@ -228,7 +230,7 @@ cd /opt/dotone-trip
 docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --build
 ```
 
-First `next build` takes minutes. Do not Ctrl+C unless stuck 15+ minutes with no new lines.
+First `next build` takes minutes. Do not Ctrl+C unless stuck 15+ minutes with no new lines. `ECONNRESET` on `RUN npm ci` is a dropped registry connection — retry; see §F.
 
 ### K2 — VPS is **1 GB / 1 CPU** (do **not** build there)
 
@@ -392,7 +394,7 @@ Commit, push `BRANCH`. Stop `next dev`. Rebuild images:
 docker compose --profile full build
 ```
 
-Do **not** use `compose.prod.yaml` on the laptop.
+`ECONNRESET` / `network aborted` on `RUN npm ci`: retry the same command. See §F. Do **not** use `compose.prod.yaml` on the laptop.
 
 ### 2. Ship images (same as K)
 
@@ -404,6 +406,8 @@ cd /opt/dotone-trip
 git fetch && git checkout BRANCH && git pull
 docker compose -f compose.yaml -f compose.prod.yaml --profile full build
 ```
+
+`ECONNRESET` on `RUN npm ci`: retry. See §F.
 
 **Small SERVER** — tar from LOCAL (do not `next build` on 1 GB). No `git pull` if you ship a new **migrate** image (SQL is inside it). Only scp compose/Caddy if those files changed (§Q).
 

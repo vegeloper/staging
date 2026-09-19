@@ -76,6 +76,8 @@ docker compose -f compose.yaml -f compose.prod.yaml --profile full build
 
 Produces `dotone-trip-app:latest` (target `runner`) and `dotone-trip-migrate:latest` (target `migrator`). Seed uses the **same** migrator image.
 
+If `RUN npm ci` fails with `npm error code ECONNRESET` / `network aborted` (and leftover `ENOTEMPTY` cleanup warnings): the npm registry connection dropped mid-install. This is **not** a bad `package-lock.json` or a broken Dockerfile. The failed layer is **not** cached as success. Retry the **same** `docker compose … build`. It often works on the second run. Do **not** change the lockfile. `--no-cache` only after two or three identical network failures. If the log later shows `npm run build` / `exporting to image`, the install already succeeded.
+
 ### Ship A — registry
 
 ```bash
@@ -115,6 +117,8 @@ rm -f /tmp/dotone-trip-images.tar
 cd /opt/dotone-trip
 docker compose -f compose.yaml -f compose.prod.yaml --profile full build
 ```
+
+Same `ECONNRESET` / `npm ci` retry rule as above.
 
 ---
 
