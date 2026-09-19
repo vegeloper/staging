@@ -14,7 +14,7 @@ test("contact form appears in the admin inbox", async ({ page }) => {
   await page.locator('#contact input[name="lastName"]').fill(lastName);
   await page.locator('#contact input[name="phone"]').fill("09121234567");
   await page.locator('#contact input[name="email"]').fill(`e2e${stamp}@gmail.com`);
-  await page.locator('#contact select[name="category"]').selectOption("general");
+  await page.locator('#contact label').filter({ hasText: "درخواست عمومی" }).click();
   await page
     .locator('#contact textarea[name="message"]')
     .fill("این یک درخواست آزمایشی برای بررسی صندوق اپراتورها است.");

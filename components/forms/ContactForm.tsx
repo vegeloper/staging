@@ -101,7 +101,7 @@ export default function ContactForm() {
   });
 
   return (
-    <section className={styles.section} dir="rtl">
+    <section id="contact" className={styles.section} dir="rtl">
       <div className={styles.container}>
         {/* ========================================
             Form
