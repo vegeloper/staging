@@ -1,15 +1,41 @@
 # DevOps: deploy from delivered Docker tar
 
-Developers already built `dotone-trip-app:latest` and `dotone-trip-migrate:latest` and gave you a `.tar` (or you `docker load` from a registry export). **Do not build on this server.**
+Developers (or CI) already built the images. You get a **small zip** plus a **image tar** (or registry tags). **Do not build on this server.** No git and no application source are required.
 
-**SERVER** = Linux host with Docker Engine 24+ and Compose **v2.24+**. You still need the **git checkout** (or an equivalent copy) of `compose.yaml`, `compose.prod.yaml`, `deploy/Caddyfile`, `.env.example` — Compose is not inside the tar.
+**SERVER** = Linux host with Docker Engine 24+ and Compose **v2.24+**. Compose is **not** inside the image tar — it comes from the zip (or a git checkout of those few files only).
+
+### What you should have received
+
+| File | What it is |
+| --- | --- |
+| `dotone-trip-handoff.zip` | Compose bundle (sometimes already unzipped as folder `dotone-trip-handoff`) |
+| `dotone-trip-images.tar` | Pre-built images. Not a zip. Or instead: two registry tags from a build service |
+
+**After you unzip the zip into `/opt/dotone-trip`:**
+
+| Path | Role |
+| --- | --- |
+| `compose.yaml` | App + Postgres + migrate/seed |
+| `compose.prod.yaml` | Prod overlay: Caddy on 80/443, Postgres not public |
+| `deploy/Caddyfile` | TLS reverse proxy to the app |
+| `.env.example` | Template — create `.env` **here on the SERVER** |
+| `scripts/generate-prod-secrets.mjs` | Generate pepper / PII / DB password (no Node install needed if Docker can run this file) |
+
+**After `docker load` of the tar (or pull + tag from a registry):**
+
+| Image | Role |
+| --- | --- |
+| `dotone-trip-app:latest` | Live site: Next.js UI + `/api` |
+| `dotone-trip-migrate:latest` | Drizzle migrations + seed script. Tag as `dotone-trip-seed:latest` if Compose asks for `seed` |
+
+**Upload:** `scp` **both** files to **`/tmp`** on the SERVER (`root@HOST:/tmp/`). Unzip the zip → **`/opt/dotone-trip`**. Load the tar from `/tmp`, then **delete** it. Never leave `dotone-trip-images.tar` under `/opt/dotone-trip`. Never put a laptop `.env` in the zip.
 
 ---
 
 ## 0. Deliverable check
 
-- `dotone-trip-images.tar` (or two loads: `app` + `migrate`)  
-- Compose files as above  
+- `dotone-trip-handoff.zip` (or the compose files already in `/opt/dotone-trip`)  
+- `dotone-trip-images.tar` (or registry pulls for `app` + `migrate`)  
 - Hostname `HOST` DNS → this server, **80/443** open  
 - Secrets: Dev may send `.env` **out of band** (not Git). If they did not, **generate them yourself** in §1b. Do not invent short passwords. Do not reuse another environment’s keys.
 

@@ -538,7 +538,36 @@ Do **not** seed on every UI release. Form submissions are not seed data.
 
 ## Q. Handoff without GitHub on the VPS
 
-The live process is the **images**. A git clone of `app/`, `package.json`, `Dockerfile`, tests is **not** required if you `up --no-build`.
+Use this when DevOps has **no git**, **no source tree**, or prefers images from a laptop / CI / build service. Runtime is the **images**. A clone of `app/`, `package.json`, `Dockerfile`, or tests is **not** required if you `up --no-build`.
+
+**What you give DevOps (two files, not the repo):**
+
+| File | What it is |
+| --- | --- |
+| `dotone-trip-handoff.zip` | Small compose bundle. After unzip it is a folder of the same name (or the files below). |
+| `dotone-trip-images.tar` | Pre-built Docker images. Not a zip. Do not put this inside the zip. |
+
+**Inside the zip / folder:**
+
+| Path | Role |
+| --- | --- |
+| `compose.yaml` | App + Postgres + migrate/seed |
+| `compose.prod.yaml` | Prod overlay: Caddy on 80/443, Postgres not public |
+| `deploy/Caddyfile` | TLS reverse proxy to the app |
+| `.env.example` | Env template only — **create `.env` on the SERVER** |
+| `scripts/generate-prod-secrets.mjs` | Generate pepper / PII / DB password on the SERVER |
+| `docs/03-devops-deploy-from-tar.md` | Optional runbook (this path in full) |
+
+**Inside the tar (after `docker load`):**
+
+| Image | Role |
+| --- | --- |
+| `dotone-trip-app:latest` | Live site: Next.js UI + `/api` |
+| `dotone-trip-migrate:latest` | Drizzle SQL + seed script. Tag as `dotone-trip-seed:latest` if Compose asks for it |
+
+**Where they go on the SERVER:** upload **both** files to **`/tmp`** (`scp … root@VPS_IP:/tmp/`). Unzip the zip into **`/opt/dotone-trip`**. `docker load` the tar from `/tmp`, then **delete** the tar. Never leave `dotone-trip-images.tar` under `/opt/dotone-trip` (Compose would copy it as build context). Never put LOCAL `.env` in the zip.
+
+CI / registry instead of a tar: skip `dotone-trip-images.tar`; pull and tag the same two images as `:latest`. You still need the zip contents on `/opt/dotone-trip`. Full SERVER steps: this section and `docs/03-devops-deploy-from-tar.md`.
 
 | On SERVER | Not on SERVER |
 | --- | --- |
