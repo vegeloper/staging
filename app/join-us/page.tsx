@@ -50,7 +50,7 @@ const cooperationCards: CooperationCard[] = [
     image: partnershipImage,
     imageAlt: "همکاری به صورت مشارکتی",
     position: "bottom",
-    href:""
+    href:"https://apply.dotone.ir/"
   },
 ];
 export const driverJobs: DriverHiringCardProps[] = [

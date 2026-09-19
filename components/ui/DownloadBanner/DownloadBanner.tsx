@@ -10,7 +10,7 @@ import Link from "next/link";
 
 export default function DownloadBanner() {
   return (
-    <section className={styles.sectionContainer} dir="rtl">
+    <section className={styles.sectionContainer} id="download-banner" dir="rtl">
       <div className={styles.banner}>
         <div className={styles.imageWrapper}>
           <Image
@@ -22,7 +22,7 @@ export default function DownloadBanner() {
           />
         </div>
 
-        <div className={styles.content}>
+        <div className={styles.content} >
           <span className={styles.subtitle}>دانلود اپلیکیشن</span>
 
           <h2 className={styles.title}>دات‌وان تریپ همیشه همراه شماست</h2>

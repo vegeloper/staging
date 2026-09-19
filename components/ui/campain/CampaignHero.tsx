@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import Link from 'next/link';
+import HashScrollLink from '@/components/ui/HashScrollLink';
 import styles from './CampaignHero.module.css';
 
 interface CampaignBannerProps {
@@ -55,12 +57,15 @@ export const CampaignHero: React.FC<CampaignBannerProps> = ({
 
       {/* دکمه‌های اقدام (CTA) */}
       <div className={styles.buttonGroup}>
-        <button className={styles.primaryBtn} type="button">
+        <HashScrollLink
+          href="/campaign/#advertising-request"
+          className={styles.primaryBtn}
+        >
           ثبت درخواست
-        </button>
-        <button className={styles.secondaryBtn} type="button">
+        </HashScrollLink>
+        <Link href="/contact-us" className={styles.secondaryBtn}>
           درخواست مشاوره
-        </button>
+        </Link>
       </div>
 
       {/* بخش ویدیو */}

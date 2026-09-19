@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./TransportHero.module.css";
 
 import buildingImage from "@/public/figma/oneBuilding.png"
@@ -23,9 +24,9 @@ export default function TransportHero() {
           مجموعه ارائه می‌دهد.
         </p>
 
-        <a href="#contact" className={styles.cta}>
+        <Link href="/contact-us" className={styles.cta}>
           درخواست مشاوره و همکاری
-        </a>
+        </Link>
       </div>
 
       <div className={styles.gallery}>

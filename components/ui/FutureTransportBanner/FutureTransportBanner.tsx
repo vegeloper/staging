@@ -20,10 +20,10 @@ export default function FutureTransportBanner() {
           </p>
 
           <div className={styles.buttonsGroup}>
-            <a href="#" className={styles.primaryBtn}>
+            <Link href="https://app.trip.dotone.ir" className={styles.primaryBtn}>
               <span>درخواست سفر</span>
                 <Image src={taxiIcon} width={20} height={20} alt="درخواست سفر"/>
-            </a>
+            </Link>
 
             <Link href="/contact-us" className={styles.secondaryBtn}>
               تماس با ما

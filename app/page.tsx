@@ -347,9 +347,11 @@ export default function Home() {
             را ساده‌تر، امن‌تر و هوشمندتر می‌کند.
           </p>
           <div className="hero-buttons">
-            <BrandButton>
-              <CarFront size={18} /> درخواست سفر
-            </BrandButton>
+            <Link href="https://app.trip.dotone.ir">
+              <BrandButton>
+                <CarFront size={18} /> درخواست سفر
+              </BrandButton>
+            </Link>
             <Link href={"/about"}>
               <BrandButton subtle>درباره دات‌وان تریپ</BrandButton></Link>
           </div>

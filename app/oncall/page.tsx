@@ -53,11 +53,13 @@ export default function page() {
             text: "درخواست سفر",
             icon: taxiIcon,
             variant: "primary",
+            href: "https://app.trip.dotone.ir",
           },
           {
             text: "دانلود اپلیکیشن",
             icon: importIcon,
             variant: "secondary",
+            href: "/oncall/#download-banner",
           },
         ]}
         image={{

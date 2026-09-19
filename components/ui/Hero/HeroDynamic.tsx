@@ -1,5 +1,7 @@
 import Image, { type StaticImageData } from "next/image";
+import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
+import HashScrollLink from "@/components/ui/HashScrollLink";
 import heroImage from "@/public/figma/svgs/service-city.svg";
 import styles from "./Hero.module.css";
 
@@ -9,6 +11,7 @@ type HeroButton = {
   text: string;
   icon?: HeroIcon;
   variant: "primary" | "secondary";
+  href?: string;
   onClick?: () => void;
 };
 
@@ -88,23 +91,45 @@ export default function Hero({
 
         {buttons.length > 0 && (
           <div className={styles.buttons}>
-            {buttons.map((button, index) => (
-              <button
-                key={`${button.text}-${index}`}
-                type="button"
-                className={
-                  button.variant === "primary"
-                    ? styles.primaryButton
-                    : styles.secondaryButton
-                }
-                onClick={button.onClick}
-              >
-                {button.icon &&
-                  renderIcon(button.icon, 18)}
+            {buttons.map((button, index) => {
+              const className =
+                button.variant === "primary"
+                  ? styles.primaryButton
+                  : styles.secondaryButton;
+              const content = (
+                <>
+                  {button.icon && renderIcon(button.icon, 18)}
+                  {button.text}
+                </>
+              );
 
-                {button.text}
-              </button>
-            ))}
+              if (button.href) {
+                const LinkComponent = button.href.includes("#")
+                  ? HashScrollLink
+                  : Link;
+                return (
+                  <LinkComponent
+                    key={`${button.text}-${index}`}
+                    href={button.href}
+                    className={className}
+                    onClick={button.onClick}
+                  >
+                    {content}
+                  </LinkComponent>
+                );
+              }
+
+              return (
+                <button
+                  key={`${button.text}-${index}`}
+                  type="button"
+                  className={className}
+                  onClick={button.onClick}
+                >
+                  {content}
+                </button>
+              );
+            })}
           </div>
         )}
       </div>

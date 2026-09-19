@@ -19,6 +19,8 @@ type AdvertisingRequestProps = {
 
   description?: string;
 
+  id?: string;
+
   onSubmit?: (
     data: AdvertisingFormValues
   ) => void | Promise<void>;
@@ -33,12 +35,15 @@ export default function AdvertisingRequest({
 
   description = "برای شروع همکاری، اطلاعات زیر را تکمیل کنید تا کارشناسان دات‌وان با شما تماس بگیرند.",
 
+  id,
+
   onSubmit,
 }: AdvertisingRequestProps) {
   return (
     <section
       className={styles.section}
       dir="rtl"
+      id={id}
     >
       <div className={styles.heading}>
         <h2 className={styles.sectionTitle}>

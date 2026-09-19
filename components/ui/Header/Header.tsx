@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   ChevronDown,
@@ -19,6 +19,16 @@ import logoDark from "@/public/figma/logo-footer.png";
 import ShakeHand from "@/public/figma/agreement.png";
 
 import styles from "./Header.module.css";
+
+const DOWNLOAD_BANNER_HREF = "/#download-banner";
+const DOWNLOAD_BANNER_ID = "download-banner";
+
+function scrollToDownloadBanner() {
+  document.getElementById(DOWNLOAD_BANNER_ID)?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+}
 
 type HeaderProps = {
   variant?: "light" | "dark";
@@ -108,6 +118,7 @@ const navItems: NavItem[] = [
 export default function Header({
   variant = "light",
 }: HeaderProps) {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [openSubmenu, setOpenSubmenu] = useState<
@@ -157,6 +168,35 @@ export default function Header({
   useEffect(() => {
     setPortalReady(true);
   }, []);
+
+  useEffect(() => {
+    if (pathname !== "/") return;
+
+    const scrollIfHashed = () => {
+      if (window.location.hash !== `#${DOWNLOAD_BANNER_ID}`) return;
+      scrollToDownloadBanner();
+    };
+
+    const frame = window.requestAnimationFrame(scrollIfHashed);
+    const timer = window.setTimeout(scrollIfHashed, 80);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timer);
+    };
+  }, [pathname]);
+
+  const goToDownloadBanner = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setMenuOpen(false);
+    setOpenSubmenu(null);
+
+    if (pathname === "/") {
+      scrollToDownloadBanner();
+      return;
+    }
+
+    router.push(DOWNLOAD_BANNER_HREF);
+  };
 
   const navClassName = `${styles.mainNav} ${
     menuOpen ? styles.open : ""
@@ -329,15 +369,16 @@ export default function Header({
                 height={18}
               />
             </Link>
-
-            <button
-              type="button"
+            <Link
+              href={DOWNLOAD_BANNER_HREF}
               className={styles.mobileSecondary}
+              onClick={goToDownloadBanner}
             >
               <Download size={17} />
               دانلود اپلیکیشن
-            </button>
+            </Link>
           </div>
+     
     </>
   );
 
@@ -392,17 +433,18 @@ export default function Header({
             />
           </Link>
 
-          <button
-            type="button"
+          <Link
+            href={DOWNLOAD_BANNER_HREF}
             className={`button ${
               isLightVariant
                 ? "button-dark"
                 : "button-glass"
             }`}
+            onClick={goToDownloadBanner}
           >
             <Download size={18} />
             دانلود اپلیکیشن
-          </button>
+          </Link>
         </div>
 
         {/* Mobile menu trigger */}
