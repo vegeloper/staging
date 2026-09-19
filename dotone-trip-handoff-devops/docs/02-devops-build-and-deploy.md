@@ -5,11 +5,11 @@ Do not `next build` on a 1 GB node.
 
 Topology: one web container (UI + `/api`) + Postgres + one-shot migrate/seed + Caddy (`compose.prod.yaml`). Browsers talk only to `https://HOST`. Never split UI and API origins.
 
-**No git / no source / images from CI?** You do not need this repo on the SERVER. Ask for two files and follow `docs/03-devops-deploy-from-tar.md`:
+**No git / no source / images from CI?** Start with **`docs/01-devops-deploy-from-tar.md`** (this pack). You do not need the application source on the SERVER.
 
 | File | Put on SERVER | Contains |
 | --- | --- | --- |
-| `dotone-trip-handoff.zip` | `/tmp` → unzip to **`/opt/dotone-trip`** | `compose.yaml`, `compose.prod.yaml`, `deploy/Caddyfile`, `.env.example`, `scripts/generate-prod-secrets.mjs` (optional: this runbook / `docs/03-*.md`) |
+| `dotone-trip-handoff-devops.zip` | `/tmp` → unzip to **`/opt/dotone-trip`** | `compose.yaml`, `compose.prod.yaml`, `deploy/Caddyfile`, `.env.example`, `scripts/generate-prod-secrets.mjs`, `docs/01-devops-deploy-from-tar.md` (this runbook is optional) |
 | `dotone-trip-images.tar` | `/tmp` → `docker load` → **delete** | `dotone-trip-app:latest` (UI + `/api`) and `dotone-trip-migrate:latest` (SQL + seed). Tag migrate as `dotone-trip-seed:latest` if needed |
 
 Create `.env` **on the SERVER** from `.env.example`. Do not ship LOCAL `.env`. Do not leave the tar under `/opt/dotone-trip`. Registry instead of a tar: pull those two image names and tag `:latest`; you still need the zip on `/opt/dotone-trip`.

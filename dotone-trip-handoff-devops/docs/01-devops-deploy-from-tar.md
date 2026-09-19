@@ -1,6 +1,8 @@
-# DevOps: deploy from delivered Docker tar
+# 01 — DevOps: deploy from delivered Docker tar
 
-Developers (or CI) already built the images. You get a **small zip** plus a **image tar** (or registry tags). **Do not build on this server.** No git and no application source are required.
+**Start here.** You already have `dotone-trip-images.tar` (or registry tags). Walk this file in order and bring the stack up. Do **not** build on this server. `docs/02-devops-build-and-deploy.md` is only if you later build from source.
+
+Developers (or CI) already built the images. You get this zip plus the image tar. No git and no application source are required.
 
 **SERVER** = Linux host with Docker Engine 24+ and Compose **v2.24+**. Compose is **not** inside the image tar — it comes from the zip (or a git checkout of those few files only).
 
@@ -8,7 +10,7 @@ Developers (or CI) already built the images. You get a **small zip** plus a **im
 
 | File | What it is |
 | --- | --- |
-| `dotone-trip-handoff.zip` | Compose bundle (sometimes already unzipped as folder `dotone-trip-handoff`) |
+| `dotone-trip-handoff-devops.zip` | This compose bundle (sometimes already unzipped as folder `dotone-trip-handoff-devops`) |
 | `dotone-trip-images.tar` | Pre-built images. Not a zip. Or instead: two registry tags from a build service |
 
 **After you unzip the zip into `/opt/dotone-trip`:**
@@ -34,7 +36,7 @@ Developers (or CI) already built the images. You get a **small zip** plus a **im
 
 ## 0. Deliverable check
 
-- `dotone-trip-handoff.zip` (or the compose files already in `/opt/dotone-trip`)  
+- `dotone-trip-handoff-devops.zip` (or the compose files already in `/opt/dotone-trip`)  
 - `dotone-trip-images.tar` (or registry pulls for `app` + `migrate`)  
 - Hostname `HOST` DNS → this server, **80/443** open  
 - Secrets: Dev may send `.env` **out of band** (not Git). If they did not, **generate them yourself** in §1b. Do not invent short passwords. Do not reuse another environment’s keys.

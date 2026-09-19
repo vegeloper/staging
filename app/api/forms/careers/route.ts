@@ -80,8 +80,8 @@ export async function POST(request: Request) {
       originalName: file.name,
     });
     return Response.json({ id: result.id, received: true }, { status: 201 });
-  } catch {
-    console.error("form_submit_failed", "careers");
+  } catch (error) {
+    console.error("form_submit_failed", "careers", error);
     return jsonError(500, "ارسال نشد، دوباره تلاش کنید.");
   }
 }

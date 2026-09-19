@@ -129,8 +129,18 @@ export async function saveResume(input: {
   const storageKey = path.posix.join(year, `${randomUUID()}.${extension}`);
   const destination = resolveStoragePath(storageKey);
 
-  await mkdir(path.dirname(destination), { recursive: true });
-  await writeFile(destination, input.buffer, { flag: "wx" });
+  try {
+    await mkdir(path.dirname(destination), { recursive: true });
+    await writeFile(destination, input.buffer, { flag: "wx" });
+  } catch (error) {
+    const code =
+      error instanceof Error && "code" in error
+        ? String((error as NodeJS.ErrnoException).code)
+        : "UNKNOWN";
+    throw new Error(
+      `Cannot write resume to ${getResumeRoot()} (${code}). The upload directory must be writable by uid 1000.`,
+    );
+  }
 
   return {
     storageKey,
