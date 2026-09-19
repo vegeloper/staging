@@ -219,6 +219,17 @@ docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-bu
 
 No seed. No `down -v`.
 
+If you are using `compose.edge.yaml` (no Caddy) instead of the default setup, modify **both** commands like this:
+
+```bash
+docker compose -f compose.yaml -f compose.prod.yaml -f compose.edge.yaml --profile full run --rm --no-deps migrate
+docker compose -f compose.yaml -f compose.prod.yaml -f compose.edge.yaml --profile full up -d --no-build postgres migrate app
+```
+
+Key changes:
+- Add `-f compose.edge.yaml` to **both** commands.
+- In the `up` command, bring up **only** `postgres migrate app` (not the full stack).
+
 ---
 
 ## 8. No Caddy / Cloudflare / nginx
@@ -247,4 +258,4 @@ docker compose -f compose.yaml -f compose.prod.yaml -f compose.edge.yaml --profi
 
 **nginx** (host): `proxy_pass http://127.0.0.1:3000;` plus `Host`, `X-Forwarded-Proto https`, `X-Forwarded-For`. See `docs/02-devops-build-and-deploy.md` §9 for the server block.
 
-Do not `down -v`. Do not publish `:3000` on `0.0.0.0`.
+Later releases: same `-f compose.edge.yaml` on **both** migrate and `up` — see §7. Do not `down -v`. Do not publish `:3000` on `0.0.0.0`.

@@ -435,7 +435,16 @@ docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-bu
 
 `--no-deps` so Postgres/`app` are not recreated. UI-only: migrate is a no-op (`[✓]`) — still safe.
 
-If you use `compose.edge.yaml` (no Caddy), add `-f compose.edge.yaml` to both lines and only `up` `postgres migrate app`.
+If you are using `compose.edge.yaml` (no Caddy) instead of the default setup, modify **both** commands like this:
+
+```bash
+docker compose -f compose.yaml -f compose.prod.yaml -f compose.edge.yaml --profile full run --rm --no-deps migrate
+docker compose -f compose.yaml -f compose.prod.yaml -f compose.edge.yaml --profile full up -d --no-build postgres migrate app
+```
+
+Key changes:
+- Add `-f compose.edge.yaml` to **both** commands.
+- In the `up` command, bring up **only** `postgres migrate app` (not the full stack).
 
 ### 4. LOCAL — smoke the live host
 

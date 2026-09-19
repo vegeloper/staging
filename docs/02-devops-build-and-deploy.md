@@ -187,6 +187,17 @@ docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-bu
 
 Order: **migrate first**, then roll `app`. Do not recreate Postgres. Do not seed unless rotating operator passwords.
 
+If you are using `compose.edge.yaml` (no Caddy) instead of the default setup, modify **both** commands like this:
+
+```bash
+docker compose -f compose.yaml -f compose.prod.yaml -f compose.edge.yaml --profile full run --rm --no-deps migrate
+docker compose -f compose.yaml -f compose.prod.yaml -f compose.edge.yaml --profile full up -d --no-build postgres migrate app
+```
+
+Key changes:
+- Add `-f compose.edge.yaml` to **both** commands.
+- In the `up` command, bring up **only** `postgres migrate app` (not the full stack).
+
 Rollback web: retag previous app digest and `up -d --no-build`. Do not roll back a destructive SQL migration without a tested down-migration.
 
 ---
@@ -254,7 +265,7 @@ docker compose -f compose.yaml -f compose.prod.yaml --profile full stop proxy
 docker compose -f compose.yaml -f compose.prod.yaml -f compose.edge.yaml --profile full up -d --no-build postgres migrate app
 ```
 
-Port 80/443 on the host must be **free** for nginx/Cloudflare origin (or CF only talks to 443 on nginx).
+Port 80/443 on the host must be **free** for nginx/Cloudflare origin (or CF only talks to 443 on nginx). Later releases: same `-f compose.edge.yaml` on **both** migrate and `up` — see §7.
 
 ### Cloudflare orange cloud (proxied)
 
