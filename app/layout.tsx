@@ -4,6 +4,17 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Landing Trip | دات‌وان تریپ",
   description: "نسل جدید حمل‌ونقل شهری و بین‌شهری با دات‌وان تریپ",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+      nosnippet: true,
+    },
+  },
   other: {
     "codex-preview": "development",
   },

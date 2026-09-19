@@ -114,7 +114,9 @@ export default function Page() {
     <>
       <Header />
 
-      <TransportHero />
+      <div className="mt-10 md:mt-16 lg:mt-20">
+        <TransportHero />
+      </div>
 
       <div style={{ marginBottom: "150px" }}>
         <FeatureSection

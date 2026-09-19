@@ -40,7 +40,9 @@ export default function page() {
   return (
     <>
       <Header />
-      <FleetShowcase />
+      <div className="mt-16 md:mt-20 lg:mt-24">
+        <FleetShowcase />
+      </div>
       <VehicleFlexibleServices />
      <VehicleShowcase
   title="خودروی موردنظر خود را دقیق‌تر بشناسید"

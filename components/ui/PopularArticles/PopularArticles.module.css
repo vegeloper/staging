@@ -4,7 +4,7 @@
   margin: 80px auto;
   box-sizing: border-box;
   font-family: inherit;
-  margin-top: 20vh;
+  margin-top: 22vh;
 }
 
 .layout {
@@ -254,7 +254,7 @@
 
 @media (max-width: 900px) {
   .section {
-    margin: 56px auto;
+    margin: 8vh auto 56px;
   }
 
   .layout {
@@ -278,7 +278,7 @@
 
 @media (max-width: 768px) {
   .section {
-    margin: 40px auto;
+    margin: 8vh auto 40px;
   }
 
   .featured {

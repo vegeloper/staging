@@ -9,7 +9,9 @@ export default function page() {
     <>
       <Header variant="light" />
 
-      <PopularArticles />
+      <div className="max-lg:mt-[5vh]">
+        <PopularArticles />
+      </div>
       <LatestArticles />
       <LatestArticles compact />
       <Footer/>

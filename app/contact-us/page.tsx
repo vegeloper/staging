@@ -7,7 +7,7 @@ export default function page() {
   return (
     <>
       <Header />
-      <div className="mt-20">
+      <div className="mt-28 md:mt-32 lg:mt-36">
         <ContactForm />
       </div>
       <Footer/>

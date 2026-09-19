@@ -10,7 +10,23 @@ const MODEL_URL = '/models/car-object.glb';
 // Opaque pixel box of CampaignCar.png (973x469) so the 3D car
 // matches the photo's perceived width, not just the frame.
 const PHOTO_FILL_X = 941 / 973;
-const PHOTO_FILL_Y = 412 / 469;
+
+function getPhotoCarCssWidth() {
+  const viewport = window.innerWidth;
+  let padX = 20;
+  let maxCar = 850;
+  if (viewport <= 420) {
+    padX = 14;
+    maxCar = Number.POSITIVE_INFINITY;
+  } else if (viewport <= 640) {
+    padX = 18;
+    maxCar = Number.POSITIVE_INFINITY;
+  } else if (viewport <= 900) {
+    padX = 24;
+    maxCar = 700;
+  }
+  return Math.min(viewport - padX * 2, maxCar);
+}
 
 function bytesToBase64(bytes: Uint8Array) {
   let binary = '';
@@ -131,12 +147,12 @@ export default function TripCarViewer() {
         const size = modelBox.getSize(new THREE.Vector3());
         const center = modelBox.getCenter(new THREE.Vector3());
         const tanHalf = Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
-        // Widest silhouette as the car yaws — keeps it from outgrowing the photo.
+        const canvasWidth = container.clientWidth;
+        const targetFillX = (getPhotoCarCssWidth() * PHOTO_FILL_X) / canvasWidth;
+        // Widest silhouette as the car yaws — same perceived width as the photo.
         const maxProjectedWidth = Math.hypot(size.x, size.z);
-        const distanceForWidth =
-          maxProjectedWidth / (2 * tanHalf * camera.aspect * PHOTO_FILL_X);
-        const distanceForHeight = size.y / (2 * tanHalf * PHOTO_FILL_Y);
-        const distance = Math.max(distanceForWidth, distanceForHeight);
+        const distance =
+          maxProjectedWidth / (2 * tanHalf * camera.aspect * targetFillX);
 
         orbit.target.copy(center);
 
@@ -239,7 +255,7 @@ export default function TripCarViewer() {
       <div className={styles.hint} aria-hidden="true">
         <Rotate3d strokeWidth={1.6} />
       </div>
-      <div className={carLayout.car}>
+      <div className={styles.stage}>
         <div className={styles.shadow} />
         <div
           ref={containerRef}

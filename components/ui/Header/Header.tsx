@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -46,19 +47,19 @@ const navItems: NavItem[] = [
     children: [
       {
         label: "سفر شهری",
-        href: "/services/city",
+        href: "/services",
       },
       {
         label: "سفر بین‌شهری",
-        href: "/services/intercity",
+        href: "/services",
       },
       {
         label: "خدمات سازمانی",
-        href: "/services/organization",
+        href: "/services",
       },
       {
         label: "سرویس ویژه",
-        href: "/services/special",
+        href: "/services",
       },
     ],
   },
@@ -70,7 +71,7 @@ const navItems: NavItem[] = [
 
   {
     label: "اخبار",
-    href: "/news",
+    href: "/blog",
   },
 
   {
@@ -87,13 +88,13 @@ const navItems: NavItem[] = [
         href: "/about",
       },
 
-      {
-        label: "همکاری با رانندگان",
-        href: "/join-us/drivers",
-      },
+      // {
+      //   label: "همکاری با رانندگان",
+      //   href: "/join-us/drivers",
+      // },
       {
         label: "همکاری با تریپ",
-        href: "/join-us/organizational ",
+        href: "/join-us/organizational",
       },
     ],
   },
@@ -155,39 +156,18 @@ export default function Header({
     );
   };
 
-  return (
+  const [portalReady, setPortalReady] = useState(false);
+
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
+
+  const navClassName = `${styles.mainNav} ${
+    menuOpen ? styles.open : ""
+  }`;
+
+  const renderNavBody = () => (
     <>
-      <header
-        className={`${styles.navShell} ${
-          isLightVariant
-            ? styles.navLight
-            : styles.navDark
-        }`}
-      >
-        {/* Logo */}
-
-        <Link
-          href="/"
-          aria-label="دات‌وان تریپ"
-          className={styles.brand}
-        >
-          <Image
-            src={isLightVariant ? logoDark : logo}
-            alt="دات‌وان تریپ"
-            width={140}
-            height={50}
-            priority
-          />
-        </Link>
-
-        {/* Navigation */}
-
-        <nav
-          className={`${styles.mainNav} ${
-            menuOpen ? styles.open : ""
-          }`}
-          aria-label="منوی اصلی"
-        >
           {/* Mobile header */}
 
           <div className={styles.mobileMenuHeader}>
@@ -318,7 +298,7 @@ export default function Header({
                           (child) => (
                             <Link
                               href={child.href}
-                              key={child.href}
+                              key={`${child.label}-${child.href}`}
                               onClick={() => {
                                 setMenuOpen(false);
                                 setOpenSubmenu(null);
@@ -362,6 +342,41 @@ export default function Header({
               دانلود اپلیکیشن
             </button>
           </div>
+    </>
+  );
+
+  return (
+    <>
+      <header
+        className={`${styles.navShell} ${
+          isLightVariant
+            ? styles.navLight
+            : styles.navDark
+        } ${pathname !== "/" ? styles.pageFrame : ""}`}
+      >
+        {/* Logo */}
+
+        <Link
+          href="/"
+          aria-label="دات‌وان تریپ"
+          className={styles.brand}
+        >
+          <Image
+            src={isLightVariant ? logoDark : logo}
+            alt="دات‌وان تریپ"
+            width={140}
+            height={50}
+            priority
+          />
+        </Link>
+
+        {/* Desktop navigation stays in the header row */}
+
+        <nav
+          className={`${navClassName} ${styles.desktopNav}`}
+          aria-label="منوی اصلی"
+        >
+          {renderNavBody()}
         </nav>
 
         {/* Desktop Actions */}
@@ -415,17 +430,29 @@ export default function Header({
         </button>
       </header>
 
-      {menuOpen && (
-        <button
-          type="button"
-          className={styles.backdrop}
-          aria-label="بستن منو"
-          onClick={() => {
-            setMenuOpen(false);
-            setOpenSubmenu(null);
-          }}
-        />
-      )}
+      {portalReady &&
+        createPortal(
+          <>
+            <nav
+              className={`${navClassName} ${styles.mobileNav} ${styles.navLight}`}
+              aria-label="منوی اصلی"
+            >
+              {renderNavBody()}
+            </nav>
+            {menuOpen && (
+              <button
+                type="button"
+                className={styles.backdrop}
+                aria-label="بستن منو"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setOpenSubmenu(null);
+                }}
+              />
+            )}
+          </>,
+          document.body,
+        )}
     </>
   );
 }

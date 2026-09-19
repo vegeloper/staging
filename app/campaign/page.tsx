@@ -113,13 +113,13 @@ export default function page() {
   return (
     <>
       <Header />
-      <div className="mt-20 md:mt-30">
+      <div className="mt-28 md:mt-36 lg:mt-40">
         <CampaignHero
           posterSrc="/videos/campainVideoPoster.png"
           videoSrc="/videos/campainHero.mp4"
         />
       </div>
-      <Car/>
+      {/* <Car/> */}
       <TripCarViewer />
       <CampaignFeatureSection />
       <TripCounterHero count={46519} backgroundImage="/figma/sky.png" />

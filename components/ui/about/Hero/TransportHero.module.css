@@ -1,7 +1,7 @@
 .hero {
   width: 100%;
   max-width: 1440px;
-  margin: 100px auto;
+  margin: 120px auto;
   padding: 27px 26px 20px;
   background: #fff;
   box-sizing: border-box;
@@ -161,6 +161,7 @@
 
 @media (max-width: 640px) {
   .hero {
+    margin-top: 48px;
     padding: 24px 14px 14px;
   }
 

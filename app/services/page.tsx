@@ -50,6 +50,7 @@ export default function page() {
     <>
       <Header variant="light" />
       {/* <Hero/> */}
+      <div className="mt-16 md:mt-20 lg:mt-24">
       <HeroDynamic
         badge={{
           text: "سفر شهری",
@@ -79,6 +80,7 @@ export default function page() {
           height: 600,
         }}
       />
+      </div>
       <FeatureSection
         imageSide="right"
         title="برای هر مسیر شهری، یک تجربه بهتر"
