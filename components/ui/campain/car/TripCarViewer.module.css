@@ -1,16 +1,6 @@
-.carWrapper {
-  width: 100%;
-  max-width: 100%;
-
-  display: flex;
+.stack {
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  padding: 20px;
-
   background: transparent;
-  overflow: hidden;
 }
 
 .hint {
@@ -27,23 +17,6 @@
 .hint svg {
   width: 22px;
   height: 22px;
-}
-
-.car {
-  position: relative;
-
-  width: min(100%, 850px);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  isolation: isolate;
-  cursor: grab;
-}
-
-.car:active {
-  cursor: grabbing;
 }
 
 .canvas {
@@ -108,14 +81,6 @@
 }
 
 @media (max-width: 900px) {
-  .carWrapper {
-    padding: 18px 24px;
-  }
-
-  .car {
-    width: min(100%, 700px);
-  }
-
   .shadow {
     bottom: 5%;
 
@@ -127,14 +92,6 @@
 }
 
 @media (max-width: 640px) {
-  .carWrapper {
-    padding: 15px 18px;
-  }
-
-  .car {
-    width: 100%;
-  }
-
   .shadow {
     bottom: 4%;
 
@@ -146,10 +103,6 @@
 }
 
 @media (max-width: 420px) {
-  .carWrapper {
-    padding: 12px 14px;
-  }
-
   .shadow {
     width: 74%;
     height: 10%;

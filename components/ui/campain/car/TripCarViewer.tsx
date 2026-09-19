@@ -2,9 +2,15 @@
 
 import { useEffect, useRef } from 'react';
 import { Rotate3d } from 'lucide-react';
+import carLayout from './Car.module.css';
 import styles from './TripCarViewer.module.css';
 
 const MODEL_URL = '/models/car-object.glb';
+
+// Opaque pixel box of CampaignCar.png (973x469) so the 3D car
+// matches the photo's perceived width, not just the frame.
+const PHOTO_FILL_X = 941 / 973;
+const PHOTO_FILL_Y = 412 / 469;
 
 function bytesToBase64(bytes: Uint8Array) {
   let binary = '';
@@ -79,7 +85,7 @@ export default function TripCarViewer() {
       if (disposed || !container.isConnected) return;
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 100);
+      const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 200);
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setClearColor(0x000000, 0);
@@ -116,6 +122,46 @@ export default function TripCarViewer() {
       });
       controls = orbit;
 
+      let modelBox: import('three').Box3 | undefined;
+      let hasInitialPose = false;
+
+      const frameToPhoto = (resetPose: boolean) => {
+        if (!modelBox) return;
+
+        const size = modelBox.getSize(new THREE.Vector3());
+        const center = modelBox.getCenter(new THREE.Vector3());
+        const tanHalf = Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
+        // Widest silhouette as the car yaws — keeps it from outgrowing the photo.
+        const maxProjectedWidth = Math.hypot(size.x, size.z);
+        const distanceForWidth =
+          maxProjectedWidth / (2 * tanHalf * camera.aspect * PHOTO_FILL_X);
+        const distanceForHeight = size.y / (2 * tanHalf * PHOTO_FILL_Y);
+        const distance = Math.max(distanceForWidth, distanceForHeight);
+
+        orbit.target.copy(center);
+
+        if (resetPose || !hasInitialPose) {
+          const yaw = THREE.MathUtils.degToRad(148);
+          const pitch = THREE.MathUtils.degToRad(14);
+          const direction = new THREE.Vector3(
+            Math.sin(yaw) * Math.cos(pitch),
+            Math.sin(pitch),
+            Math.cos(yaw) * Math.cos(pitch)
+          );
+          camera.position.copy(center).addScaledVector(direction, distance);
+          hasInitialPose = true;
+        } else {
+          const offset = camera.position.clone().sub(orbit.target);
+          if (offset.lengthSq() > 1e-8) {
+            camera.position.copy(orbit.target).add(offset.setLength(distance));
+          }
+        }
+
+        camera.lookAt(center);
+        camera.updateProjectionMatrix();
+        orbit.update();
+      };
+
       const sizeToContainer = () => {
         const width = container.clientWidth;
         const height = container.clientHeight;
@@ -123,6 +169,7 @@ export default function TripCarViewer() {
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
         renderer?.setSize(width, height, false);
+        frameToPhoto(false);
       };
 
       sizeToContainer();
@@ -162,18 +209,8 @@ export default function TripCarViewer() {
       });
       scene.add(model);
 
-      const box = new THREE.Box3().setFromObject(model);
-      const size = box.getSize(new THREE.Vector3());
-      const center = box.getCenter(new THREE.Vector3());
-      const fov = THREE.MathUtils.degToRad(camera.fov);
-      const fitByHeight = size.y / 2 / Math.tan(fov / 2);
-      const fitByLength = Math.max(size.x, size.z) / 2 / Math.tan(fov / 2) / camera.aspect;
-      const distance = Math.max(fitByHeight, fitByLength) * 1.75;
-
-      orbit.target.copy(center);
-      camera.position.set(center.x, center.y, center.z + distance);
-      camera.lookAt(center);
-      orbit.update();
+      modelBox = new THREE.Box3().setFromObject(model);
+      frameToPhoto(true);
 
       const animate = () => {
         if (disposed) return;
@@ -198,11 +235,11 @@ export default function TripCarViewer() {
   }, []);
 
   return (
-    <div className={styles.carWrapper}>
+    <div className={`${carLayout.carWrapper} ${styles.stack}`}>
       <div className={styles.hint} aria-hidden="true">
         <Rotate3d strokeWidth={1.6} />
       </div>
-      <div className={styles.car}>
+      <div className={carLayout.car}>
         <div className={styles.shadow} />
         <div
           ref={containerRef}
