@@ -139,13 +139,32 @@
 
   color: #171717;
 
-  font-size: clamp(9px, 0.7vw, 12px);
+  font-size: clamp(14px, 0.7vw, 12px);
   font-weight: 600;
   line-height: 1.8;
 
   white-space: nowrap;
 }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
 
+.brace {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wheatIcon {
+  display: block;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
 .brace {
   display: inline-block;
 
@@ -354,7 +373,10 @@
   .badge {
     margin-bottom: 10px;
   }
-
+  .wheatIcon {
+    width: 45px;
+    height: 45px;
+  }
   .title {
     transform: translateX(-27%);
   }
@@ -395,7 +417,10 @@
 
     font-size: 17px;
   }
-
+ .wheatIcon {
+    width: 35px;
+    height: 35px;
+  }
   .numberFade {
     right: 5%;
 
@@ -459,7 +484,7 @@
 
     margin-bottom: 7px;
 
-    font-size: 8px;
+    font-size: 10px;
   }
 
   .brace {
@@ -471,7 +496,10 @@
 
     padding-top: 5px;
   }
-
+  .wheatIcon {
+    width: 30px;
+    height: 30px;
+  }
   .number,
   .suffix {
     font-size: clamp(64px, 20vw, 110px);
@@ -572,7 +600,10 @@
   .badge {
     font-size: 7px;
   }
-
+  .wheatIcon {
+    width: 22px;
+    height: 22px;
+  }
   .number,
   .suffix {
     font-size: clamp(56px, 20vw, 78px);

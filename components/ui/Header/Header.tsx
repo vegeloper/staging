@@ -80,10 +80,6 @@ const navItems: NavItem[] = [
     href: "/blog",
   },
 
-  {
-    label: "بلاگ",
-    href: "/blog",
-  },
 
   {
     label: "درباره تریپ",

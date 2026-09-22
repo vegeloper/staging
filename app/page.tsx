@@ -332,6 +332,7 @@ function SectionHeading({
 export default function Home() {
   return (
     <main dir="rtl">
+        <Header variant="dark" />
       <section className="hero" id="home">
         <img
           className="hero-bg"
@@ -339,7 +340,6 @@ export default function Home() {
           alt="خودروی دات‌وان تریپ"
         />
 
-        <Header variant="dark" />
         <div className="hero-content">
           <h1>
             نسل جدید حمل‌ونقل،

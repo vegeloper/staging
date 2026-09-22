@@ -105,11 +105,23 @@ export default function TripCounterHero({
       <div className={styles.content}>
         {badge && (
           <div className={styles.badge}>
-            <span className={styles.brace}>{"{"}</span>
+            <span className={styles.brace}>
+              <img
+                src="/figma/svgs/rightwheat.svg"
+                alt=""
+                className={styles.wheatIcon}
+              />
+            </span>
 
             <span>{badge}</span>
 
-            <span className={styles.brace}>{"}"}</span>
+            <span className={styles.brace}>
+              <img
+                src="/figma/svgs/leftwheat.svg"
+                alt=""
+                className={styles.wheatIcon}
+              />
+            </span>
           </div>
         )}
 

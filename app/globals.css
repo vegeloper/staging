@@ -150,6 +150,7 @@ main {
   color: #fff;
   background: #171717;
 }
+
 .hero-bg {
   position: absolute;
   inset: 0;
@@ -1215,3 +1216,9 @@ main {
 
 
 
+@media (min-width: 1440px) {
+  .hero {
+     width: calc(100% - 32px);
+    max-width: none;
+  }
+}
