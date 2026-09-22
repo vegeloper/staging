@@ -6,13 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
-import {
-  ChevronDown,
-  ChevronLeft,
-  Download,
-  Menu,
-  X,
-} from "lucide-react";
+import { ChevronDown, ChevronLeft, Download, Menu, X } from "lucide-react";
 
 import logo from "@/public/figma/logo.png";
 import logoDark from "@/public/figma/logo-footer.png";
@@ -64,7 +58,7 @@ const navItems: NavItem[] = [
         href: "/b2b",
       },
       {
-        label: "خدمات اختصاصی",
+        label: "سرویس در اختیار",
         href: "/oncall",
       },
     ],
@@ -80,15 +74,14 @@ const navItems: NavItem[] = [
     href: "/blog",
   },
 
-
   {
     label: "درباره تریپ",
     href: "/about",
+  },
+  {
+    label: "به ما بپیوندید",
+    href: "/join-us",
     children: [
-            {
-        label: "به ما بپیودید",
-        href: "/join-us",
-      },
 
       {
         label: "همکاری با رانندگان",
@@ -100,26 +93,21 @@ const navItems: NavItem[] = [
       },
     ],
   },
-
   {
     label: "تماس با ما",
     href: "/contact-us",
   },
-    {
+  {
     label: "کمپین",
     href: "/campaign",
   },
 ];
 
-export default function Header({
-  variant = "light",
-}: HeaderProps) {
+export default function Header({ variant = "light" }: HeaderProps) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const [openSubmenu, setOpenSubmenu] = useState<
-    string | null
-  >(null);
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   const pathname = usePathname();
 
@@ -154,9 +142,7 @@ export default function Header({
   };
 
   const toggleSubmenu = (label: string) => {
-    setOpenSubmenu((current) =>
-      current === label ? null : label,
-    );
+    setOpenSubmenu((current) => (current === label ? null : label));
   };
 
   const [portalReady, setPortalReady] = useState(false);
@@ -194,187 +180,150 @@ export default function Header({
     router.push(DOWNLOAD_BANNER_HREF);
   };
 
-  const navClassName = `${styles.mainNav} ${
-    menuOpen ? styles.open : ""
-  }`;
+  const navClassName = `${styles.mainNav} ${menuOpen ? styles.open : ""}`;
 
   const renderNavBody = () => (
     <>
-          {/* Mobile header */}
+      {/* Mobile header */}
 
-          <div className={styles.mobileMenuHeader}>
-            <span>منوی دات‌وان تریپ</span>
+      <div className={styles.mobileMenuHeader}>
+        <span>منوی دات‌وان تریپ</span>
 
-            <button
-              type="button"
-              className={styles.mobileClose}
-              onClick={() => setMenuOpen(false)}
-              aria-label="بستن منو"
+        <button
+          type="button"
+          className={styles.mobileClose}
+          onClick={() => setMenuOpen(false)}
+          aria-label="بستن منو"
+        >
+          <X size={20} />
+        </button>
+      </div>
+
+      {/* Links */}
+
+      <div className={styles.navLinks}>
+        {navItems.map((item) => {
+          const hasChildren = item.children && item.children.length > 0;
+
+          const active = isActive(item.href);
+
+          const submenuIsOpen = openSubmenu === item.label;
+
+          return (
+            <div
+              className={`${styles.navItem} ${
+                hasChildren ? styles.hasChildren : ""
+              }`}
+              key={item.label}
             >
-              <X size={20} />
-            </button>
-          </div>
-
-          {/* Links */}
-
-          <div className={styles.navLinks}>
-            {navItems.map((item) => {
-              const hasChildren =
-                item.children &&
-                item.children.length > 0;
-
-              const active = isActive(item.href);
-
-              const submenuIsOpen =
-                openSubmenu === item.label;
-
-              return (
-                <div
-                  className={`${styles.navItem} ${
-                    hasChildren
-                      ? styles.hasChildren
-                      : ""
-                  }`}
-                  key={item.label}
-                >
-                  {/* ============================
+              {/* ============================
                       Normal Link
                   ============================ */}
 
-                  {!hasChildren && (
-                    <Link
-                      href={item.href}
-                      className={
-                        active
-                          ? styles.activeLink
-                          : ""
-                      }
-                      onClick={() =>
-                        setMenuOpen(false)
-                      }
-                    >
-                      <span>{item.label}</span>
-                    </Link>
-                  )}
+              {!hasChildren && (
+                <Link
+                  href={item.href}
+                  className={active ? styles.activeLink : ""}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <span>{item.label}</span>
+                </Link>
+              )}
 
-                  {/* ============================
+              {/* ============================
                       Link with submenu
                   ============================ */}
 
-                  {hasChildren && (
-                    <>
-                      <div
-                        className={`${styles.parentLink} ${
-                          active
-                            ? styles.activeLink
-                            : ""
-                        }`}
-                      >
-                        <Link
-                          href={item.href}
-                          onClick={() => {
-                            /*
+              {hasChildren && (
+                <>
+                  <div
+                    className={`${styles.parentLink} ${
+                      active ? styles.activeLink : ""
+                    }`}
+                  >
+                    <Link
+                      href={item.href}
+                      onClick={() => {
+                        /*
                               روی دسکتاپ لینک اصلی کار می‌کند.
                               روی موبایل فلش جداگانه
                               زیرمنو را باز می‌کند.
                             */
-                            setMenuOpen(false);
-                          }}
-                        >
-                          {item.label}
-                        </Link>
+                        setMenuOpen(false);
+                      }}
+                    >
+                      {item.label}
+                    </Link>
 
-                        {/* Desktop arrow */}
+                    {/* Desktop arrow */}
 
-                        <ChevronDown
-                          size={15}
-                          strokeWidth={1.8}
-                          className={
-                            styles.desktopChevron
-                          }
-                          aria-hidden="true"
-                        />
+                    <ChevronDown
+                      size={15}
+                      strokeWidth={1.8}
+                      className={styles.desktopChevron}
+                      aria-hidden="true"
+                    />
 
-                        {/* Mobile submenu button */}
+                    {/* Mobile submenu button */}
 
-                        <button
-                          type="button"
-                          className={
-                            styles.mobileSubmenuButton
-                          }
-                          onClick={() =>
-                            toggleSubmenu(item.label)
-                          }
-                          aria-label={`نمایش زیرمنوی ${item.label}`}
-                          aria-expanded={
-                            submenuIsOpen
-                          }
-                        >
-                          <ChevronLeft
-                            size={17}
-                            strokeWidth={1.8}
-                          />
-                        </button>
-                      </div>
+                    <button
+                      type="button"
+                      className={styles.mobileSubmenuButton}
+                      onClick={() => toggleSubmenu(item.label)}
+                      aria-label={`نمایش زیرمنوی ${item.label}`}
+                      aria-expanded={submenuIsOpen}
+                    >
+                      <ChevronLeft size={17} strokeWidth={1.8} />
+                    </button>
+                  </div>
 
-                      {/* Submenu */}
+                  {/* Submenu */}
 
-                      <div
-                        className={`${styles.submenu} ${
-                          submenuIsOpen
-                            ? styles.submenuOpen
-                            : ""
-                        }`}
+                  <div
+                    className={`${styles.submenu} ${
+                      submenuIsOpen ? styles.submenuOpen : ""
+                    }`}
+                  >
+                    {item.children?.map((child) => (
+                      <Link
+                        href={child.href}
+                        key={`${child.label}-${child.href}`}
+                        onClick={() => {
+                          setMenuOpen(false);
+                          setOpenSubmenu(null);
+                        }}
                       >
-                        {item.children?.map(
-                          (child) => (
-                            <Link
-                              href={child.href}
-                              key={`${child.label}-${child.href}`}
-                              onClick={() => {
-                                setMenuOpen(false);
-                                setOpenSubmenu(null);
-                              }}
-                            >
-                              {child.label}
-                            </Link>
-                          ),
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          );
+        })}
+      </div>
 
-          {/* Mobile actions */}
+      {/* Mobile actions */}
 
-          <div className={styles.mobileActions}>
-            <Link
-              href="https://apply.dotone.ir/"
-              className={styles.mobilePrimary}
-              onClick={() => setMenuOpen(false)}
-            >
-              همکاری با تریپ
-
-              <Image
-                src={ShakeHand}
-                alt=""
-                width={18}
-                height={18}
-              />
-            </Link>
-            <Link
-              href={DOWNLOAD_BANNER_HREF}
-              className={styles.mobileSecondary}
-              onClick={goToDownloadBanner}
-            >
-              <Download size={17} />
-              دانلود اپلیکیشن
-            </Link>
-          </div>
-     
+      <div className={styles.mobileActions}>
+        <Link
+          href="https://apply.dotone.ir/"
+          className={styles.mobilePrimary}
+          onClick={() => setMenuOpen(false)}
+        >
+          همکاری با تریپ
+          <Image src={ShakeHand} alt="" width={18} height={18} />
+        </Link>
+        <Link
+          href={DOWNLOAD_BANNER_HREF}
+          className={styles.mobileSecondary}
+          onClick={goToDownloadBanner}
+        >
+          <Download size={17} />
+          دانلود اپلیکیشن
+        </Link>
+      </div>
     </>
   );
 
@@ -382,18 +331,12 @@ export default function Header({
     <>
       <header
         className={`${styles.navShell} ${
-          isLightVariant
-            ? styles.navLight
-            : styles.navDark
+          isLightVariant ? styles.navLight : styles.navDark
         } ${pathname !== "/" ? styles.pageFrame : ""}`}
       >
         {/* Logo */}
 
-        <Link
-          href="/"
-          aria-label="دات‌وان تریپ"
-          className={styles.brand}
-        >
+        <Link href="/" aria-label="دات‌وان تریپ" className={styles.brand}>
           <Image
             src={isLightVariant ? logoDark : logo}
             alt="دات‌وان تریپ"
@@ -415,26 +358,15 @@ export default function Header({
         {/* Desktop Actions */}
 
         <div className={styles.navActions}>
-          <Link
-            href="https://apply.dotone.ir/"
-            className="button button-brand"
-          >
+          <Link href="https://apply.dotone.ir/" className="button button-brand">
             همکاری با تریپ
-
-            <Image
-              src={ShakeHand}
-              alt=""
-              width={18}
-              height={18}
-            />
+            <Image src={ShakeHand} alt="" width={18} height={18} />
           </Link>
 
           <Link
             href={DOWNLOAD_BANNER_HREF}
             className={`button ${
-              isLightVariant
-                ? "button-dark"
-                : "button-glass"
+              isLightVariant ? "button-dark" : "button-glass"
             }`}
             onClick={goToDownloadBanner}
           >
@@ -448,19 +380,11 @@ export default function Header({
         <button
           type="button"
           className={styles.menuButton}
-          aria-label={
-            menuOpen ? "بستن منو" : "باز کردن منو"
-          }
+          aria-label={menuOpen ? "بستن منو" : "باز کردن منو"}
           aria-expanded={menuOpen}
-          onClick={() =>
-            setMenuOpen((prev) => !prev)
-          }
+          onClick={() => setMenuOpen((prev) => !prev)}
         >
-          {menuOpen ? (
-            <X size={21} />
-          ) : (
-            <Menu size={21} />
-          )}
+          {menuOpen ? <X size={21} /> : <Menu size={21} />}
         </button>
       </header>
 

@@ -12,6 +12,10 @@ import FutureTransportBanner from "@/components/ui/FutureTransportBanner/FutureT
 import Footer from "@/components/ui/footer/Footer";
 import Header from "@/components/ui/Header/Header";
 import FlexibleTravel from "@/components/ui/FlexibleTravel/FlexibleTravel";
+import oncall1 from "@/public/figma/oncall1.png"
+import oncall2 from "@/public/figma/oncall2.png"
+import oncall3 from "@/public/figma/oncall3.png"
+
 export const tripFaqItems: FAQItem[] = [
   {
     question: "خودرو در اختیار چه تفاوتی با سفر معمولی دارد؟",
@@ -47,7 +51,7 @@ export default function page() {
           highlight: "خودرو و راننده",
           text: "در اختیار شما",
         }}
-        description="برای زمانی که ره خودرو و راننده اختصاصی در طول چند ساعت یا یک بازه مشخص نیاز دارید، خوردو در اختیار دات وان تریپ را درخواست کنید"
+        description="برای هر زمانی که خودرو و راننده اختصاصی در طول چند ساعت یا یک بازه مشخص نیاز دارید، خوردو در اختیار دات وان تریپ را درخواست کنید"
         buttons={[
           {
             text: "درخواست سفر",
@@ -74,7 +78,7 @@ export default function page() {
         title="خودرو در اختیار؛ سفر بدون محدودیت یک مسیر مشخص"
         description="در سرویس خودرو در اختیار، خودرو به همراه راننده برای مدت مشخص در اختیار شما قرار می‌گیرد.به‌جای درخواست یک سفر از مبدأ به مقصد، می‌توانید در بازه زمانی تعیین‌شده از خودرو برای سفر بین چند مقصد استفاده کنید."
         image={{
-          src: driverImage,
+          src: oncall1,
           alt: "راننده دات‌وان تریپ",
           width: 720,
           height: 480,
@@ -91,7 +95,7 @@ export default function page() {
               "رانندگان احراز هویت‌شده و آموزش‌دیده، همراه با نظارت بر سفر.",
           },
           {
-            title: "نعطاف در جا‌به‌جایی",
+            title: "انعطاف در جا‌به‌جایی",
             description: "امکان برنامه‌ریزی برای چند توقف و مقصد در طول سرویس.",
           },
         ]}
@@ -101,7 +105,7 @@ export default function page() {
         title="وقتی یک سفر معمولی کافی نیست"
         description="اگر برنامه شما شامل چند مقصد، توقف‌های متعدد یا رفت‌وآمد در یک بازه زمانی مشخص است، خودرو در اختیار می‌تواند انتخاب مناسب‌تری باشد."
         image={{
-          src: driverImage,
+          src: oncall2,
           alt: "راننده دات‌وان تریپ",
           width: 720,
           height: 480,
@@ -132,7 +136,7 @@ export default function page() {
         imageSide="right"
         title="از درخواست تا پایان سرویس"
         image={{
-          src: driverImage,
+          src: oncall3,
           alt: "راننده دات‌وان تریپ",
           width: 720,
           height: 480,
@@ -142,12 +146,12 @@ export default function page() {
           {
             title: "ثبت درخواست",
             description:
-              "زمان موردنیاز، تعداد مسافران و اطلاعات مربوط به سرویس را ثبت کنید.",
+              "مبدأ و مدت زمان مورد نیاز برای استفاده از سرویس را مشخص کنید و درخواست خود را ثبت نمایید.",
           },
           {
             title: "بررسی و هماهنگی",
             description:
-              "جزئیات درخواست توسط تیم دات‌وان تریپ بررسی و هماهنگ می‌شود.",
+              "پس از ثبت درخواست،سیستم به صورت خودکار راننده مناسب را برای سرویس شما انتخاب و تخصیص می دهد.",
           },
           {
             title: "تخصیص خودرو و راننده",
