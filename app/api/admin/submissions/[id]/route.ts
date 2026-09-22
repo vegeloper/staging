@@ -1,6 +1,7 @@
 import { jsonError, HttpError, isSameOrigin } from "@/lib/http/errors";
 import { readJsonBody } from "@/lib/http/body";
 import { readSessionUser } from "@/lib/auth";
+import { canManageSubmissions } from "@/lib/auth/rbac";
 import { updateSubmissionStatus } from "@/lib/submissions/service";
 import { submissionStatuses } from "@/lib/forms/shared";
 import { z } from "zod";
@@ -21,6 +22,9 @@ export async function PATCH(
 
   const user = await readSessionUser();
   if (!user) return jsonError(401, "نشست نامعتبر است.");
+  if (!canManageSubmissions(user.role)) {
+    return jsonError(403, "به صندوق درخواست‌ها دسترسی ندارید.");
+  }
 
   const { id } = await context.params;
   let payload: unknown;

@@ -53,6 +53,7 @@ services:
       AUTH_PASSWORD_PEPPER: ${AUTH_PASSWORD_PEPPER:?AUTH_PASSWORD_PEPPER is required}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
       SEED_OPERATOR_PASSWORD: ${SEED_OPERATOR_PASSWORD:-}
+      SEED_CREATOR_PASSWORD: ${SEED_CREATOR_PASSWORD:-}
     depends_on:
       postgres:
         condition: service_healthy

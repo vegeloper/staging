@@ -202,19 +202,20 @@ What this starts:
 
 ### Step 6 — Seed operator accounts (once)
 
-Seeding **upserts** `admin` and `operator` and sets their password hashes. Do this once per environment, or when a human asks to rotate those two passwords.
+Seeding **upserts** `admin` and `operator` and sets their password hashes. Add `SEED_CREATOR_PASSWORD` in the same command when this environment needs the content-creator login (`creator`). Do this once per environment, or when a human asks to rotate those passwords.
 
 ```bash
 # in .env, for this one command only
 SEED_ADMIN_PASSWORD='…strong unique…'
 SEED_OPERATOR_PASSWORD='…strong unique…'
+SEED_CREATOR_PASSWORD='…strong unique…'
 
 docker compose --profile seed up seed
 ```
 
 If you already launched `--profile full`, Postgres is up; seed only needs the database. Then **remove the seed passwords from `.env`**.
 
-Default usernames are `admin` and `operator`. There is no public registration.
+Default usernames are `admin`, `operator`, and, when the creator password is set, `creator`. There is no public registration. `creator` can draft news and articles. `admin` approves or rejects them. `operator` stays on the submission inbox.
 
 ### Step 7 — Prove the live domain
 
@@ -328,10 +329,11 @@ docker compose --profile full up --build
 **Seed behaviour** (`scripts/db-seed.mjs`)
 
 - Upserts usernames `admin` and `operator`.
+- Upserts `creator` only when `SEED_CREATOR_PASSWORD` is set. A non-interactive run without that variable skips the content creator.
 - Re-hashes passwords with the current `AUTH_PASSWORD_PEPPER`.
-- If `SEED_*` is omitted, it prompts (TTY only). Compose must pass env vars.
+- If `SEED_ADMIN_PASSWORD` or `SEED_OPERATOR_PASSWORD` is omitted, it prompts (TTY only). Compose must pass env vars.
 
-**Loading other “new data”** (articles, CMS, etc.) is not part of this seed. Put it in a dedicated job or admin tool. Do not overload `db:seed`.
+The news and article catalog is not part of `db:seed`. The first request to `/blog` or `/admin/content` after migration copies the current static feed into `content_posts` once. Later edits stay in the CMS, including deletions. A creator can add a post before that copy; the original feed is still inserted for any slug that is still free.
 
 ---
 
@@ -421,6 +423,7 @@ Rollback: keep the previous web image digest. `docker compose ... up -d` the old
 | `TRUST_PROXY` | `true` behind Caddy / company LB |
 | `SEED_ADMIN_PASSWORD` | Set only while running the seed job |
 | `SEED_OPERATOR_PASSWORD` | Set only while running the seed job |
+| `SEED_CREATOR_PASSWORD` | Set only while seeding the `creator` account |
 
 ---
 

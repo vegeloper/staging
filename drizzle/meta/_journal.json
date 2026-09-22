@@ -8,6 +8,13 @@
       "when": 1789633355608,
       "tag": "0000_confused_bloodaxe",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790117733867,
+      "tag": "0001_cms_content",
+      "breakpoints": true
     }
   ]
 }

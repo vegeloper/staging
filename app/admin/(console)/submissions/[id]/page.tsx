@@ -10,6 +10,7 @@ import {
   submissionStatusLabels,
   submissionTypeLabels,
 } from "@/lib/forms";
+import { requireInboxUser } from "@/lib/auth";
 import { getSubmissionDetail } from "@/lib/submissions/service";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +21,7 @@ export default async function SubmissionDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  await requireInboxUser();
   const item = await getSubmissionDetail(id);
   if (!item || !item.detail) notFound();
 

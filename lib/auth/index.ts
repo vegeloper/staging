@@ -1,5 +1,13 @@
 export { hashPassword, verifyPassword } from "./password";
-export { requireUser } from "./require-user";
+export { requireCmsUser, requireInboxUser, requireUser } from "./require-user";
+export {
+  canAccessCms,
+  canManageSubmissions,
+  canReviewContent,
+  homePathForRole,
+  roleLabel,
+  type UserRole,
+} from "./rbac";
 export {
   SESSION_COOKIE,
   clearFailedLogins,

@@ -1,4 +1,5 @@
 import { readSessionUser } from "@/lib/auth";
+import { canManageSubmissions } from "@/lib/auth/rbac";
 import { jsonError } from "@/lib/http/errors";
 import { getCareerResume } from "@/lib/submissions/service";
 import {
@@ -15,6 +16,9 @@ export async function GET(
 ) {
   const user = await readSessionUser();
   if (!user) return jsonError(401, "نشست نامعتبر است.");
+  if (!canManageSubmissions(user.role)) {
+    return jsonError(403, "به صندوق درخواست‌ها دسترسی ندارید.");
+  }
 
   const { id } = await context.params;
   const resume = await getCareerResume(id);

@@ -9,6 +9,7 @@ import {
   submissionTypes,
   safeDisplayText,
 } from "@/lib/forms";
+import { requireInboxUser } from "@/lib/auth";
 import { listSubmissions } from "@/lib/submissions/service";
 
 export const dynamic = "force-dynamic";
@@ -31,6 +32,7 @@ export default async function AdminInboxPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  await requireInboxUser();
   const params = await searchParams;
   const type = firstString(params.type);
   const status = firstString(params.status);

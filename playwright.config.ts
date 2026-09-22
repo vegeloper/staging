@@ -7,6 +7,12 @@ export default defineConfig({
   use: {
     baseURL: "http://localhost:3000",
     trace: "on-first-retry",
+    ...(process.env.PLAYWRIGHT_CHROME_CHANNEL
+      ? { channel: process.env.PLAYWRIGHT_CHROME_CHANNEL as "chrome" }
+      : {}),
+    launchOptions: process.env.PLAYWRIGHT_SLOW_MO
+      ? { slowMo: Number(process.env.PLAYWRIGHT_SLOW_MO) }
+      : undefined,
   },
   webServer: {
     command: "npm run dev",

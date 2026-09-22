@@ -25,20 +25,33 @@ export default function LoginForm() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password }),
         });
-        const data = (await response.json().catch(() => ({}))) as { error?: string };
+        const data = (await response.json().catch(() => ({}))) as {
+          error?: string;
+          user?: { role?: string };
+        };
         setPending(false);
         if (!response.ok) {
           setError(data.error || "ورود ناموفق بود.");
           return;
         }
-        const returnTo = searchParams.get("returnTo") || "/admin";
-        router.push(returnTo.startsWith("/admin") ? returnTo : "/admin");
+        const requested = searchParams.get("returnTo") || "/admin";
+        let destination = requested.startsWith("/admin") ? requested : "/admin";
+        if (
+          data.user?.role === "content_creator" &&
+          !destination.startsWith("/admin/content")
+        ) {
+          destination = "/admin/content";
+        }
+        if (data.user?.role === "operator" && destination.startsWith("/admin/content")) {
+          destination = "/admin";
+        }
+        router.push(destination);
         router.refresh();
       }}
     >
       <div className={styles.brand}>دات‌وان تریپ</div>
-      <h1>ورود اپراتورها</h1>
-      <p>فقط کاربران داخلی شرکت به صندوق درخواست‌ها دسترسی دارند.</p>
+      <h1>ورود کاربران داخلی</h1>
+      <p>مدیر وب‌سایت، اپراتور و تولیدکننده محتوا از اینجا وارد می‌شوند.</p>
       <label>
         نام کاربری
         <input

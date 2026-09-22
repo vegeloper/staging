@@ -29,9 +29,10 @@ type LatestArticlesProps = {
   featuredCount?: number;
   compact?: boolean;
   articles?: LatestArticle[];
+  categories?: readonly string[];
 };
 
-const categories = ["همه", "مقالات", "راهنما", "اطلاعیه", "اخبار"] as const;
+const defaultCategories = ["همه", "مقالات", "راهنما", "اطلاعیه", "اخبار"] as const;
 
 const defaultArticles: LatestArticle[] = [
   {
@@ -137,6 +138,7 @@ export default function LatestArticles({
   featuredCount = 3,
   compact = false,
   articles = defaultArticles,
+  categories = defaultCategories,
 }: LatestArticlesProps) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>(allLabel);
