@@ -45,8 +45,10 @@ test("content creator submits and the website admin publishes it", async ({ page
   await page.getByLabel("نام کاربری").fill("admin");
   await page.getByLabel("رمز عبور").fill(adminPassword!);
   await page.getByRole("button", { name: "ورود" }).click();
-  await expect(page.getByRole("heading", { name: "درخواست‌های دریافتی" })).toBeVisible();
-  await page.getByRole("link", { name: "مطالب" }).click();
+  await expect(page.getByRole("heading", { name: "پیشخوان مدیریت" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "بخش‌های مدیریت" }).getByRole("link", { name: "درخواست‌ها" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "بخش‌های مدیریت" }).getByRole("link", { name: "پوسته" })).toBeVisible();
+  await page.getByRole("navigation", { name: "بخش‌های مدیریت" }).getByRole("link", { name: "مطالب" }).click();
   await page.locator('input[name="q"]').fill(slug);
   await page.getByRole("button", { name: "فیلتر" }).click();
   await page.getByRole("link", { name: title }).click();
@@ -76,7 +78,7 @@ test("content creator submits and the website admin publishes it", async ({ page
   await page.getByLabel("نام کاربری").fill("admin");
   await page.getByLabel("رمز عبور").fill(adminPassword!);
   await page.getByRole("button", { name: "ورود" }).click();
-  await page.getByRole("link", { name: "مطالب" }).click();
+  await page.getByRole("navigation", { name: "بخش‌های مدیریت" }).getByRole("link", { name: "مطالب" }).click();
   await page.locator('input[name="q"]').fill(slug);
   await page.getByRole("button", { name: "فیلتر" }).click();
   await page.getByRole("link", { name: title }).click();
@@ -108,6 +110,8 @@ test("content creator submits and the website admin publishes it", async ({ page
     await page.getByRole("button", { name: "ورود" }).click();
     await expect(page.getByRole("heading", { name: "درخواست‌های دریافتی" })).toBeVisible();
     await expect(page.getByRole("link", { name: "مطالب" })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "پوسته" })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "کپی‌رایت" })).toHaveCount(0);
     await page.goto("/admin/content");
     await expect(page.getByRole("heading", { name: "درخواست‌های دریافتی" })).toBeVisible();
   }

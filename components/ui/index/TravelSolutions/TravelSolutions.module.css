@@ -147,7 +147,7 @@
 
   border-radius: 999px;
 
-  background: #00b7ce;
+  background: var(--brand, #00b7ce);
   color: #fff;
 
   font-size: 10px;

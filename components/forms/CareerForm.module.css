@@ -140,7 +140,7 @@
 }
 
 .control:focus {
-  border-color: #00b7ce;
+  border-color: var(--brand, #00b7ce);
 
   box-shadow:
     0 0 0 3px rgba(0, 183, 206, 0.07);
@@ -221,14 +221,14 @@
 }
 
 .dropzone:focus-visible {
-  border-color: #00b7ce;
+  border-color: var(--brand, #00b7ce);
 
   box-shadow:
     0 0 0 3px rgba(0, 183, 206, 0.08);
 }
 
 .dropzoneActive {
-  border-color: #00b7ce;
+  border-color: var(--brand, #00b7ce);
 
   background: rgba(0, 183, 206, 0.025);
 
@@ -306,7 +306,7 @@
 .fileChip > svg {
   flex-shrink: 0;
 
-  color: #00b7ce;
+  color: var(--brand, #00b7ce);
 }
 
 .fileInformation {
@@ -460,7 +460,7 @@
   background: linear-gradient(
     180deg,
     #0dc4d6 0%,
-    #00b5c9 100%
+    var(--brand, #00b7ce) 100%
   );
 
   color: #fff;

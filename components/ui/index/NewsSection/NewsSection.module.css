@@ -184,7 +184,7 @@
 }
 
 .featuredTitle a:hover {
-  color: #00b7ce;
+  color: var(--brand, #00b7ce);
 }
 
 .featuredDescription {
@@ -251,7 +251,7 @@
 }
 
 .category {
-  color: #00b7ce;
+  color: var(--brand, #00b7ce);
 
   font-weight: 600;
 }
@@ -417,7 +417,7 @@
 }
 
 .newsTitle a:hover {
-  color: #00b7ce;
+  color: var(--brand, #00b7ce);
 }
 
 

@@ -114,7 +114,7 @@
 }
 
 .navLinks a:hover {
-  color: #00b7ce;
+  color: var(--brand, #00b7ce);
 }
 
 
@@ -172,7 +172,7 @@
 }
 
 .hasChildren:hover .desktopChevron {
-  color: #00b7ce;
+  color: var(--brand, #00b7ce);
 
   opacity: 1;
 
@@ -186,7 +186,7 @@
 
 .activeLink,
 .activeLink > a {
-  color: #00b7ce !important;
+  color: var(--brand, #00b7ce) !important;
 
   font-weight: 700;
 }
@@ -259,7 +259,7 @@
 .submenu a:hover {
   background: #f3f3f3;
 
-  color: #00b7ce !important;
+  color: var(--brand, #00b7ce) !important;
 }
 
 
@@ -294,7 +294,7 @@
 }
 
 .navDark .submenu a:hover {
-  color: #00b7ce !important;
+  color: var(--brand, #00b7ce) !important;
 
   background: rgba(255, 255, 255, 0.07);
 }
@@ -797,7 +797,7 @@
 
     border-radius: 50%;
 
-    background: #00b7ce;
+    background: var(--brand, #00b7ce);
   }
 
   .navDark .submenu {
@@ -855,9 +855,9 @@
   }
 
   .mobilePrimary {
-    border: 1px solid #00b7ce;
+    border: 1px solid var(--brand, #00b7ce);
 
-    background: #00b7ce !important;
+    background: var(--brand, #00b7ce) !important;
 
     color: #fff !important;
   }

@@ -47,7 +47,7 @@
 }
 
 .highlight {
-  color: #00b7d4; /* رنگ آبی دات‌وان تریپ */
+  color: var(--brand, #00b7ce); /* رنگ آبی دات‌وان تریپ */
 }
 
 /* توضیحات */
@@ -77,7 +77,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #00b7d4;
+  background-color: var(--brand, #00b7ce);
   color: #ffffff;
   font-weight: 600;
   font-size: 0.95rem;
@@ -90,7 +90,7 @@
 }
 
 .primaryBtn:hover {
-  background-color: #009cb5;
+  background-color: var(--brand-dark, #0093a5);
   transform: translateY(-1px);
 }
 

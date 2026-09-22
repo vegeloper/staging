@@ -172,7 +172,7 @@
 
   border-radius: 50%;
 
-  background: #00b7ce;
+  background: var(--brand, #00b7ce);
 }
 
 
@@ -220,7 +220,7 @@
 
   margin-inline: 8px;
 
-  border: 0.11em solid #00b7ce;
+  border: 0.11em solid var(--brand, #00b7ce);
   border-radius: 50%;
 
   background:
@@ -333,9 +333,9 @@
 ======================================== */
 
 .primaryButton {
-  border: 1px solid #00b7ce;
+  border: 1px solid var(--brand, #00b7ce);
 
-  background: #00b7ce;
+  background: var(--brand, #00b7ce);
 
   color: #fff;
 
@@ -345,7 +345,7 @@
 }
 
 .primaryButton:hover {
-  background: #00a5bb;
+  background: var(--brand-dark, #0093a5);
 
   transform: translateY(-1px);
 

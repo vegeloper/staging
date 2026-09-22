@@ -223,7 +223,7 @@
 
   border-radius: 7px;
 
-  background: #00b7ce;
+  background: var(--brand, #00b7ce);
   color: #fff;
 
   font-size: 12px;
@@ -245,7 +245,7 @@
 }
 
 .primaryButton:hover {
-  background: #009fb4;
+  background: var(--brand-dark, #0093a5);
 
   transform: translateY(-1px);
 

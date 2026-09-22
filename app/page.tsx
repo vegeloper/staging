@@ -4,7 +4,6 @@ import FleetFeature from "@/components/ui/index/FleetFeature/FleetFeature";
 import modernFleetImage from "@/public/figma/car3.png";
 import trainedDriversImage from "@/public/figma/trainedDriversImage.png";
 import securiyImage from "@/public/figma/security.png";
-import tripStartImage from "@/public/figma/journey.png";
 import cityTransportImage from "@/public/figma/solutionImage1.png";
 import intercityImage from "@/public/figma/solutionImage2.png";
 import corporateImage from "@/public/figma/solutionImage3.png";
@@ -38,6 +37,8 @@ import NewsSection, {
 import FutureTransportBanner from "@/components/ui/FutureTransportBanner/FutureTransportBanner";
 import FAQ, { FAQItem } from "@/components/ui/Faq/Faq";
 import Link from "next/link";
+import { resolvedMedia } from "@/lib/site/defaults";
+import { getPublishedSiteSettings } from "@/lib/site/public";
 const A = "/figma/";
 // faq data
 export const tripFaqItems: FAQItem[] = [
@@ -329,7 +330,8 @@ function SectionHeading({
   );
 }
 
-export default function Home() {
+export default async function Home() {
+  const media = resolvedMedia((await getPublishedSiteSettings()).theme);
   return (
     <main dir="rtl">
         <Header variant="dark" />
@@ -424,7 +426,7 @@ export default function Home() {
         items={securiyItems}
       />
       <TripStartHero
-        image={tripStartImage}
+        image={media.heroImage}
         imageAlt="شروع سفر با دات‌وان تریپ"
         eyebrow="تجربه سفر با دات‌وان"
         title="سفر، از لحظه درخواست شروع می‌شود"

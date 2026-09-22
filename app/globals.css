@@ -42,7 +42,10 @@
   --brand: #00b7ce;
   --brand-dark: #0093a5;
   --ink: #171717;
-  --paper: #f0f0f;
+  --paper: #f0f0f0;
+  --surface: #ffffff;
+  --hero: #00b7ce;
+  --page-image: none;
 }
 * {
   box-sizing: border-box;
@@ -52,7 +55,11 @@ html {
 }
 body {
   margin: 0;
-  background: var(--paper);
+  background-color: var(--paper);
+  background-image: var(--page-image);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: var(--ink);
   font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
 }

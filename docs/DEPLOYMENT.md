@@ -200,22 +200,23 @@ What this starts:
 - `app` — Next.js UI + API (no public `:3000`)
 - `proxy` — Caddy on **80/443**, automatic HTTPS
 
-### Step 6 — Seed operator accounts (once)
+### Step 6 — Bootstrap operator accounts (once)
 
-Seeding **upserts** `admin` and `operator` and sets their password hashes. Add `SEED_CREATOR_PASSWORD` in the same command when this environment needs the content-creator login (`creator`). Do this once per environment, or when a human asks to rotate those passwords.
+Do **not** put passwords in `.env`. Bootstrap creates `admin`, `operator`, and `creator`, prints each password once, and does not read `SEED_*`.
 
 ```bash
-# in .env, for this one command only
-SEED_ADMIN_PASSWORD='…strong unique…'
-SEED_OPERATOR_PASSWORD='…strong unique…'
-SEED_CREATOR_PASSWORD='…strong unique…'
+# local stack
+npm run docker:bootstrap
 
-docker compose --profile seed up seed
+# production overlay, Postgres already running — does not restart the web container
+npm run docker:bootstrap:prod
 ```
 
-If you already launched `--profile full`, Postgres is up; seed only needs the database. Then **remove the seed passwords from `.env`**.
+Store the three lines from stdout in the password manager and clear the shell scrollback. Running bootstrap again replaces all three password hashes and resets their roles to `admin`, `operator`, and `content_creator`.
 
-Default usernames are `admin`, `operator`, and, when the creator password is set, `creator`. There is no public registration. `creator` can draft news and articles. `admin` approves or rejects them. `operator` stays on the submission inbox.
+`npm run db:seed` is the older path. It reads `SEED_ADMIN_PASSWORD` and `SEED_OPERATOR_PASSWORD` (and `SEED_CREATOR_PASSWORD` when set). Use it only when those passwords already exist, and remove the variables immediately after. There is no public registration. `creator` drafts news and articles. `admin` can do the creator’s work, the operator inbox, and theme/copyright. `operator` stays on the submission inbox.
+
+Dashboards: [04 — admin dashboards](04-admin-dashboards.md).
 
 ### Step 7 — Prove the live domain
 
@@ -314,9 +315,10 @@ docker compose --profile full up --build
 
 | Job | Command | When |
 | --- | --- | --- |
-| Migrate | `docker compose --profile migrate up migrate` | Every release that includes `drizzle/*.sql` |
-| Seed operators | `docker compose --profile seed up seed` | New environment, or password reset of `admin`/`operator` |
-| App-generated data | Public forms and `/admin` | Continuous — this is not a seed |
+| Migrate | `npm run docker:migrate` | Every release that includes `drizzle/*.sql` |
+| Bootstrap accounts | `npm run docker:bootstrap` or `npm run docker:bootstrap:prod` | New environment, or rotating `admin` / `operator` / `creator` |
+| Seed from `SEED_*` | `docker compose --profile seed up seed` | Optional fallback when passwords already exist |
+| App-generated data | Public forms, CMS, theme, copyright | Continuous — this is not a seed |
 
 **Schema change workflow**
 
@@ -326,14 +328,33 @@ docker compose --profile full up --build
 4. Merge. Production: **migrate job first**, then roll the web image.
 5. Keep an old web replica only if the migration is backward-compatible.
 
+**Bootstrap behaviour** (`scripts/db-bootstrap.mjs`)
+
+- Ignores `SEED_*`.
+- Upserts `admin`, `operator`, and `creator`, including their roles.
+- Prints the new passwords after the database transaction commits. It does not write a file.
+- Re-hashes with the current `AUTH_PASSWORD_PEPPER`.
+
 **Seed behaviour** (`scripts/db-seed.mjs`)
 
-- Upserts usernames `admin` and `operator`.
+- Upserts usernames `admin` and `operator`. It does not change their roles.
 - Upserts `creator` only when `SEED_CREATOR_PASSWORD` is set. A non-interactive run without that variable skips the content creator.
 - Re-hashes passwords with the current `AUTH_PASSWORD_PEPPER`.
 - If `SEED_ADMIN_PASSWORD` or `SEED_OPERATOR_PASSWORD` is omitted, it prompts (TTY only). Compose must pass env vars.
 
-The news and article catalog is not part of `db:seed`. The first request to `/blog` or `/admin/content` after migration copies the current static feed into `content_posts` once. Later edits stay in the CMS, including deletions. A creator can add a post before that copy; the original feed is still inserted for any slug that is still free.
+The news and article catalog is not part of bootstrap or `db:seed`. The first request to `/blog` or `/admin/content` after migration copies the current static feed into `content_posts` once. Later edits stay in the CMS, including deletions. A creator can add a post before that copy; the original feed is still inserted for any slug that is still free.
+
+Theme and copyright are not seeded either. Until an admin publishes them, the site uses the built-in colors, media, and copyright sentence.
+
+### Publishing theme, copyright, and CMS content
+
+Publishing from **پوسته**, **کپی‌رایت**, or the content editor writes Postgres and then invalidates the Next.js data cache **inside the running web process** (`revalidateTag(..., { expire: 0 })` plus `revalidatePath('/', 'layout')`). The next request waits for the fresh value and caches it. The container is not restarted, so open connections are not dropped.
+
+This matches the Compose layout: one `app` replica. `revalidateTag` updates that process only. Do not scale `app` past one replica unless a shared Next.js cache handler is added; other replicas would keep the previous theme until they restart.
+
+`npm run docker:deploy` is different. It rebuilds the image and replaces the container. Caddy is configured to start only after `/api/health` is healthy (`depends_on: service_healthy`). That rollout is a single replica swap, not a content publish. Content, theme, and copyright changes do not need it. The npm script does not use `up --wait`, because the one-shot migrate container exits on purpose and some Compose versions treat that as a failed wait.
+
+Files selected in the theme dashboard must already exist under `public/figma`, `public/videos`, `public/fonts`, or `public/uploads` inside the image. Publishing a path does not upload a new binary. A new asset still needs an image deploy. Empty paths keep the built-in logo, hero image, and campaign video.
 
 ---
 
@@ -421,9 +442,9 @@ Rollback: keep the previous web image digest. `docker compose ... up -d` the old
 | `UPLOAD_ROOT` | `/app/data/resumes` in the container |
 | `MAX_RESUME_BYTES` | Default `5242880` |
 | `TRUST_PROXY` | `true` behind Caddy / company LB |
-| `SEED_ADMIN_PASSWORD` | Set only while running the seed job |
-| `SEED_OPERATOR_PASSWORD` | Set only while running the seed job |
-| `SEED_CREATOR_PASSWORD` | Set only while seeding the `creator` account |
+| `SEED_ADMIN_PASSWORD` | Optional. Only for `db:seed`. Bootstrap does not read it |
+| `SEED_OPERATOR_PASSWORD` | Optional. Only for `db:seed` |
+| `SEED_CREATOR_PASSWORD` | Optional. Only for `db:seed` when creating `creator` that way |
 
 ---
 
@@ -453,11 +474,11 @@ docker compose up -d postgres
 # Schema
 docker compose --profile migrate up migrate
 
-# Operator users (once)
-docker compose --profile seed up seed
+# Operator users (once) — prints passwords, does not write .env
+npm run docker:bootstrap:prod
 
 # Full production (TLS + web + db)
-docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --build
+npm run docker:deploy
 
 # Follow web logs
 docker compose -f compose.yaml -f compose.prod.yaml logs -f app

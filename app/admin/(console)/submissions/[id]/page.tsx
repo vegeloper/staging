@@ -29,7 +29,7 @@ export default async function SubmissionDetailPage({
 
   return (
     <>
-      <Link href="/admin" className={styles.backButton}>
+      <Link href="/admin/submissions" className={styles.backButton}>
         <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
           <path
             fill="none"

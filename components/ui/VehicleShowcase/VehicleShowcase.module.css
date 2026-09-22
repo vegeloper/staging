@@ -122,7 +122,7 @@
   font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
   font-size: 16px;
   font-weight: 700;
-  color: #00b7ce;
+  color: var(--brand, #00b7ce);
   line-height: 48px;
   width: 100%;
   margin: 0 0 16px 0;

@@ -26,6 +26,7 @@
 
 .topbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
@@ -49,6 +50,7 @@
 
 .nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 14px;
 }
 
@@ -58,8 +60,13 @@
 }
 
 .nav a:hover,
-.nav a:focus-visible {
+.nav a:focus-visible,
+.nav a[aria-current="page"] {
   opacity: 1;
+}
+
+.nav a[aria-current="page"] {
+  color: #7ee7f3;
 }
 
 .topbar span {
@@ -438,4 +445,56 @@
   .span2 {
     grid-column: auto;
   }
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.cardLink {
+  display: grid;
+  gap: 8px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 20px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(23, 23, 23, 0.08);
+}
+
+.cardLink strong {
+  font-size: 28px;
+  color: var(--brand-dark);
+}
+
+.cardLink small {
+  color: rgba(23, 23, 23, 0.62);
+  line-height: 1.6;
+}
+
+.swatches {
+  display: flex;
+  gap: 8px;
+}
+
+.swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(23, 23, 23, 0.12);
+}
+
+.colorRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.colorRow input[type="color"] {
+  width: 48px;
+  min-width: 48px;
+  padding: 4px;
 }

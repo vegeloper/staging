@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { destinationForRole, type UserRole } from "@/lib/auth/rbac";
 import styles from "./Admin.module.css";
 
 export default function LoginForm() {
@@ -35,16 +36,11 @@ export default function LoginForm() {
           return;
         }
         const requested = searchParams.get("returnTo") || "/admin";
-        let destination = requested.startsWith("/admin") ? requested : "/admin";
-        if (
-          data.user?.role === "content_creator" &&
-          !destination.startsWith("/admin/content")
-        ) {
-          destination = "/admin/content";
-        }
-        if (data.user?.role === "operator" && destination.startsWith("/admin/content")) {
-          destination = "/admin";
-        }
+        const role = data.user?.role;
+        const destination =
+          role === "admin" || role === "operator" || role === "content_creator"
+            ? destinationForRole(role as UserRole, requested)
+            : "/admin";
         router.push(destination);
         router.refresh();
       }}

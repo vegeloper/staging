@@ -213,6 +213,16 @@ export const contentSettings = pgTable("content_settings", {
   seededAt: timestamp("seeded_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const siteDocuments = pgTable("site_documents", {
+  key: text("key").primaryKey(),
+  draft: jsonb("draft").notNull(),
+  published: jsonb("published"),
+  revision: integer("revision").notNull().default(0),
+  publishedAt: timestamp("published_at", { withTimezone: true }),
+  updatedBy: uuid("updated_by").references(() => users.id, { onDelete: "set null" }),
+  ...timestamps,
+});
+
 export const contentEvents = pgTable("content_events", {
   id: uuid("id").primaryKey().defaultRandom(),
   postId: uuid("post_id")
@@ -235,6 +245,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   authoredPosts: many(contentPosts, { relationName: "contentAuthor" }),
   reviewedPosts: many(contentPosts, { relationName: "contentReviewer" }),
   contentEvents: many(contentEvents, { relationName: "contentEventActor" }),
+  siteDocuments: many(siteDocuments),
 }));
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -316,6 +327,13 @@ export const contentPostsRelations = relations(contentPosts, ({ one, many }) => 
     relationName: "contentReviewer",
   }),
   events: many(contentEvents),
+}));
+
+export const siteDocumentsRelations = relations(siteDocuments, ({ one }) => ({
+  updatedByUser: one(users, {
+    fields: [siteDocuments.updatedBy],
+    references: [users.id],
+  }),
 }));
 
 export const contentEventsRelations = relations(contentEvents, ({ one }) => ({

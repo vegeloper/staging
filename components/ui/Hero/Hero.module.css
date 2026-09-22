@@ -194,7 +194,7 @@
 .primaryButton:hover {
   transform: translateY(-1px);
 
-  background: #00abc3;
+  background: var(--brand, #00b7ce);
 }
 
 

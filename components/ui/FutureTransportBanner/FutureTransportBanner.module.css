@@ -64,7 +64,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: #00c5d2;
+  background-color: var(--brand, #00b7ce);
   color: #ffffff;
   padding: 12px 24px;
   border-radius: 16px;
@@ -75,7 +75,7 @@
 }
 
 .primaryBtn:hover {
-  background-color: #00b0bd;
+  background-color: var(--brand-dark, #0093a5);
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(0, 197, 210, 0.25);
 }

@@ -1,9 +1,11 @@
 export { hashPassword, verifyPassword } from "./password";
-export { requireCmsUser, requireInboxUser, requireUser } from "./require-user";
+export { requireAdminUser, requireCmsUser, requireInboxUser, requireUser } from "./require-user";
 export {
   canAccessCms,
+  canManageSite,
   canManageSubmissions,
   canReviewContent,
+  destinationForRole,
   homePathForRole,
   roleLabel,
   type UserRole,

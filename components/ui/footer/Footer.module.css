@@ -89,7 +89,7 @@
 .brandExclamation {
   margin-right: 4px;
 
-  color: #00c5d2;
+  color: var(--brand, #00b7ce);
 }
 
 
@@ -247,7 +247,7 @@
 }
 
 .linkItem:hover {
-  color: #00c5d2;
+  color: var(--brand, #00b7ce);
 }
 
 
