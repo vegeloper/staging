@@ -15,7 +15,7 @@ const servicesData: ServiceItem[] = [
   {
     id: 1,
     title: 'سواری شهری',
-    description: 'مناسب برای جابه‌جایی‌های روزمره و سفرهای داخل شهر',
+    description: 'مناسب برای سفر‌های روزمره و سفرهای داخل شهر',
     isTall: false,
   },
   {
@@ -33,7 +33,7 @@ const servicesData: ServiceItem[] = [
   {
     id: 4,
     title: 'خودروهای سازمانی',
-    description: 'گزینه‌هایی برای نیازهای جابه‌جایی سازمان‌ها و مجموعه‌ها',
+    description: 'گزینه‌هایی برای نیازهای سفر سازمان‌ها و مجموعه‌ها',
     isTall: true,
   },
 ];
@@ -44,7 +44,7 @@ export default function VehicleFlexibleServices() {
       
       {/* هدر کامپوننت */}
       <div className={styles.sectionHeader}>
-        <h2 className={styles.sectionTitle}>کنترل بیشتر، جابه‌جایی منعطف‌تر</h2>
+        <h2 className={styles.sectionTitle}>کنترل بیشتر، سفر منعطف‌تر</h2>
         <p className={styles.sectionSubtitle}>
           سفر را شما انتخاب می‌کنید؛ ما مسیر را برایتان ساده‌تر می‌کنیم.
         </p>

@@ -96,17 +96,17 @@ export default function Footer() {
           </p>
 
           <div className={styles.socialIcons} style={{ direction: "ltr" }}>
-            <Link href="#" aria-label="LinkedIn" className={styles.socialLink}>
+            <Link href="https://www.linkedin.com/company/dotonetrip_info/" aria-label="LinkedIn" className={styles.socialLink}>
               <Image src={linkdinIcon} alt="لینکدین" />
             </Link>
-            <Link href="#" aria-label="Telegram" className={styles.socialLink}>
+            <Link href="https://t.me/DotOnetrip_info" aria-label="Telegram" className={styles.socialLink}>
               <Image src={telegramIcon} alt="تلگرام" />
             </Link>
 
-            <Link href="#" aria-label="Instagram" className={styles.socialLink}>
+            <Link href="https://www.instagram.com/dotonetrip" aria-label="Instagram" className={styles.socialLink}>
               <Image src={instagramIcon} alt="اینستاگرام" />
             </Link>
-            <Link href="#" aria-label="بله" className={styles.socialLink}>
+            <Link href="https://ble.ir/dotonetrip_info" aria-label="بله" className={styles.socialLink}>
               <Image src={baleIcon} alt="بله" />
             </Link>
           </div>

@@ -17,7 +17,7 @@ export default function FleetShowcase() {
             <span className={styles.highlight}>ناوگان دات‌وان تریپ</span> را بشناسید
           </h2>
           <p className={styles.subtitle}>
-            ناوگانی متناسب با نیازهای مختلف جابه‌جایی! از سفرهای شهری و بین‌شهری
+            ناوگانی متناسب با نیازهای مختلف سفر! از سفرهای شهری و بین‌شهری
             تا خدمات اختصاصی و سازمانی
           </p>
         </div>

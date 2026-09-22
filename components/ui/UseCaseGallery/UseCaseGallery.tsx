@@ -1,6 +1,8 @@
 import Image, { type StaticImageData } from "next/image";
 
 import styles from "./UseCaseGallery.module.css";
+import CarImage1 from "@/public/figma/taxiBeach.png"
+import CarImage2 from "@/public/figma/taxiBeach2.png"
 
 export type UseCaseCard = {
   id: string;
@@ -32,7 +34,7 @@ const defaultCards: UseCaseCard[] = [
     id: "meetings",
     number: 2,
     title: "جلسات و مأموریت‌های کاری",
-    description: "برای جابه‌جایی کارکنان در جلسات، مأموریت‌ها و برنامه‌های کاری.",
+    description: "برای سفر کارکنان در جلسات، مأموریت‌ها و برنامه‌های کاری.",
     image: {
       src: fleetSrc,
       alt: "ناوگان خودروهای دات‌وان تریپ",
@@ -45,9 +47,9 @@ const defaultCards: UseCaseCard[] = [
     id: "commute",
     number: 1,
     title: "رفت‌وآمد منظم کارکنان",
-    description: "برای جابه‌جایی منظم کارکنان بین نقاط مشخص و محل کار.",
+    description: "برای سفر منظم کارکنان بین نقاط مشخص و محل کار.",
     image: {
-      src: fleetSrc,
+      src: CarImage2,
       alt: "خودروهای دات‌وان در محل کار",
       objectPosition: "70% 50%",
       width: 255,
@@ -60,16 +62,16 @@ const defaultCards: UseCaseCard[] = [
     number: 5,
     title: "سرویس‌های اختصاصی",
     description:
-      "برای نیازهایی که به مدل جابه‌جایی متفاوت یا برنامه‌ریزی اختصاصی نیاز دارند.",
+      "برای نیازهایی که به مدل سفر متفاوت یا برنامه‌ریزی اختصاصی نیاز دارند.",
     decoration: "star",
   },
   {
     id: "events",
     number: 4,
     title: "برنامه‌ها و رویدادهای سازمانی",
-    description: "برای برنامه‌های سازمانی، جلسات، رویدادها و جابه‌جایی مهمانان.",
+    description: "برای برنامه‌های سازمانی، جلسات، رویدادها و سفر مهمانان.",
     image: {
-      src: fleetSrc,
+      src: CarImage1,
       alt: "ناوگان دات‌وان برای رویدادهای سازمانی",
       objectPosition: "center 70%",
       width: 310,

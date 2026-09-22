@@ -11,13 +11,13 @@ const featuresData = [
   {
     id: 1,
     title: "انعطاف بیشتر",
-    description: "برنامه جابه‌جایی شما می‌تواند شامل چند مقصد و توقف باشد.",
+    description: "برنامه سفر شما می‌تواند شامل چند مقصد و توقف باشد.",
     icon: maximizeIcon, 
   },
   {
     id: 2,
     title: "صرفه‌جویی در زمان",
-    description: "نیازی نیست برای هر جابه‌جایی مجدداً درخواست خودرو ثبت کنید.",
+    description: "نیازی نیست برای هر سفر مجدداً درخواست خودرو ثبت کنید.",
     icon: timerIcon,
   },
   {
@@ -41,7 +41,7 @@ export default function FlexibleTravel() {
         
         {/* === بخش هدر (عنوان و زیرعنوان) === */}
         <div className={styles.header}>
-          <h2 className={styles.title}>کنترل بیشتر، جابه‌جایی منعطف‌تر</h2>
+          <h2 className={styles.title}>کنترل بیشتر، سفر منعطف‌تر</h2>
           <p className={styles.subtitle}>
             سفر را شما انتخاب می‌کنید؛ ما مسیر را برایتان ساده‌تر می‌کنیم.
           </p>

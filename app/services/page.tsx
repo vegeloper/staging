@@ -7,6 +7,7 @@ import importIcon from "@/public/figma/import.png";
 import dotIcon from "@/public/figma/dot.png";
 import FeatureSection from "@/components/ui/FeatureSection/FeatureSection";
 import driverImage from "@/public/figma/drivers.png";
+import Image2 from "@/public/figma/carUpSide.png"
 import TripExperience from "@/components/ui/TripExperience/TripExperience";
 import DownloadBanner from "@/components/ui/DownloadBanner/DownloadBanner";
 import FAQ, { FAQItem } from "@/components/ui/Faq/Faq";
@@ -84,7 +85,7 @@ export default function page() {
         title="برای هر مسیر شهری، یک تجربه بهتر"
         description="دات‌وان تریپ با ترکیب خودروهای مدرن، رانندگان آموزش‌دیده و فناوری هوشمند، سفرهای شهری را مدیریت می‌کند."
         image={{
-          src: driverImage,
+          src: Image2,
           alt: "راننده دات‌وان تریپ",
           width: 720,
           height: 480,
