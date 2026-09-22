@@ -34,7 +34,7 @@
 
   color: #777;
 
-  font-size: clamp(10px, 0.75vw, 13px);
+  font-size: clamp(14px, 0.75vw, 13px);
   font-weight: 400;
   line-height: 2;
 

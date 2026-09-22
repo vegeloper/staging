@@ -114,11 +114,11 @@ export default function Page() {
     <>
       <Header />
 
-      <div className="mt-10 md:mt-16 lg:mt-20">
+      <div className="mt-10 md:mt-16 lg:mt-20 lg:mb-20">
         <TransportHero />
       </div>
 
-      <div style={{ marginBottom: "150px" }}>
+      <div className="">
         <FeatureSection
           imageSide="right"
           title="فراتر از یک سرویس درخواست خودرو"
@@ -145,7 +145,7 @@ export default function Page() {
         description="از انتخاب و مدیریت ناوگان تا تجربه مسافر و همکاری با رانندگان، تلاش می‌کنیم هر بخش از زنجیره حمل‌ونقل را با استفاده از فناوری، داده و استانداردهای مشخص بهبود دهیم."
         cards={secondRowCards}
       />
-      <div style={{ marginTop: "150px" }}>
+      <div className="lg:mt-20">
         <FeatureSection
           imageSide="left"
           title="از سفر روزمره تا زیرساخت مدیریت حمل‌ونقل"
