@@ -113,6 +113,9 @@ const securiyItems = [
   {
     text: "افزایش امنیت از طریق مانیتورینگ و کنترل ناوگان",
   },
+  {
+    text:"نمایشگرهای دیجیتال داخل خودرو برای ارائه محتوای سرگرمی، اطلاع‌رسانی و تبلیغات در طول سفر"
+  }
 ];
 //coverage cars in iran data
 const coverageItems: CoverageItem[] = [
@@ -358,11 +361,11 @@ export default function Home() {
         </div>
         <div className="hero-stats">
           <div>
-            <strong>+۱٬۲۵۰</strong>
+            <strong>۱٬۲۵۰+</strong>
             <span>تعداد رانندگان فعال</span>
           </div>
           <div>
-            <strong>+۱۵۰٬۰۰۰</strong>
+            <strong>۱۵۰٬۰۰۰+</strong>
             <span>سفرهای انجام شده</span>
           </div>
         </div>

@@ -44,45 +44,38 @@ export default function FleetFeature({
           <Image
             src={image}
             alt={imageAlt}
-            fill
             className={styles.image}
             sizes="
-              (max-width: 700px) 90vw,
-              (max-width: 1000px) 42vw,
-              420px
-            "
+        (max-width: 700px) 90vw,
+        (max-width: 1000px) 42vw,
+        420px
+      "
           />
         </div>
       </div>
 
       {/* Content */}
       <div className={styles.content}>
-        <h3 className={styles.title}>
-          {title}
-        </h3>
+        <h3 className={styles.title}>{title}</h3>
 
-        <p className={styles.description}>
-          {description}
-        </p>
+        <p className={styles.description}>{description}</p>
 
         <ul className={styles.list}>
           {items.map((item, index) => (
-            <li
-              key={`${item.text}-${index}`}
-              className={styles.listItem}
-            >
+            <li key={`${item.text}-${index}`} className={styles.listItem}>
               {item.text}
             </li>
           ))}
         </ul>
 
         <div className={styles.buttonWrapper}>
-          {buttonHref&&buttonText?(      <Link
-            href={buttonHref}
-            className={styles.button}
-          >
-            {buttonText}
-          </Link>):(<></>)}
+          {buttonHref && buttonText ? (
+            <Link href={buttonHref} className={styles.button}>
+              {buttonText}
+            </Link>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </section>

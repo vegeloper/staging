@@ -39,7 +39,6 @@
 /* ========================================
    Image
 ======================================== */
-
 .imageColumn {
   width: 38%;
 
@@ -51,27 +50,21 @@
 }
 
 .imageWrapper {
-  position: relative;
-
   width: 100%;
   max-width: 400px;
-
-  aspect-ratio: 0.88 / 1;
 
   overflow: hidden;
 
   border-radius: 34px 70px 34px 70px;
-
 }
 
 .image {
-  width: 100%;
-  height: 100%;
-
   display: block;
 
-  object-fit: cover;
-  object-position: center;
+  width: 100%;
+  height: auto;
+
+  object-fit: contain;
 }
 
 /* ========================================
