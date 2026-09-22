@@ -38,8 +38,8 @@ export default function DownloadBanner() {
               <span>مایکت</span>
             </Link>
 
-            <Link href="#" className={styles.downloadBtn}>
-              <Image src={bazarIcon} alt="https://cafebazaar.ir/app/com.dotone.passenger?ref=share" width={24} height={24} />
+            <Link href="https://cafebazaar.ir/app/com.dotone.passenger?ref=share" className={styles.downloadBtn}>
+              <Image src={bazarIcon} alt="دانلود از بازار" width={24} height={24} />
               <span>کافه بازار</span>
             </Link>
 

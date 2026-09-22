@@ -11,6 +11,9 @@ import corporateImage from "@/public/figma/solutionImage3.png";
 import specialServicesImage from "@/public/figma/solutionImage4.png";
 import driversImage from "@/public/figma/recruiting.png";
 import carSideView from "@/public/figma/vehicles/Car-SideView.svg";
+import carSideView2 from "@/public/figma/carousel2.png";
+import carSideView3 from "@/public/figma/carousel3.png";
+
 import mainNewsImage from "@/public/figma/mainNewsImage.png";
 import TripStartHero from "@/components/ui/index/TripStartHero/TripStartHero";
 import news1Image from "@/public/figma/news-1.png";
@@ -484,30 +487,30 @@ export default function Home() {
             footerText: "بی‌وای‌دی سیل ۵ دی‌ام-آی هیبریدی",
           },
           {
-            id: "byd-seal-about2",
+            id: "BZ3X Seal",
 
             image: {
-              src: carSideView,
-              alt: "BYD Seal",
+              src: carSideView2,
+              alt: "BZ3X Seal",
             },
 
             sideDescription:
               "در دات‌وان تریپ، خودرو فقط وسیله‌ای برای رسیدن به مقصد نیست؛ بخشی از تجربه سفر است. ناوگان دات‌وان تریپ با تمرکز بر ایمنی، راحتی و فناوری انتخاب شده تا کیفیت سفر از لحظه ورود تا رسیدن به مقصد حفظ شود.",
 
-            footerText: "بی‌وای‌دی سیل ۵ دی‌ام-آی هیبریدی",
+            footerText: "تویوتا BZ3X سفید بنزینی",
           },
           {
-            id: "byd-seal-about3",
+            id: "EV460",
 
             image: {
-              src: carSideView,
-              alt: "BYD Seal",
+              src: carSideView3,
+              alt: "EV460",
             },
 
             sideDescription:
               "در دات‌وان تریپ، خودرو فقط وسیله‌ای برای رسیدن به مقصد نیست؛ بخشی از تجربه سفر است. ناوگان دات‌وان تریپ با تمرکز بر ایمنی، راحتی و فناوری انتخاب شده تا کیفیت سفر از لحظه ورود تا رسیدن به مقصد حفظ شود.",
 
-            footerText: "بی‌وای‌دی سیل ۵ دی‌ام-آی هیبریدی",
+            footerText: "چانگان ایدو EV460 برقی",
           },
         ]}
       />
