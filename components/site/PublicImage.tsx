@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+import { isLibraryFilePath } from "@/lib/media/paths";
+
 type PublicImageProps = {
   src: string;
   alt: string;
@@ -17,7 +19,7 @@ export default function PublicImage({
   className,
   priority,
 }: PublicImageProps) {
-  if (src.endsWith(".svg")) {
+  if (src.endsWith(".svg") || isLibraryFilePath(src)) {
     return <img src={src} alt={alt} width={width} height={height} className={className} />;
   }
 

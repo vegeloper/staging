@@ -4,6 +4,7 @@ import { getDb } from "@/db";
 import { contentPosts, siteDocuments, submissions } from "@/db/schema";
 import type { AuthUser } from "@/lib/auth/session";
 import { fieldErrorsFromZod, HttpError } from "@/lib/http/errors";
+import { assertThemeAssets, countMediaAssets } from "@/lib/media/library";
 
 import {
   DEFAULT_COPYRIGHT,
@@ -86,6 +87,7 @@ export async function saveSiteDocument(
 ) {
   assertAdmin(user);
   const value = parseDocument(key, input);
+  if (key === "theme") await assertThemeAssets(value as SiteTheme);
   const now = new Date();
 
   return getDb().transaction(async (tx) => {
@@ -172,9 +174,11 @@ export async function adminOverviewCounts() {
     .from(contentPosts)
     .where(eq(contentPosts.status, "pending_review"));
   const published = await loadPublishedSite();
+  const mediaCount = await countMediaAssets();
   return {
     newSubmissions: Number(submissionRow?.total ?? 0),
     pendingContent: Number(contentRow?.total ?? 0),
+    mediaCount,
     copyright: published.copyright,
     themeRevision: published.themeRevision,
     copyrightRevision: published.copyrightRevision,

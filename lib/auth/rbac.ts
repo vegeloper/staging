@@ -39,9 +39,15 @@ export function destinationForRole(role: UserRole, requested: string) {
       ? destination
       : "/admin/submissions";
   }
-  return destination === "/admin/content" || destination.startsWith("/admin/content/")
-    ? destination
-    : "/admin/content";
+  if (
+    destination === "/admin/content" ||
+    destination.startsWith("/admin/content/") ||
+    destination === "/admin/media" ||
+    destination.startsWith("/admin/media/")
+  ) {
+    return destination;
+  }
+  return "/admin/content";
 }
 
 export function roleLabel(role: UserRole) {

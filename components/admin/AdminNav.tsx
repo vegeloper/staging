@@ -10,6 +10,7 @@ const tabs = [
   { href: "/admin", label: "پیشخوان", allow: canManageSite },
   { href: "/admin/submissions", label: "درخواست‌ها", allow: canManageSubmissions },
   { href: "/admin/content", label: "مطالب", allow: canAccessCms },
+  { href: "/admin/media", label: "رسانه", allow: canAccessCms },
   { href: "/admin/theme", label: "پوسته", allow: canManageSite },
   { href: "/admin/copyright", label: "کپی‌رایت", allow: canManageSite },
 ] as const;

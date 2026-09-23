@@ -7,6 +7,7 @@ The console lives at `/admin`. The signed-in role decides which tabs exist.
 | پیشخوان | `/admin` | yes | redirected to درخواست‌ها | redirected to مطالب |
 | درخواست‌ها | `/admin/submissions` | yes | yes | no |
 | مطالب | `/admin/content` | yes | no | yes |
+| رسانه | `/admin/media` | yes | no | yes |
 | پوسته | `/admin/theme` | yes | no | no |
 | کپی‌رایت | `/admin/copyright` | yes | no | no |
 
@@ -14,10 +15,11 @@ Usernames from bootstrap are `admin`, `operator`, and `creator`. Passwords come 
 
 ## پیشخوان
 
-The admin home shows four cards:
+The admin home shows five cards:
 
 - new submission count, linked to the inbox filtered to `new`
 - posts waiting for review
+- accepted media-library files
 - published theme revision
 - published copyright text and revision
 
@@ -25,7 +27,7 @@ The admin can open every other tab from here and can perform the operator and co
 
 ## درخواست‌ها
 
-This is the operator inbox moved from `/admin` to `/admin/submissions`. Filters, detail, status changes, and resume download are unchanged. A creator who opens this path is sent back to مطالب. An operator who opens پوسته, کپی‌رایت, or مطالب is sent back to the inbox.
+This is the operator inbox moved from `/admin` to `/admin/submissions`. Filters, detail, status changes, and resume download are unchanged. A creator who opens this path is sent back to مطالب. An operator who opens پوسته, کپی‌رایت, مطالب, or رسانه is sent back to the inbox.
 
 ## مطالب
 
@@ -35,18 +37,34 @@ The website admin can create, edit, submit, approve, reject, and unpublish any p
 
 Workflow detail is the same as the first CMS release: draft → pending review → approved or rejected. Rejection needs a note. The creator can resubmit a rejected post.
 
+The post image can be one of the built-in catalog images, a file dropped on the field, or an item chosen from the media library. A direct upload is stored in the library only after the checks below succeed, and the post then points at `/media/file/{id}`.
+
+## رسانه
+
+`/admin/media` is the shared library for the admin and the content team. Operators do not see the tab.
+
+The upload area accepts a drag-and-drop or a file picked from the computer. The browser shows a blue **در حال اسکن** toast with a small wave of dots while the request runs. A clean file turns that toast green and appears in the library. A bad file turns it red and is not stored. Amber is only a warning, for example when a valid video is dropped on an image field: the file can still enter the library, but that field does not select it.
+
+Before anything is written:
+
+1. The bytes are identified. PNG, JPEG, GIF, WebP, MP4, and WebM are allowed. SVG is not. An `MZ`/`ELF`/script header is rejected even if the name ends in `.png` or `.mp4`. The extension must match the detected type. A PNG must end at `IEND`, and other containers must not carry a trailing payload.
+2. ClamAV scans the buffer with the INSTREAM protocol. The upload is refused when the scanner is down or when it reports a signature. Nothing infected is written to disk.
+
+Images are limited to 8 MB and videos to 64 MB. The same SHA-256 is not stored twice; the existing library row is reused.
+
+The list and the detail page request only a 320-pixel JPEG thumbnail (or a filetype badge if a thumbnail could not be made). The original is requested when someone chooses **نمایش بزرگ** or **پخش**, and when the public site actually renders that asset. Detail shows the name, description, alt text, MIME type, size, dimensions, duration, SHA-256, scan engine and result, uploader, and timestamps. Search, kind, sort, and date filters are on the list. A card opens the detail page. The same browser is the picker inside theme and content fields.
+
+Files live under `MEDIA_ROOT` (`data/media` locally, `/app/data/media` in Docker), not under `public/`.
+
 ## پوسته
 
-The theme document has a draft and a published copy.
+The theme screen is three sections: **پالت رنگ**, **تصاویر**, and **ویدیو**. The document still has a draft and a published copy.
 
-- **رنگ اصلی** and **رنگ اصلی تیره** drive buttons, links, and the other brand accents. Those colors are CSS variables (`--brand`, `--brand-dark`), so the change covers the pages that used the old cyan values.
-- **رنگ متن** and **رنگ زمینه** set `--ink` and `--paper`. The page background color is `--paper`. An optional background image is `--page-image`.
-- **رنگ سطح کارت‌ها** and **رنگ تأکید** are `--surface` and `--hero` for the same published theme.
-- Logos update the header (dark and light) and the footer.
-- **تصویر بخش شروع سفر** updates the home-page journey image.
-- **ویدیوی صفحه کمپین** and **پوستر ویدیوی کمپین** update `/campaign`.
+- **پالت رنگ:** **رنگ اصلی** and **رنگ اصلی تیره** drive buttons, links, and the other brand accents (`--brand`, `--brand-dark`). **رنگ متن** and **رنگ زمینه** set `--ink` and `--paper`. **رنگ سطح کارت‌ها** and **رنگ تأکید** are `--surface` and `--hero`.
+- **تصاویر:** optional page background (`--page-image`), both header logos, the footer logo, the home journey image, and the campaign poster. Each field accepts a drop, a file from the computer, a library pick, or a built-in `/figma`, `/videos`, `/fonts`, or `/uploads` path.
+- **ویدیو:** the campaign video only. Its poster stays in the image section.
 
-Leave a media field empty to keep the built-in file. A filled path must start with `/figma/`, `/videos/`, `/fonts/`, or `/uploads/` and must not contain `..`, quotes, or other CSS syntax. The picker lists files already in `public/`. Publishing does not upload a new file. A new image or video has to be in the image that Docker runs.
+Leave a field empty to keep the built-in file. A filled path must be a library id (`/media/file/{uuid}`) or a public path, with no `..`, quotes, or other CSS syntax. Saving checks that a library image is an image and the campaign file is a video. Publishing still does not restart the container.
 
 **ذخیره پیش‌نویس** does not change the public site. **انتشار پوسته** copies the draft to the published document, increments the revision, and invalidates the Next.js cache in the running process.
 

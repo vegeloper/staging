@@ -6,6 +6,8 @@ import { canAccessCms } from "@/lib/auth/rbac";
 import { HttpError } from "@/lib/http/errors";
 import { parseUuid } from "@/lib/http/body";
 import { sanitizeSearchQuery } from "@/lib/forms/shared";
+import { assertLibraryImage } from "@/lib/media/library";
+
 import { parseBody, serializeBody } from "./body";
 import {
   arrangeFeeds,
@@ -410,6 +412,7 @@ export async function createManagedContent(
 ) {
   const actor = actorFromUser(user);
   assertCms(actor);
+  await assertLibraryImage(input.imageSrc);
 
   try {
     return await getDb().transaction(async (tx) => {
@@ -478,6 +481,7 @@ export async function updateManagedContent(
   if ((action === "save" || action === "submit" || action === "publish") && !input) {
     throw new HttpError(422, "اطلاعات مطلب کامل نیست.");
   }
+  if (input) await assertLibraryImage(input.imageSrc);
 
   try {
     return await getDb().transaction(async (tx) => {

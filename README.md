@@ -2,7 +2,7 @@
 
 Production deployment, secrets, and service topology: **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)**.
 
-Admin dashboards (inbox, CMS, theme, copyright): **[docs/04-admin-dashboards.md](docs/04-admin-dashboards.md)**.
+Admin dashboards (inbox, CMS, media library, theme, copyright): **[docs/04-admin-dashboards.md](docs/04-admin-dashboards.md)**.
 
 # vinext-starter
 

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { isLibraryFilePath } from "@/lib/media/paths";
+
 import type { SiteTheme } from "./defaults";
 
 const hex = z
@@ -12,11 +14,12 @@ export function isSafeAssetPath(value: string) {
   if (value.length > 240) return false;
   if (value.includes("..")) return false;
   if (/[\s"'`()<>\\;{}]/.test(value)) return false;
+  if (isLibraryFilePath(value)) return true;
   return /^\/(?:figma|videos|fonts|uploads)\/[A-Za-z0-9_./-]+$/.test(value);
 }
 
 const assetPath = z.string().trim().refine(isSafeAssetPath, {
-  message: "مسیر باید داخل /figma، /videos، /fonts یا /uploads باشد.",
+  message: "مسیر باید از کتابخانه رسانه یا پوشه‌های /figma، /videos، /fonts و /uploads باشد.",
 });
 
 export const themeSchema = z.object({

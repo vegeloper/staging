@@ -21,6 +21,7 @@ test("content creator submits and the website admin publishes it", async ({ page
   await page.getByRole("button", { name: "ورود" }).click();
   await expect(page.getByRole("heading", { name: "مطالب و اخبار" })).toBeVisible();
   await expect(page.getByRole("link", { name: "درخواست‌ها" })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "رسانه" })).toBeVisible();
 
   await page.getByRole("link", { name: "مطلب جدید" }).click();
   await page.getByLabel("عنوان").fill(title);
@@ -110,6 +111,7 @@ test("content creator submits and the website admin publishes it", async ({ page
     await page.getByRole("button", { name: "ورود" }).click();
     await expect(page.getByRole("heading", { name: "درخواست‌های دریافتی" })).toBeVisible();
     await expect(page.getByRole("link", { name: "مطالب" })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "رسانه" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "پوسته" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "کپی‌رایت" })).toHaveCount(0);
     await page.goto("/admin/content");

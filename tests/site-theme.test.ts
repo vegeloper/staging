@@ -10,6 +10,7 @@ describe("site theme validation", () => {
     expect(isSafeAssetPath("/figma/logo.png")).toBe(true);
     expect(isSafeAssetPath("/videos/campainHero.mp4")).toBe(true);
     expect(isSafeAssetPath("/uploads/brand/hero.webp")).toBe(true);
+    expect(isSafeAssetPath("/media/file/11111111-1111-4111-8111-111111111111")).toBe(true);
   });
 
   it("rejects colors and paths that could change the stylesheet or leave the public folder", () => {
@@ -20,6 +21,8 @@ describe("site theme validation", () => {
     expect(isSafeAssetPath("/figma/logo.png?x=1")).toBe(false);
     expect(isSafeAssetPath("https://example.com/logo.png")).toBe(false);
     expect(isSafeAssetPath("/etc/passwd")).toBe(false);
+    expect(isSafeAssetPath("/media/file/not-a-uuid")).toBe(false);
+    expect(isSafeAssetPath("/media/thumb/11111111-1111-4111-8111-111111111111")).toBe(false);
   });
 
   it("keeps copyright as plain text", () => {

@@ -20,6 +20,7 @@ export const userRoleEnum = pgEnum("user_role", [
   "content_creator",
 ]);
 export const contentKindEnum = pgEnum("content_kind", ["news", "article"]);
+export const mediaKindEnum = pgEnum("media_kind", ["image", "video"]);
 export const contentStatusEnum = pgEnum("content_status", [
   "draft",
   "pending_review",
@@ -213,6 +214,31 @@ export const contentSettings = pgTable("content_settings", {
   seededAt: timestamp("seeded_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const mediaAssets = pgTable("media_assets", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  kind: mediaKindEnum("kind").notNull(),
+  originalName: text("original_name").notNull(),
+  description: text("description").notNull().default(""),
+  altText: text("alt_text").notNull().default(""),
+  mimeType: text("mime_type").notNull(),
+  extension: text("extension").notNull(),
+  byteSize: integer("byte_size").notNull(),
+  width: integer("width"),
+  height: integer("height"),
+  durationMs: integer("duration_ms"),
+  sha256: text("sha256").notNull(),
+  storageKey: text("storage_key").notNull(),
+  thumbnailKey: text("thumbnail_key"),
+  scanEngine: text("scan_engine").notNull(),
+  scanResult: text("scan_result").notNull(),
+  uploadedBy: uuid("uploaded_by").references(() => users.id, { onDelete: "set null" }),
+  ...timestamps,
+}, (table) => [
+  uniqueIndex("media_assets_sha256_unique").on(table.sha256),
+  index("media_assets_kind_created_at_idx").on(table.kind, sql`${table.createdAt} DESC`),
+  index("media_assets_uploaded_by_idx").on(table.uploadedBy),
+]);
+
 export const siteDocuments = pgTable("site_documents", {
   key: text("key").primaryKey(),
   draft: jsonb("draft").notNull(),
@@ -246,6 +272,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   reviewedPosts: many(contentPosts, { relationName: "contentReviewer" }),
   contentEvents: many(contentEvents, { relationName: "contentEventActor" }),
   siteDocuments: many(siteDocuments),
+  mediaAssets: many(mediaAssets),
 }));
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -327,6 +354,13 @@ export const contentPostsRelations = relations(contentPosts, ({ one, many }) => 
     relationName: "contentReviewer",
   }),
   events: many(contentEvents),
+}));
+
+export const mediaAssetsRelations = relations(mediaAssets, ({ one }) => ({
+  uploader: one(users, {
+    fields: [mediaAssets.uploadedBy],
+    references: [users.id],
+  }),
 }));
 
 export const siteDocumentsRelations = relations(siteDocuments, ({ one }) => ({

@@ -41,6 +41,10 @@ yarn-error.log*
 /data/resumes/**
 !/data/resumes/.gitkeep
 
+# private media library (keep the directory, ignore uploads)
+/data/media/**
+!/data/media/.gitkeep
+
 # vercel
 .vercel
 

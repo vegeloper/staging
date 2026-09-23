@@ -88,7 +88,7 @@ Treat every item as a ship blocker, not a backlog ticket.
 - Set `TRUST_PROXY=true` when the app is reachable directly from the internet.
 - Reuse `PII_ENCRYPTION_KEY` or `AUTH_PASSWORD_PEPPER` across staging and production.
 - Commit `SEED_*` passwords.
-- Put resumes under `public/` or a CDN.
+- Put resumes or the media library under `public/` or a CDN.
 - Disable TLS “just for the first launch.”
 - Run `db:seed` against production on a schedule (it resets admin/operator password hashes).
 
@@ -100,7 +100,7 @@ Treat every item as a ship blocker, not a backlog ticket.
 - Node 22.13+ only on laptops; production runs the image
 - DNS A/AAAA record for the live hostname pointing at the edge
 - Inbound **80/443** on the edge. No inbound 5432. No inbound 3000 from the internet
-- Disk for `postgres_data` and the resume volume
+- Disk for `postgres_data`, the resume volume, the media volume, and ClamAV definitions (`clamav_data`, about 200 MB and growing)
 - Outbound 80/443 from the edge if Caddy is obtaining Let’s Encrypt certificates
 
 Windows laptops: use Docker Desktop, run Compose from the repo root in PowerShell. Production servers should be Linux.
@@ -118,6 +118,8 @@ Windows laptops: use Docker Desktop, run Compose from the repo root in PowerShel
 | `.env.example` | Template — copy, never commit the copy |
 | `scripts/generate-prod-secrets.mjs` | `npm run ops:secrets` |
 | `scripts/db-migrate.mjs` / `scripts/db-seed.mjs` | Schema and operator users |
+
+The `full` profile also starts `clamav` (definitions stay in the `clamav_data` volume; the port is not published) and `media-init`, which chowns the media volume to uid 1000 the same way `resume-init` does for resumes. The web image includes `ffmpeg` so thumbnails are small JPEGs. The first ClamAV start downloads signatures and can take several minutes before the app becomes healthy. Uploads fail closed until that scanner answers.
 
 ---
 
@@ -441,6 +443,12 @@ Rollback: keep the previous web image digest. `docker compose ... up -d` the old
 | `PII_ENCRYPTION_KEY` | 32-byte Base64; **rotation without re-encrypting rows bricks national IDs** |
 | `UPLOAD_ROOT` | `/app/data/resumes` in the container |
 | `MAX_RESUME_BYTES` | Default `5242880` |
+| `MEDIA_ROOT` | `/app/data/media` in the container. Not `public/` |
+| `MAX_MEDIA_IMAGE_BYTES` | Default `8388608` |
+| `MAX_MEDIA_VIDEO_BYTES` | Default `67108864` |
+| `CLAMAV_HOST` | `clamav` inside Compose. Unset locally to use `/var/run/clamav/clamd.ctl` when that socket exists |
+| `CLAMAV_PORT` | Default `3310`. Do not publish it |
+| `MEDIA_HOST_PATH` | Optional host bind for the media volume |
 | `TRUST_PROXY` | `true` behind Caddy / company LB |
 | `SEED_ADMIN_PASSWORD` | Optional. Only for `db:seed`. Bootstrap does not read it |
 | `SEED_OPERATOR_PASSWORD` | Optional. Only for `db:seed` |
@@ -459,6 +467,8 @@ Rollback: keep the previous web image digest. `docker compose ... up -d` the old
 | `/api/ready` 503 | Postgres down, wrong `DATABASE_URL`, or `DATABASE_SSL` mismatch |
 | National IDs garbage in admin | Wrong `PII_ENCRYPTION_KEY` |
 | Forms work, admin empty | Looking at a different database than the web container |
+| Media upload stays red: scanner unavailable | `clamav` is not healthy yet (first start downloads definitions) or `CLAMAV_HOST` does not match the sidecar |
+| A large video is rejected as a broken file | The body was truncated. The app allows 64 MB videos and the Next proxy buffer is 70 MB |
 
 ---
 

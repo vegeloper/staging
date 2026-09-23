@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { contentImages } from "@/lib/cms/images";
+import MediaField from "./MediaField";
 import { emptyContentForm, type ContentFormValues } from "@/lib/cms/input";
 import {
   categoriesForKind,
@@ -201,12 +202,15 @@ export default function ContentEditor({
         </label>
 
         <label>
-          تصویر
+          تصویر آماده
           <select
-            value={values.imageSrc}
+            value={contentImages.some((image) => image.src === values.imageSrc) ? values.imageSrc : ""}
             disabled={disabled}
             onChange={(event) => update("imageSrc", event.target.value)}
           >
+            <option value="" disabled>
+              از کتابخانه یا بارگذاری
+            </option>
             {contentImages.map((image) => (
               <option key={image.src} value={image.src}>
                 {image.label}
@@ -215,6 +219,14 @@ export default function ContentEditor({
           </select>
           {fields.imageSrc ? <small>{fields.imageSrc}</small> : null}
         </label>
+        <MediaField
+          label="تصویر مطلب"
+          kind="image"
+          value={values.imageSrc}
+          disabled={disabled}
+          hint="از کتابخانه، کشیدن فایل، یا انتخاب از رایانه"
+          onChange={(src) => update("imageSrc", src)}
+        />
 
         <label>
           توضیح تصویر

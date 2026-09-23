@@ -1,3 +1,5 @@
+import { isLibraryFilePath } from "@/lib/media/paths";
+
 export const contentImages = [
   { src: "/figma/png/passenger-insideCar.jpg", label: "مسافر داخل خودرو" },
   { src: "/figma/png/cars-insideCabin.png", label: "کابین خودرو" },
@@ -14,5 +16,5 @@ export const contentImages = [
 export const contentImageSrcs: readonly string[] = contentImages.map((image) => image.src);
 
 export function isAllowedContentImage(src: string) {
-  return contentImageSrcs.includes(src);
+  return contentImageSrcs.includes(src) || isLibraryFilePath(src);
 }

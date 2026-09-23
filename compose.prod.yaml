@@ -35,9 +35,9 @@ services:
     tmpfs:
       - /tmp:uid=1000,gid=1000,mode=01777
       - /app/.next/cache:uid=1000,gid=1000
-    # /app/data/resumes stays writable via the volume in compose.yaml.
-    # resume-init (not this overlay) chowns uid 1000 — do not cap_drop / read_only that job.
-    # Do not add `:ro` on that mount — career PDF uploads write there.
+    # /app/data/resumes and /app/data/media stay writable via volumes in compose.yaml.
+    # resume-init and media-init (not this overlay) chown uid 1000 — do not cap_drop / read_only those jobs.
+    # Do not add `:ro` on those mounts.
     logging: *default-logging
     depends_on:
       postgres:
@@ -46,6 +46,10 @@ services:
         condition: service_completed_successfully
       resume-init:
         condition: service_completed_successfully
+      media-init:
+        condition: service_completed_successfully
+      clamav:
+        condition: service_healthy
 
   proxy:
     image: caddy:2.10-alpine
