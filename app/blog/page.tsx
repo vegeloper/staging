@@ -1,20 +1,33 @@
 import Header from "@/components/ui/Header/Header";
-
-
 import PopularArticles from "@/components/ui/PopularArticles/PopularArticles";
 import LatestArticles from "@/components/ui/LatestArticles/LatestArticles";
 import Footer from "@/components/ui/footer/Footer";
-export default function page() {
+
+import {
+  getLatestArticles,
+  getPopularArticles,
+} from "@/lib/articles";
+
+export default function BlogPage() {
+  const popularArticles = getPopularArticles(5);
+  const latestArticles = getLatestArticles();
+
   return (
     <>
       <Header variant="light" />
 
-      <div className="mt-20 max-lg:mt-[5vh]">
-        <PopularArticles />
-        <LatestArticles />
-        <LatestArticles compact />
-      </div>
-      <Footer/>
+      <main className="mt-16 md:mt-20 lg:mt-24">
+        <PopularArticles articles={popularArticles} />
+
+        <LatestArticles articles={latestArticles} />
+
+        <LatestArticles
+          compact
+          articles={latestArticles}
+        />
+      </main>
+
+      <Footer />
     </>
   );
 }

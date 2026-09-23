@@ -1,8 +1,9 @@
-import Image, { type StaticImageData } from "next/image";
+import Image, {
+  type StaticImageData,
+} from "next/image";
 import Link from "next/link";
 
 import styles from "./NewsSection.module.css";
-
 
 export type NewsItem = {
   id: string;
@@ -16,6 +17,7 @@ export type NewsItem = {
   category?: string;
 
   image: string | StaticImageData;
+
   imageAlt?: string;
 
   href: string;
@@ -39,8 +41,6 @@ type NewsSectionProps = {
   allNewsLabel?: string;
 };
 
-
-
 export default function NewsSection({
   eyebrow = "اخبار و رویدادها",
 
@@ -57,110 +57,227 @@ export default function NewsSection({
   allNewsLabel = "مشاهده همه اخبار",
 }: NewsSectionProps) {
   return (
-    <section className={styles.section} dir="rtl">
+    <section
+      className={styles.section}
+      dir="rtl"
+    >
       <div className={styles.container}>
+        {/* ========================================
+            Heading
+        ======================================== */}
 
         <header className={styles.heading}>
-          {eyebrow && <span className={styles.eyebrow}>{eyebrow}</span>}
+          {eyebrow && (
+            <span className={styles.eyebrow}>
+              {eyebrow}
+            </span>
+          )}
 
-          {title && <h2 className={styles.sectionTitle}>{title}</h2>}
+          {title && (
+            <h2 className={styles.sectionTitle}>
+              {title}
+            </h2>
+          )}
 
           {description && (
-            <p className={styles.sectionDescription}>{description}</p>
+            <p
+              className={
+                styles.sectionDescription
+              }
+            >
+              {description}
+            </p>
           )}
         </header>
 
-
+        {/* ========================================
+            News Layout
+        ======================================== */}
 
         <div className={styles.newsLayout}>
-  
-          <article className={styles.featuredCard}>
+          {/* ========================================
+              Featured News
+          ======================================== */}
+
+          <article
+            className={styles.featuredCard}
+          >
+            {/* Featured Image */}
+
             <Link
               href={featuredNews.href}
-              className={styles.featuredImageLink}
+              className={
+                styles.featuredImageLink
+              }
               aria-label={featuredNews.title}
             >
-              <div className={styles.featuredImageWrapper}>
+              <div
+                className={
+                  styles.featuredImageWrapper
+                }
+              >
                 <Image
                   src={featuredNews.image}
-                  alt={featuredNews.imageAlt ?? featuredNews.title}
+                  alt={
+                    featuredNews.imageAlt ??
+                    featuredNews.title
+                  }
                   fill
                   priority
-                  className={styles.featuredImage}
+                  className={
+                    styles.featuredImage
+                  }
                   sizes="(max-width: 768px) 92vw, 52vw"
                 />
               </div>
             </Link>
 
-            <div className={styles.featuredContent}>
-              <h3 className={styles.featuredTitle}>
-                <Link href={featuredNews.href}>{featuredNews.title}</Link>
+            {/* Featured Content */}
+
+            <div
+              className={
+                styles.featuredContent
+              }
+            >
+              <h3
+                className={
+                  styles.featuredTitle
+                }
+              >
+                <Link
+                  href={featuredNews.href}
+                >
+                  {featuredNews.title}
+                </Link>
               </h3>
 
               {featuredNews.description && (
-                <p className={styles.featuredDescription}>
-                  {featuredNews.description}
+                <p
+                  className={
+                    styles.featuredDescription
+                  }
+                >
+                  {
+                    featuredNews.description
+                  }
                 </p>
               )}
 
-              <div className={styles.featuredFooter}>
-                <div className={styles.meta}>
-                  {featuredNews.date && <span>{featuredNews.date}</span>}
+              {/* فقط دکمه - بدون تاریخ و Category */}
 
-                  {featuredNews.category && (
-                    <>
-                      <span className={styles.metaDivider} aria-hidden="true" />
-
-                      <span className={styles.category}>
-                        {featuredNews.category}
-                      </span>
-                    </>
-                  )}
-                </div>
-
-                <Link href={featuredNews.href} className={styles.newsButton}>
-                  {featuredNews.buttonText ?? "مشاهده خبر"}
+              <div
+                className={
+                  styles.featuredFooter
+                }
+              >
+                <Link
+                  href={featuredNews.href}
+                  className={
+                    styles.newsButton
+                  }
+                >
+                  {featuredNews.buttonText ??
+                    "مشاهده مطلب"}
                 </Link>
               </div>
             </div>
           </article>
 
-                  
+          {/* ========================================
+              Side News
+          ======================================== */}
 
           <div className={styles.newsList}>
             {news.map((item) => (
-              <article className={styles.newsCard} key={item.id}>
+              <article
+                className={styles.newsCard}
+                key={item.id}
+              >
                 {/* Image */}
 
                 <Link
                   href={item.href}
-                  className={styles.newsImageLink}
+                  className={
+                    styles.newsImageLink
+                  }
                   aria-label={item.title}
                 >
-                  <div className={styles.newsImageWrapper}>
+                  <div
+                    className={
+                      styles.newsImageWrapper
+                    }
+                  >
                     <Image
                       src={item.image}
-                      alt={item.imageAlt ?? item.title}
+                      alt={
+                        item.imageAlt ??
+                        item.title
+                      }
                       fill
-                      className={styles.newsImage}
+                      className={
+                        styles.newsImage
+                      }
                       sizes="(max-width: 768px) 35vw, 16vw"
                     />
                   </div>
                 </Link>
 
+                {/* Content */}
 
-                <div className={styles.newsContent}>
-                  <h3 className={styles.newsTitle}>
-                    <Link href={item.href}>{item.title}</Link>
+                <div
+                  className={
+                    styles.newsContent
+                  }
+                >
+                  {/* Title */}
+
+                  <h3
+                    className={
+                      styles.newsTitle
+                    }
+                  >
+                    <Link href={item.href}>
+                      {item.title}
+                    </Link>
                   </h3>
 
-                  <div className={styles.newsCardFooter}>
+                  {/* Description */}
+
+                  {item.description && (
+                    <p
+                      className={
+                        styles.newsDescription
+                      }
+                    >
+                      {item.description}
+                    </p>
+                  )}
+
+                  {/* Footer */}
+
+                  <div
+                    className={
+                      styles.newsCardFooter
+                    }
+                  >
                     {item.date && (
-                      <span className={styles.newsDate}>{item.date}</span>
+                      <span
+                        className={
+                          styles.newsDate
+                        }
+                      >
+                        {item.date}
+                      </span>
                     )}
 
-                    <Link href={item.href} className={styles.newsButton}>
-                      {item.buttonText ?? "مشاهده خبر"}
+                    <Link
+                      href={item.href}
+                      className={
+                        styles.newsButton
+                      }
+                    >
+                      {item.buttonText ??
+                        "مشاهده مطلب"}
                     </Link>
                   </div>
                 </div>
@@ -169,10 +286,18 @@ export default function NewsSection({
           </div>
         </div>
 
- 
+        {/* ========================================
+            All News
+        ======================================== */}
+
         {allNewsHref && (
           <div className={styles.allNews}>
-            <Link href={allNewsHref} className={styles.allNewsButton}>
+            <Link
+              href={allNewsHref}
+              className={
+                styles.allNewsButton
+              }
+            >
               {allNewsLabel}
             </Link>
           </div>

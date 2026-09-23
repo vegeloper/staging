@@ -1,18 +1,41 @@
+/* ========================================
+   Section
+======================================== */
+
 .section {
   width: 95%;
   max-width: 1280px;
+
   margin: 80px auto;
+
   box-sizing: border-box;
   font-family: inherit;
-  margin-top: 22vh;
 }
+
+.section * {
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+/* ========================================
+   Layout
+======================================== */
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+
+  grid-template-columns:
+    minmax(280px, 360px)
+    minmax(0, 1fr);
+
   gap: 40px;
+
   align-items: start;
 }
+
+/* ========================================
+   Aside
+======================================== */
 
 .aside {
   min-width: 0;
@@ -20,37 +43,64 @@
 
 .title {
   margin: 0 0 28px;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 24px;
   font-weight: 700;
   line-height: 180%;
+
   color: #000;
 }
+
+/* ========================================
+   Articles List
+======================================== */
 
 .list {
   display: flex;
   flex-direction: column;
+
   gap: 24px;
+
   margin: 0;
   padding: 0;
+
   list-style: none;
 }
 
 .item {
   display: grid;
-  grid-template-columns: 72px minmax(0, 1fr);
+
+  grid-template-columns:
+    72px
+    minmax(0, 1fr);
+
   gap: 16px;
+
   width: 100%;
+
   padding: 0;
+
   border: 0;
+
   background: transparent;
+
   color: inherit;
+
   text-align: right;
+
   cursor: pointer;
 }
 
 .item:focus-visible,
-.navButton:focus-visible {
+.navButton:focus-visible,
+.dot:focus-visible {
   outline: 2px solid #00b7ce;
   outline-offset: 3px;
 }
@@ -60,86 +110,145 @@
   font-weight: 600;
 }
 
+/* ========================================
+   Thumbnail
+======================================== */
+
 .thumb {
   width: 72px;
   height: 72px;
+
   border-radius: 16px;
+
   object-fit: cover;
 }
+
+/* ========================================
+   Item Content
+======================================== */
 
 .itemCopy {
   display: flex;
   flex-direction: column;
+
   align-items: flex-start;
+
   gap: 8px;
+
   min-width: 0;
 }
 
 .itemBadge,
 .badge {
   display: inline-flex;
+
   align-items: center;
   justify-content: center;
+
   min-height: 24px;
+
   padding: 2px 10px;
+
   border-radius: 999px;
+
   background: #f5f5f5;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 12px;
   font-weight: 500;
   line-height: 180%;
+
   color: #171717;
 }
 
 .itemBadge {
   background: none;
+
   color: #171717;
+
   border: 1px solid #171717;
 }
 
 .itemTitle {
   display: -webkit-box;
+
   overflow: hidden;
+
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 14px;
   font-weight: 400;
   line-height: 180%;
+
   color: #414141;
 }
+
+/* ========================================
+   Featured Column
+======================================== */
 
 .featuredCol {
   display: flex;
   flex-direction: column;
+
   gap: 16px;
+
   min-width: 0;
 }
 
+/* ========================================
+   Desktop Navigation
+======================================== */
+
 .nav {
   display: flex;
+
   align-items: center;
   justify-content: flex-start;
+
   gap: 8px;
 }
 
 .navButton {
   box-sizing: border-box;
+
   flex-shrink: 0;
+
   display: inline-flex;
+
   align-items: center;
   justify-content: center;
+
   width: 48px;
   height: 48px;
+
   padding: 14px;
+
   border: 0;
   border-radius: 16px;
+
   background: transparent;
+
   cursor: pointer;
 }
 
 .navButton img {
   display: block;
+
   width: 20px;
   height: 20px;
 }
@@ -152,33 +261,94 @@
   background: rgb(0 0 0 / 4%);
 }
 
+/* ========================================
+   Swipe Area
+======================================== */
+
+.swipeArea {
+  width: 100%;
+  min-width: 0;
+
+  overflow: hidden;
+
+  border-radius: 24px;
+}
+
+/*
+  Wrapper متحرک.
+
+  وقتی انگشت رها شود transition فعال است
+  و کارت نرم به موقعیت اصلی برمی‌گردد.
+*/
+.slideMotion {
+  width: 100%;
+  min-width: 0;
+
+  transform: translate3d(0, 0, 0);
+
+  transition:
+    transform 420ms
+      cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 260ms ease;
+
+  will-change: transform;
+}
+
+/* ========================================
+   Featured Article
+======================================== */
+
 .featured {
   position: relative;
+
   display: block;
+
   overflow: hidden;
+
   width: 100%;
+
   aspect-ratio: 860 / 520;
+
   min-height: 360px;
+
   border-radius: 24px;
+
   text-decoration: none;
+
   color: #fff;
 }
 
 .featuredImage {
   object-fit: cover;
   object-position: center;
+
+  transform: scale(1.001);
+
+  transition:
+    transform 450ms
+      cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* ========================================
+   Overlay
+======================================== */
 
 .overlay {
   position: absolute;
   inset: 0;
+
   z-index: 1;
+
   display: flex;
   flex-direction: column;
+
   align-items: flex-start;
   justify-content: flex-end;
+
   gap: 12px;
+
   padding: 24px 28px;
+
   background: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0) 48%,
@@ -189,9 +359,13 @@
 .featuredCopy {
   display: flex;
   flex-direction: column;
+
   align-items: flex-start;
+
   gap: 10px;
+
   min-width: 0;
+
   max-width: 80%;
 }
 
@@ -202,35 +376,61 @@
 
 .featuredTitle {
   margin: 0;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 24px;
   font-weight: 700;
   line-height: 180%;
+
   color: #fff;
 }
+
+/* ========================================
+   Meta
+======================================== */
 
 .meta {
   display: flex;
   flex-wrap: wrap;
+
   align-items: center;
   justify-content: flex-start;
+
   gap: 14px;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 14px;
   font-weight: 400;
   line-height: 180%;
+
   color: rgba(255, 255, 255, 0.9);
 }
 
 .meta span {
   display: inline-flex;
+
   align-items: center;
+
   gap: 6px;
+
   white-space: nowrap;
 }
 
 .meta img {
   display: block;
+
   width: 20px;
   height: 20px;
 }
@@ -238,12 +438,62 @@
 .metaDash {
   width: 16px;
   height: 1px;
+
   background: rgb(255 255 255 / 70%);
 }
 
+/* ========================================
+   Slider Dots
+
+   Desktop => Hidden
+======================================== */
+
+.dots {
+  display: none;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+
+  flex: 0 0 auto;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: #d6d6d6;
+
+  cursor: pointer;
+
+  transition:
+    width 300ms
+      cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 250ms ease,
+    transform 250ms ease;
+}
+
+.dot:hover {
+  background: #a9a9a9;
+}
+
+.dotActive {
+  width: 22px;
+
+  background: #00b7ce;
+}
+
+/* ========================================
+   Tablet
+======================================== */
+
 @media (max-width: 1024px) {
   .layout {
-    grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+    grid-template-columns:
+      minmax(240px, 300px)
+      minmax(0, 1fr);
+
     gap: 28px;
   }
 
@@ -252,6 +502,10 @@
   }
 }
 
+/* ========================================
+   Tablet / Mobile
+======================================== */
+
 @media (max-width: 900px) {
   .section {
     margin: 8vh auto 56px;
@@ -259,30 +513,122 @@
 
   .layout {
     grid-template-columns: 1fr;
+
     gap: 28px;
   }
 
   .featuredCol {
     order: -1;
+
+    gap: 10px;
+  }
+
+  /* ========================================
+     Hide Desktop Arrows
+  ======================================== */
+
+  .nav {
+    display: none;
+  }
+
+  /* ========================================
+     Touch / Swipe
+  ======================================== */
+
+  .swipeArea {
+    width: 100%;
+
+    overflow: hidden;
+
+    border-radius: 24px;
+
+    /*
+      اسکرول عمودی صفحه همچنان آزاد است.
+      حرکت افقی را خود کامپوننت مدیریت می‌کند.
+    */
+    touch-action: pan-y;
+
+    -webkit-user-select: none;
+    user-select: none;
+
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /*
+    وقتی انگشت روی صفحه است Transition را
+    خاموش می‌کنیم تا کارت دقیقاً همراه انگشت حرکت کند.
+  */
+  .isSwiping .slideMotion {
+    transition: none;
   }
 
   .featured {
     min-height: 280px;
+
+    -webkit-user-drag: none;
+  }
+
+  .featuredImage {
+    pointer-events: none;
+
+    -webkit-user-drag: none;
+
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /*
+    هنگام Drag یک Scale بسیار جزئی
+    باعث طبیعی‌تر شدن Swipe می‌شود.
+  */
+  .isSwiping .featuredImage {
+    transform: scale(1.015);
+  }
+
+  /* ========================================
+     Dots
+  ======================================== */
+
+  .dots {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding-top: 5px;
   }
 
   .title {
     margin-bottom: 20px;
+
     text-align: center;
   }
 }
+
+/* ========================================
+   Mobile
+======================================== */
 
 @media (max-width: 768px) {
   .section {
     margin: 8vh auto 40px;
   }
 
+  .featuredCol {
+    gap: 9px;
+  }
+
+  .swipeArea {
+    border-radius: 20px;
+  }
+
   .featured {
     min-height: 240px;
+
     border-radius: 20px;
   }
 
@@ -298,12 +644,109 @@
     font-size: 18px;
   }
 
+  /* ========================================
+     List
+  ======================================== */
+
   .item {
-    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-columns:
+      64px
+      minmax(0, 1fr);
   }
 
   .thumb {
     width: 64px;
     height: 64px;
+  }
+
+  /* ========================================
+     Dots
+  ======================================== */
+
+  .dots {
+    gap: 6px;
+
+    padding-top: 4px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .dotActive {
+    width: 20px;
+  }
+}
+
+/* ========================================
+   Small Mobile
+======================================== */
+
+@media (max-width: 480px) {
+  .section {
+    width: 92%;
+
+    margin-top: 6vh;
+  }
+
+  .swipeArea {
+    border-radius: 18px;
+  }
+
+  .featured {
+    min-height: 220px;
+
+    border-radius: 18px;
+  }
+
+  .overlay {
+    padding: 16px;
+  }
+
+  .featuredTitle {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .badge,
+  .itemBadge {
+    font-size: 10px;
+  }
+
+  .meta {
+    gap: 8px;
+
+    font-size: 11px;
+  }
+
+  .meta img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .dots {
+    gap: 6px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .dotActive {
+    width: 18px;
+  }
+}
+
+/* ========================================
+   Reduced Motion
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .slideMotion,
+  .featuredImage,
+  .dot {
+    transition: none;
   }
 }

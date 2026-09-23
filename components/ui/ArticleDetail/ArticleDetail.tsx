@@ -1,14 +1,20 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-import { articleHref, type Article } from "@/lib/articles";
+import {
+  articleHref,
+  type Article,
+} from "@/lib/articles";
+
 import styles from "./ArticleDetail.module.css";
 
 type ArticleDetailProps = {
   article: Article;
   related?: Article[];
   relatedTitle?: string;
-  backHref?: string;
   backLabel?: string;
 };
 
@@ -16,13 +22,33 @@ export default function ArticleDetail({
   article,
   related = [],
   relatedTitle = "مطالب محبوب:",
-  backHref = "/blog",
   backLabel = "بازگشت",
 }: ArticleDetailProps) {
+  const router = useRouter();
+
+  const hasMeta =
+    article.date ||
+    article.comments ||
+    article.likes;
+
   return (
-    <article className={styles.section} dir="rtl">
+    <article
+      className={styles.section}
+      dir="rtl"
+    >
+      {/* ========================================
+          Header
+      ======================================== */}
+
       <header className={styles.header}>
-        <Link className={styles.back} href={backHref}>
+        {/* Back */}
+
+        <button
+          type="button"
+          className={styles.back}
+          onClick={() => router.back()}
+          aria-label={backLabel}
+        >
           <Image
             src="/figma/arrow/backArrow.svg"
             alt=""
@@ -31,48 +57,81 @@ export default function ArticleDetail({
             unoptimized
             className={styles.backArrow}
           />
+
           {backLabel}
-        </Link>
+        </button>
 
-        <span className={styles.badge}>{article.category}</span>
-        <h1 className={styles.title}>{article.title}</h1>
+        {/* Category */}
 
-        <div className={styles.metaRow}>
-          <div className={styles.meta}>
-            <span className={styles.metaDash} aria-hidden="true" />
-            <span>
-              <Image
-                src="/figma/svgs/small-icons/calendar.svg"
-                alt=""
-                width={20}
-                height={20}
-                unoptimized
+        <span className={styles.badge}>
+          {article.category}
+        </span>
+
+        {/* Title */}
+
+        <h1 className={styles.title}>
+          {article.title}
+        </h1>
+
+        {/* Meta */}
+
+        {hasMeta && (
+          <div className={styles.metaRow}>
+            <div className={styles.meta}>
+              <span
+                className={styles.metaDash}
+                aria-hidden="true"
               />
-              {article.date}
-            </span>
-            <span>
-              <Image
-                src="/figma/svgs/small-icons/chat.svg"
-                alt=""
-                width={20}
-                height={20}
-                unoptimized
-              />
-              {article.comments}
-            </span>
-            <span>
-              <Image
-                src="/figma/svgs/small-icons/heart.svg"
-                alt=""
-                width={20}
-                height={20}
-                unoptimized
-              />
-              {article.likes}
-            </span>
+
+              {article.date && (
+                <span>
+                  <Image
+                    src="/figma/svgs/small-icons/calendar.svg"
+                    alt=""
+                    width={20}
+                    height={20}
+                    unoptimized
+                  />
+
+                  {article.date}
+                </span>
+              )}
+
+              {article.comments && (
+                <span>
+                  <Image
+                    src="/figma/svgs/small-icons/chat.svg"
+                    alt=""
+                    width={20}
+                    height={20}
+                    unoptimized
+                  />
+
+                  {article.comments}
+                </span>
+              )}
+
+              {article.likes && (
+                <span>
+                  <Image
+                    src="/figma/svgs/small-icons/heart.svg"
+                    alt=""
+                    width={20}
+                    height={20}
+                    unoptimized
+                  />
+
+                  {article.likes}
+                </span>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </header>
+
+      {/* ========================================
+          Hero Image
+      ======================================== */}
 
       <div className={styles.hero}>
         <Image
@@ -85,54 +144,97 @@ export default function ArticleDetail({
           className={styles.heroImage}
           style={
             article.image.objectPosition
-              ? { objectPosition: article.image.objectPosition }
+              ? {
+                  objectPosition:
+                    article.image.objectPosition,
+                }
               : undefined
           }
         />
       </div>
 
+      {/* ========================================
+          Content
+      ======================================== */}
+
       <div className={styles.layout}>
+        {/* Article Body */}
+
         <div className={styles.body}>
-          {article.body.map((block, index) =>
-            block.type === "h2" ? (
-              <h2 key={`${block.type}-${index}`}>{block.text}</h2>
-            ) : (
-              <p key={`${block.type}-${index}`}>{block.text}</p>
-            ),
+          {article.body.map(
+            (block, index) =>
+              block.type === "h2" ? (
+                <h2
+                  key={`${block.type}-${index}`}
+                >
+                  {block.text}
+                </h2>
+              ) : (
+                <p
+                  key={`${block.type}-${index}`}
+                >
+                  {block.text}
+                </p>
+              ),
           )}
         </div>
 
-        {related.length > 0 ? (
-          <aside className={styles.aside} aria-label={relatedTitle}>
-            <h2 className={styles.asideTitle}>{relatedTitle}</h2>
+        {/* ========================================
+            Related Articles
+        ======================================== */}
+
+        {related.length > 0 && (
+          <aside
+            className={styles.aside}
+            aria-label={relatedTitle}
+          >
+            <h2
+              className={styles.asideTitle}
+            >
+              {relatedTitle}
+            </h2>
+
             <ul className={styles.list}>
               {related.map((item) => (
                 <li key={item.id}>
-                  <Link className={styles.item} href={articleHref(item)}>
+                  <Link
+                    className={styles.item}
+                    href={articleHref(item)}
+                  >
                     <Image
                       src={item.image.src}
-                      alt=""
+                      alt={item.image.alt}
                       width={72}
                       height={72}
                       unoptimized
                       className={styles.thumb}
                     />
-                    <span className={styles.itemCopy}>
+
+                    <span
+                      className={styles.itemCopy}
+                    >
                       <span
                         className={`${styles.itemBadge} ${
-                          item.category === "اخبار" ? styles.itemBadgeGhost : ""
+                          item.category === "اخبار"
+                            ? styles.itemBadgeGhost
+                            : ""
                         }`}
                       >
                         {item.category}
                       </span>
-                      <span className={styles.itemTitle}>{item.title}</span>
+
+                      <span
+                        className={styles.itemTitle}
+                      >
+                        {item.title}
+                      </span>
                     </span>
                   </Link>
                 </li>
               ))}
             </ul>
           </aside>
-        ) : null}
+        )}
       </div>
     </article>
   );
