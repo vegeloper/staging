@@ -6,6 +6,10 @@ export function canManageSubmissions(role: UserRole) {
   return role === "admin" || role === "operator";
 }
 
+export function canManagePositions(role: UserRole) {
+  return role === "admin" || role === "operator";
+}
+
 export function canAccessCms(role: UserRole) {
   return role === "admin" || role === "content_creator";
 }
@@ -37,6 +41,8 @@ export function destinationForRole(role: UserRole, requested: string) {
   if (role === "operator") {
     return destination === "/admin/submissions" ||
       destination.startsWith("/admin/submissions/") ||
+      destination === "/admin/positions" ||
+      destination.startsWith("/admin/positions/") ||
       destination === "/admin/profile"
       ? destination
       : "/admin/submissions";

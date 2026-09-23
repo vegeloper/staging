@@ -1,7 +1,7 @@
 import { count, eq } from "drizzle-orm";
 
 import { getDb } from "@/db";
-import { contentPosts, siteDocuments, submissions } from "@/db/schema";
+import { contentPosts, jobPositions, siteDocuments, submissions } from "@/db/schema";
 import type { AuthUser } from "@/lib/auth/session";
 import { fieldErrorsFromZod, HttpError } from "@/lib/http/errors";
 import { assertThemeAssets, countMediaAssets } from "@/lib/media/library";
@@ -175,9 +175,20 @@ export async function adminOverviewCounts() {
     .where(eq(contentPosts.status, "pending_review"));
   const published = await loadPublishedSite();
   const mediaCount = await countMediaAssets();
+  let pendingPositions = 0;
+  try {
+    const [positionRow] = await db
+      .select({ total: count() })
+      .from(jobPositions)
+      .where(eq(jobPositions.status, "pending_review"));
+    pendingPositions = Number(positionRow?.total ?? 0);
+  } catch (error) {
+    console.error(error);
+  }
   return {
     newSubmissions: Number(submissionRow?.total ?? 0),
     pendingContent: Number(contentRow?.total ?? 0),
+    pendingPositions,
     mediaCount,
     copyright: published.copyright,
     themeRevision: published.themeRevision,

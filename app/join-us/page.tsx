@@ -6,18 +6,16 @@ import driverImage from "@/public/figma/femailDrivers.png";
 import partnershipImage from "@/public/figma/partenrShip.png";
 import careerImage from "@/public/figma/parkedCars.png";
 import CareerHero from "@/components/ui/join-us/CareerHero/CareerHero";
-import CorporateJobCard, {
-  CorporateJobCardProps,
-} from "@/components/ui/join-us/CorporateJobCard/CorporateJobCard";
-import DriverHiringCard, {
-  DriverHiringCardProps,
-} from "@/components/ui/join-us/DriverHiringCard/DriverHiringCard";
+import { type DriverHiringCardProps } from "@/components/ui/join-us/DriverHiringCard/DriverHiringCard";
 import DriverHiringSection from "@/components/ui/join-us/DriverHiringSection/DriverHiringSection";
 import CorporateJobsSection from "@/components/ui/join-us/CorporateJobsSection/CorporateJobsSection";
 import PartnershipSection from "@/components/ui/join-us/PartnershipSection/PartnershipSection";
 import partnershipCarImage from "@/public/figma/driver-Highway.png";
 import Footer from "@/components/ui/footer/Footer";
 import FAQ, { FAQItem } from "@/components/ui/Faq/Faq";
+import { getPublicPositions } from "@/lib/jobs/service";
+
+export const dynamic = "force-dynamic";
 const cooperationCards: CooperationCard[] = [
   {
     title: "همکاری به عنوان راننده",
@@ -91,82 +89,6 @@ export const driverJobs: DriverHiringCardProps[] = [
   },
 ];
 
-export const corporateJobs: CorporateJobCardProps[] = [
-  {
-    id: "test",
-    title: "نوع پوزیشن کاری",
-
-    employmentType: "تمام وقت",
-
-    locations: [
-      {
-        label: "تبریز",
-        icon: "/figma/svgs/building.svg",
-      },
-      {
-        label: "تهران",
-        icon: "/figma/svgs/location.svg",
-      },
-    ],
-  },
-
-  {
-    id: "test2",
-    title: "نوع پوزیشن کاری",
-
-    employmentType: "تمام وقت",
-
-    locations: [
-      {
-        label: "تبریز",
-        icon: "/figma/svgs/building.svg",
-      },
-      {
-        label: "تهران",
-        icon: "/figma/svgs/location.svg",
-      },
-    ],
-  },
-
-  {
-    id: "test3",
-
-    title: "نوع پوزیشن کاری",
-
-    employmentType: "تمام وقت",
-
-    locations: [
-      {
-        label: "تبریز",
-        icon: "/figma/svgs/building.svg",
-      },
-      {
-        label: "تهران",
-        icon: "/figma/svgs/location.svg",
-      },
-    ],
-  },
-
-  {
-    id: "test4",
-
-    title: "نوع پوزیشن کاری",
-
-    employmentType: "تمام وقت",
-
-    locations: [
-      {
-        label: "تبریز",
-        icon: "/figma/svgs/building.svg",
-      },
-      {
-        label: "تهران",
-        icon: "/figma/svgs/location.svg",
-      },
-    ],
-  },
-];
-
 export const tripFaqItems: FAQItem[] = [
   {
     question: "از چه راه‌هایی می‌تونم رزومه‌ی خودم رو برای موقعیت",
@@ -194,7 +116,9 @@ export const tripFaqItems: FAQItem[] = [
       "دات‌وان تریپ خدمات خود را به‌صورت مرحله‌ای توسعه می‌دهد. برای مشاهده شهرهای فعال، فهرست به‌روز را بررسی کنید.",
   },
 ];
-export default function page() {
+export default async function page() {
+  const corporateJobs = (await getPublicPositions()).slice(0, 4);
+
   return (
     <>
       <Header />
