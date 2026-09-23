@@ -24,9 +24,9 @@ export default async function AdminConsoleLayout({
             <Link href={homePathForRole(user.role)}>دات‌وان تریپ</Link>
             <AdminNav role={user.role} />
           </div>
-          <span>
+          <Link href="/admin/profile">
             {user.username} · {roleLabel(user.role)}
-          </span>
+          </Link>
           <LogoutButton />
         </header>
         <div className={styles.shell}>{children}</div>

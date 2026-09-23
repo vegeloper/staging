@@ -499,6 +499,74 @@
   padding: 4px;
 }
 
+.passwordButton {
+  min-width: 9rem;
+}
+
+.passwordOk {
+  animation: passwordOk 0.9s ease;
+}
+
+.passwordBad {
+  animation: passwordBad 0.9s ease;
+}
+
+.fillOne {
+  position: relative;
+  display: inline-grid;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.fillOne::after {
+  content: "1";
+  position: absolute;
+  inset: 0;
+  color: #fff;
+  clip-path: inset(100% 0 0 0);
+  animation: fillOne 1.1s ease-in-out infinite;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+@keyframes fillOne {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes passwordOk {
+  0% {
+    background: var(--brand);
+  }
+  40% {
+    background: #067647;
+  }
+  100% {
+    background: var(--brand);
+  }
+}
+
+@keyframes passwordBad {
+  0% {
+    background: var(--brand);
+  }
+  40% {
+    background: #b42318;
+  }
+  100% {
+    background: var(--brand);
+  }
+}
+
 .section {
   display: grid;
   gap: 14px;

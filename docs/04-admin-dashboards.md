@@ -10,6 +10,7 @@ The console lives at `/admin`. The signed-in role decides which tabs exist.
 | رسانه | `/admin/media` | yes | no | yes |
 | پوسته | `/admin/theme` | yes | no | no |
 | کپی‌رایت | `/admin/copyright` | yes | no | no |
+| پروفایل | `/admin/profile` | yes | yes | yes |
 
 Usernames from bootstrap are `admin`, `operator`, and `creator`. Passwords come from `npm run db:bootstrap` or `npm run docker:bootstrap`. See [DEPLOYMENT.md](DEPLOYMENT.md) §6.
 
@@ -67,6 +68,10 @@ The theme screen is three sections: **پالت رنگ**, **تصاویر**, and *
 Leave a field empty to keep the built-in file. A filled path must be a library id (`/media/file/{uuid}`) or a public path, with no `..`, quotes, or other CSS syntax. Saving checks that a library image is an image and the campaign file is a video. Publishing still does not restart the container.
 
 **ذخیره پیش‌نویس** does not change the public site. **انتشار پوسته** copies the draft to the published document, increments the revision, and invalidates the Next.js cache in the running process.
+
+## پروفایل
+
+Every signed-in role opens **پروفایل** from the tab or from their name in the header. The page shows the username and role, and a password form: current password, new password, and confirmation. The new password must be at least 12 characters and different from the current one. While the request runs, the button shows a `1` filling upward. Success flashes the button green and shows a green toast. A mismatch, a wrong current password, or any other failure flashes it red and shows a red toast. Other sessions for that account are revoked. The session that made the change stays signed in.
 
 ## کپی‌رایت
 

@@ -35,7 +35,9 @@ export function destinationForRole(role: UserRole, requested: string) {
     : home;
   if (role === "admin") return destination;
   if (role === "operator") {
-    return destination === "/admin/submissions" || destination.startsWith("/admin/submissions/")
+    return destination === "/admin/submissions" ||
+      destination.startsWith("/admin/submissions/") ||
+      destination === "/admin/profile"
       ? destination
       : "/admin/submissions";
   }
@@ -43,7 +45,8 @@ export function destinationForRole(role: UserRole, requested: string) {
     destination === "/admin/content" ||
     destination.startsWith("/admin/content/") ||
     destination === "/admin/media" ||
-    destination.startsWith("/admin/media/")
+    destination.startsWith("/admin/media/") ||
+    destination === "/admin/profile"
   ) {
     return destination;
   }

@@ -13,6 +13,7 @@ const tabs = [
   { href: "/admin/media", label: "رسانه", allow: canAccessCms },
   { href: "/admin/theme", label: "پوسته", allow: canManageSite },
   { href: "/admin/copyright", label: "کپی‌رایت", allow: canManageSite },
+  { href: "/admin/profile", label: "پروفایل", allow: () => true },
 ] as const;
 
 function isCurrent(pathname: string, href: string) {

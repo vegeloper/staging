@@ -55,7 +55,7 @@ Existing Postgres data, resumes, and uploaded media stay on their Docker volumes
 
 1. Open `http://127.0.0.1:3000`.
 2. Open `http://127.0.0.1:3000/admin/login` and sign in as `admin`.
-3. Confirm the tabs: پیشخوان، درخواست‌ها، مطالب، رسانه، پوسته، کپی‌رایت.
+3. Confirm the tabs you should see, including پروفایل. Admin sees every tab. Operator sees درخواست‌ها and پروفایل. Creator sees مطالب، رسانه، and پروفایل.
 4. On a fresh ClamAV volume, wait until the clamav container is healthy before uploading media. Until then an upload shows a red “scanner unavailable” toast and the file is not stored.
 
 Useful follow-ups:

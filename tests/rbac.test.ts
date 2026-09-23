@@ -18,6 +18,8 @@ describe("admin destinations", () => {
     expect(destinationForRole("content_creator", "/admin/media")).toBe("/admin/media");
     expect(destinationForRole("content_creator", "/admin/media/abc")).toBe("/admin/media/abc");
     expect(destinationForRole("operator", "/admin/media")).toBe("/admin/submissions");
+    expect(destinationForRole("operator", "/admin/profile")).toBe("/admin/profile");
+    expect(destinationForRole("content_creator", "/admin/profile")).toBe("/admin/profile");
     expect(destinationForRole("content_creator", "/administrator")).toBe("/admin/content");
   });
 });
