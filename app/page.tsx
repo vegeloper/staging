@@ -14,12 +14,7 @@ import carSideView from "@/public/figma/vehicles/Car-SideView.svg";
 import carSideView2 from "@/public/figma/carousel2.png";
 import carSideView3 from "@/public/figma/carousel3.png";
 
-import mainNewsImage from "@/public/figma/mainNewsImage.png";
 import TripStartHero from "@/components/ui/index/TripStartHero/TripStartHero";
-import news1Image from "@/public/figma/news-1.png";
-import news2Image from "@/public/figma/news-2.png";
-import news3Image from "@/public/figma/news-3.png";
-import news4Image from "@/public/figma/news-4.png";
 
 import IranCoverage, {
   CoverageItem,

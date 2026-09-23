@@ -22,53 +22,28 @@ export type VehicleSpec = {
 export type Vehicle = {
   id: string;
 
+  name?: string;
+
   image: {
     src: StaticImageData;
     alt: string;
   };
 
-  /**
-   * مشخصات سمت چپ
-   * اگر sideDescription وجود داشته باشد،
-   * specs نمایش داده نمی‌شود.
-   */
   specs?: VehicleSpec[];
 
-  /**
-   * متن بلند سمت چپ
-   */
   sideDescription?: string;
 
-  /**
-   * متن پایین اسلاید
-   * مثلا:
-   * بی‌وای‌دی سیل ۵ دی‌ام-آی هیبریدی
-   */
   footerText?: string;
 
-  /**
-   * اگر این دو مقدار وجود داشته باشند
-   * دکمه پایین نمایش داده می‌شود.
-   */
   detailsHref?: string;
   detailsLabel?: string;
 };
 
 type VehicleShowcaseProps = {
-  /**
-   * عنوان بالا سمت راست
-   */
   title: string;
 
-  /**
-   * اگر ارسال شود زیر title نمایش داده می‌شود.
-   * اگر ارسال نشود badge نمایش داده می‌شود.
-   */
   description?: string;
 
-  /**
-   * متن badge زمانی که description نداریم
-   */
   badgeText?: string;
 
   vehicles?: Vehicle[];
@@ -81,6 +56,8 @@ type VehicleShowcaseProps = {
 const defaultVehicles: Vehicle[] = [
   {
     id: "byd-seal-5-dmi",
+
+    name: "BYD Seal 5 DM-i",
 
     image: {
       src: carSideView,
@@ -108,6 +85,8 @@ const defaultVehicles: Vehicle[] = [
 
   {
     id: "byd-seal-06-dmi",
+
+    name: "BYD Seal 06 DM-i",
 
     image: {
       src: carSideView,
@@ -181,17 +160,35 @@ export default function VehicleShowcase({
       aria-label="ناوگان دات‌وان تریپ"
     >
       <div className={styles.carouselArea}>
-        <div className={styles.viewport} ref={emblaRef}>
+        <div
+          className={styles.viewport}
+          ref={emblaRef}
+        >
           <div className={styles.track}>
             {vehicles.map((vehicle, index) => {
-              const hasSpecs = vehicle.specs && vehicle.specs.length > 0;
+              const hasSpecs =
+                vehicle.specs &&
+                vehicle.specs.length > 0;
 
-              const hasSideDescription = Boolean(vehicle.sideDescription);
+              const hasSideDescription =
+                Boolean(vehicle.sideDescription);
 
               const hasButton =
-                Boolean(vehicle.detailsHref) && Boolean(vehicle.detailsLabel);
+                Boolean(vehicle.detailsHref) &&
+                Boolean(vehicle.detailsLabel);
 
-              const hasFooterText = Boolean(vehicle.footerText);
+              const hasFooterText =
+                Boolean(vehicle.footerText);
+
+              /*
+                حالت جدید:
+                فقط وقتی دکمه داریم و name ارسال شده
+                اسم خودرو بالای مشخصات نمایش داده می‌شود.
+              */
+              const showVehicleName =
+                hasButton &&
+                Boolean(vehicle.name) &&
+                !hasSideDescription;
 
               return (
                 <div
@@ -208,69 +205,100 @@ export default function VehicleShowcase({
                     ======================================== */}
 
                     <div className={styles.header}>
-                      {/* =========================
-                          سمت راست
-                      ========================= */}
+                      {/* Right */}
 
                       <div className={styles.intro}>
-                        {/* اگر description نداریم badge می‌آید */}
-
                         {!description && (
                           <div className={styles.badge}>
-                            <span className={styles.badgeDot} />
+                            <span
+                              className={styles.badgeDot}
+                            />
 
                             {badgeText}
                           </div>
                         )}
 
-                        <h2 className={styles.title}>{title}</h2>
-
-                        {/* اگر description داریم زیر title می‌آید */}
+                        <h2 className={styles.title}>
+                          {title}
+                        </h2>
 
                         {description && (
-                          <p className={styles.description}>{description}</p>
+                          <p
+                            className={
+                              styles.description
+                            }
+                          >
+                            {description}
+                          </p>
                         )}
                       </div>
 
-                      {/* =========================
-                          سمت چپ
-                      ========================= */}
+                      {/* Left */}
+
                       <div
                         className={`${styles.modelInfo} ${
-                          hasSideDescription ? styles.modelInfoWide : ""
+                          hasSideDescription
+                            ? styles.modelInfoWide
+                            : ""
                         }`}
                       >
-                        {/* حالت اول:
-                            متن بلند
-                        */}
-
                         {hasSideDescription ? (
-                          <p className={styles.sideDescription}>
+                          <p
+                            className={
+                              styles.sideDescription
+                            }
+                          >
                             {vehicle.sideDescription}
                           </p>
                         ) : (
-                          /* حالت دوم:
-                             مشخصات خودرو
-                          */
+                          <>
+                            {showVehicleName && (
+                              <h3
+                                className={
+                                  styles.vehicleName
+                                }
+                              >
+                                {vehicle.name}
+                              </h3>
+                            )}
 
-                          hasSpecs && (
-                            <dl className={styles.specCard}>
-                              {vehicle.specs!.map((spec) => (
-                                <div
-                                  className={styles.specRow}
-                                  key={spec.label}
-                                >
-                                  <dt className={styles.specLabel}>
-                                    {spec.label}:
-                                  </dt>
+                            {hasSpecs && (
+                              <dl
+                                className={
+                                  styles.specCard
+                                }
+                              >
+                                {vehicle.specs!.map(
+                                  (spec) => (
+                                    <div
+                                      className={
+                                        styles.specRow
+                                      }
+                                      key={
+                                        spec.label
+                                      }
+                                    >
+                                      <dt
+                                        className={
+                                          styles.specLabel
+                                        }
+                                      >
+                                        {spec.label}:
+                                      </dt>
 
-                                  <dd className={styles.specValue}>
-                                    {spec.value}
-                                  </dd>
-                                </div>
-                              ))}
-                            </dl>
-                          )
+                                      <dd
+                                        className={
+                                          styles.specValue
+                                        }
+                                      >
+                                        {spec.value}
+                                      </dd>
+                                    </div>
+                                  ),
+                                )}
+                              </dl>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>
@@ -292,22 +320,31 @@ export default function VehicleShowcase({
                         Footer
                     ======================================== */}
 
-                    {(hasButton || hasFooterText) && (
+                    {(hasButton ||
+                      hasFooterText) && (
                       <div className={styles.footer}>
-                        {/* حالت دکمه */}
-
                         {hasButton ? (
                           <a
-                            className={styles.detailsButton}
-                            href={vehicle.detailsHref}
-                            tabIndex={index === activeIndex ? undefined : -1}
+                            className={
+                              styles.detailsButton
+                            }
+                            href={
+                              vehicle.detailsHref
+                            }
+                            tabIndex={
+                              index === activeIndex
+                                ? undefined
+                                : -1
+                            }
                           >
                             {vehicle.detailsLabel}
                           </a>
                         ) : (
-                          /* حالت متن */
-
-                          <p className={styles.footerText}>
+                          <p
+                            className={
+                              styles.footerText
+                            }
+                          >
                             {vehicle.footerText}
                           </p>
                         )}
@@ -329,7 +366,9 @@ export default function VehicleShowcase({
             <button
               type="button"
               className={`${styles.navButton} ${styles.navRight}`}
-              onClick={() => emblaApi?.scrollPrev()}
+              onClick={() =>
+                emblaApi?.scrollPrev()
+              }
               aria-label="خودروی قبلی"
             >
               <Image
@@ -344,7 +383,9 @@ export default function VehicleShowcase({
             <button
               type="button"
               className={`${styles.navButton} ${styles.navLeft}`}
-              onClick={() => emblaApi?.scrollNext()}
+              onClick={() =>
+                emblaApi?.scrollNext()
+              }
               aria-label="خودروی بعدی"
             >
               <Image

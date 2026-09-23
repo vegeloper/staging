@@ -1,359 +1,223 @@
+/* ==========================================
+   Vehicle Showcase
+========================================== */
+
 .section {
-  /* ابعاد فریم مطابق فیگما */
   --frame-gap: 24px;
   --frame-peek: 30px;
   --frame-min-height: 704px;
+
   --frame-padding: 4.54vw;
   --frame-padding-sides: 3.78vw;
+
   --slide-width: calc(
     100% - (var(--frame-peek) * 2) - (var(--frame-gap) * 2)
   );
-  /* ۲۴۸ از ۷۰۴ پیکسل ارتفاع فریم، تا نسبت فیگما در همه عرض‌ها حفظ شود */
+
   --car-top: 15.43%;
   --nav-size: 38px;
 
   width: 100%;
+
   margin: 80px 0;
+
+  box-sizing: border-box;
+
+  font-family: inherit;
+}
+
+.section *,
+.section *::before,
+.section *::after {
   box-sizing: border-box;
   font-family: inherit;
 }
 
+
+/* ==========================================
+   Carousel
+========================================== */
+
 .carouselArea {
   position: relative;
+
+  width: 100%;
 }
 
 .viewport {
+  width: 100%;
+
   overflow: hidden;
 }
 
 .track {
   display: flex;
+
+  width: 100%;
 }
 
 .slide {
-  /* پدینگ به‌جای gap: امبلا فاصله CSS gap را در اسنپ حساب نمی‌کند */
-  box-sizing: border-box;
-  flex: 0 0 calc(var(--slide-width) + var(--frame-gap));
+  /*
+    padding به‌جای gap تا Embla
+    فاصله اسلایدها را درست محاسبه کند
+  */
+  flex: 0 0 calc(
+    var(--slide-width) + var(--frame-gap)
+  );
+
   min-width: 0;
+
   padding-inline: calc(var(--frame-gap) / 2);
 }
 
-/* --- فریم خودرو --- */
+
+/* ==========================================
+   Frame
+========================================== */
+
 .frame {
   position: relative;
+
   display: flex;
   flex-direction: column;
+
+  width: 100%;
+
+  min-width: 0;
   min-height: var(--frame-min-height);
-  padding:  var(--frame-padding)  var(--frame-padding-sides) 50px;
+
+  padding:
+    var(--frame-padding)
+    var(--frame-padding-sides)
+    50px;
+
+  overflow: hidden;
+
   border: 2px solid #f2f2f2;
   border-radius: 24px;
+
   background: #eeeeee;
-  overflow: hidden;
 }
 
-/* تصویر خودرو به‌عنوان لایه پس‌زمینه */
-.carLayer {
-  position: absolute;
-  z-index: 0;
-  top: var(--car-top);
-  bottom: 0;
-  inset-inline: 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
 
-.carImage {
-  height: 100%;
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
-}
+/* ==========================================
+   Header
+========================================== */
 
-/* --- سرتیتر: متن معرفی سمت راست، مشخصات خودرو سمت چپ --- */
 .header {
   position: relative;
+
   z-index: 2;
+
+  width: 100%;
+  min-width: 0;
+
   display: grid;
-  grid-template-columns: 1fr auto;
+
+  /*
+    حالت عادی:
+    title سمت راست
+    specs سمت چپ
+  */
+  grid-template-columns:
+    minmax(0, 1fr)
+    300px;
+
   align-items: start;
+
   gap: 40px;
 }
 
-.intro {
-  max-width: 560px;
+
+/*
+  حالت توضیحات بلند
+
+  چون modelInfoWide ممکن است متن زیادی داشته باشد،
+  ستون سمت چپ دیگر روی 300px قفل نمی‌شود.
+*/
+.header:has(.modelInfoWide) {
+  grid-template-columns:
+    minmax(280px, 0.8fr)
+    minmax(0, 1.2fr);
+
+  gap: clamp(30px, 4vw, 64px);
 }
+
+
+/* ==========================================
+   Intro
+========================================== */
+
+.intro {
+  width: 100%;
+  max-width: 560px;
+
+  min-width: 0;
+}
+
+
+/* ==========================================
+   Title
+========================================== */
 
 .title {
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: #171717;
-  line-height: 180%;
-  margin: 0 0 12px 0;
+  margin: 0 0 12px;
 
-  @media (min-width: 769px) {
-    font-size: 24px;
-  }
+  color: #171717;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
+  font-size: 24px;
+  font-weight: 700;
+
+  line-height: 1.8;
+
+  text-align: right;
 }
+
+
+/* ==========================================
+   Description
+========================================== */
 
 .description {
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  color: #6b7280;
-  line-height: 180%;
+  width: 100%;
+
   margin: 0;
 
-  @media (min-width: 769px) {
-    font-size: 16px;
-  }
-}
+  color: #6b7280;
 
-.modelInfo {
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: right;
-}
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
 
-.vehicleName {
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
   font-size: 16px;
-  font-weight: 700;
-  color: #00b7ce;
-  line-height: 48px;
-  width: 100%;
-  margin: 0 0 16px 0;
-  text-align: right;
+  font-weight: 400;
 
-  @media (min-width: 769px) {
-    font-size: 20px;
-  }
-}
+  line-height: 1.8;
 
-.specCard {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 276px;
-  border: 1px solid #D9D9D9;
-  border-radius: 24px;
-  padding: 24px 20px;
-  margin: 0;
   text-align: right;
 }
 
-.specRow {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  font-size: 14px;
-  line-height: 1.7;
-}
-
-.specLabel {
-  color: #6b7280;
-  margin: 0;
-}
-
-.specValue {
-  color: #171717;
-  font-weight: 700;
-  margin: 0;
-}
-
-/* --- دکمه جزییات --- */
-.footer {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  justify-content: center;
-  margin-top: auto;
-  padding-top: 32px;
-}
-
-.detailsButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 10px 28px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 12px;
-  background: var(--brand);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  text-decoration: none;
-  box-shadow:
-    inset 0 6px 7px rgba(255, 255, 255, 0.08),
-    0 4px 14px rgba(0, 183, 206, 0.18);
-  transition:
-    transform 0.2s,
-    filter 0.2s;
-}
-
-.detailsButton:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.04);
-}
-
-/* --- فلش‌ها: مرکز عمودی لبه‌های فریم فعال --- */
-.navLayer {
-  position: absolute;
-  z-index: 3;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: var(--slide-width);
-  margin-inline: auto;
-  pointer-events: none;
-}
-
-.navButton {
-  position: absolute;
-  top: 50%;
-  width: var(--nav-size);
-  height: var(--nav-size);
-  padding: 0;
-  border: 0;
-  background: transparent;
-  line-height: 0;
-  pointer-events: auto;
-  transform: translateY(-50%);
-  transition: transform 0.2s;
-  /* display: none; */
-
-  @media (min-width: 769px) {
-    display: block
-  }
-}
-
-.navButton:hover {
-  transform: translateY(-50%) scale(1.08);
-}
-
-.navButton img {
-  width: 100%;
-  height: 100%;
-}
-
-.navRight {
-    right: calc(var(--nav-size) / -2);
-}
-
-.navLeft {
- 
-    left: calc(var(--nav-size) / -2);
-  
-}
 
 /* ==========================================
-   Responsive Design (واکنش‌گرایی)
-   ========================================== */
+   Badge
+========================================== */
 
-@media (min-width: 769px) {
-  .carLayer {
-    top: 10%;
-    bottom: 10%;
-  }
-}
-
-@media (max-width: 1024px) {
-  .header {
-    gap: 24px;
-  }
-}
-
-@media (max-width: 768px) {
-  .section {
-    --frame-min-height: auto;
-    --frame-peek: 14px;
-    --frame-gap: 12px;
-    --nav-size: 32px;
-
-    margin: 40px 0;
-  }
-
-  .frame {
-    border-radius: 20px;
-    padding: 24px 16px 20px;
-    min-height: 0;
-  }
-
-  .header {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 16px;
-  }
-
-  .intro {
-    max-width: 100%;
-    text-align: center;
-  }
-
-  .modelInfo {
-    width: 100%;
-    max-width: 100%;
-    align-items: center;
-    text-align: center;
-  }
-
-  .vehicleName {
-    text-align: center;
-    line-height: 1.5;
-    margin-bottom: 12px;
-  }
-
-  .specCard {
-    width: 100%;
-    max-width: 280px;
-    margin-inline: auto;
-  }
-
-  .carLayer {
-    position: relative;
-    top: auto;
-    bottom: auto;
-    inset-inline: auto;
-    z-index: 1;
-    width: 100%;
-    height: auto;
-    margin-top: 8px;
-    padding-inline: 4px;
-  }
-
-  .carImage {
-    width: 100%;
-    height: auto;
-    max-height: 168px;
-    object-fit: contain;
-    transform: scale(1.2);
-
-    @media (min-width: 769px) {
-      transform: unset;
-    }
-  }
-
-  .footer {
-    margin-top: 12px;
-    padding-top: 4px;
-  }
-}
-/* ==========================================
-   Dynamic Variants
-   ========================================== */
-
-/* badge بالای title */
 .badge {
   width: fit-content;
 
   display: inline-flex;
   align-items: center;
+
   gap: 8px;
 
   margin-bottom: 14px;
@@ -363,19 +227,22 @@
   border-radius: 999px;
 
   background: #dddddd;
+
   color: #171717;
 
   font-size: 13px;
   font-weight: 500;
 
   line-height: 1.7;
+
+  white-space: nowrap;
 }
 
 .badgeDot {
   width: 5px;
   height: 5px;
 
-  flex-shrink: 0;
+  flex: 0 0 5px;
 
   border-radius: 50%;
 
@@ -383,24 +250,263 @@
 }
 
 
-/* متن بلند سمت چپ */
-.sideDescription {
-  width: 100%;
+/* ==========================================
+   Model Info
+========================================== */
 
-  margin: 0;
+.modelInfo {
+  width: 300px;
+  max-width: 100%;
 
-  color: #6b7280;
+  min-width: 0;
 
-  font-size: 14px;
-  font-weight: 400;
+  display: flex;
+  flex-direction: column;
 
-  line-height: 2.1;
+  align-items: flex-start;
 
   text-align: right;
 }
 
 
-/* متن پایین به جای button */
+/* ==========================================
+   Vehicle Name
+========================================== */
+
+.vehicleName {
+  width: 100%;
+
+  margin: 0 0 16px;
+
+  color: var(--brand, #00b7ce);
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
+  font-size: 20px;
+  font-weight: 700;
+
+  line-height: 1.8;
+
+  text-align: right;
+}
+
+
+/* ==========================================
+   Specs Card
+========================================== */
+
+.specCard {
+  width: 276px;
+  max-width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 16px;
+
+  margin: 0;
+
+  padding: 24px 20px;
+
+  border: 1px solid #d9d9d9;
+  border-radius: 24px;
+
+  text-align: right;
+}
+
+.specRow {
+  width: 100%;
+
+  display: flex;
+  align-items: baseline;
+
+  gap: 6px;
+
+  font-size: 14px;
+
+  line-height: 1.7;
+}
+
+.specLabel {
+  margin: 0;
+
+  color: #6b7280;
+
+  font-weight: 400;
+}
+
+.specValue {
+  margin: 0;
+
+  color: #171717;
+
+  font-weight: 700;
+}
+
+
+/* ==========================================
+   Long Description Variant
+========================================== */
+
+.modelInfoWide {
+  /*
+    نکته مهم:
+    عرض نباید از ستون Grid بیشتر شود.
+  */
+  width: 100%;
+  max-width: 700px;
+
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+}
+
+.sideDescription {
+  width: 100%;
+  max-width: 100%;
+
+  min-width: 0;
+
+  margin: 0;
+
+  color: #6b7280;
+
+  font-size: 16px;
+  font-weight: 400;
+
+  line-height: 2;
+
+  text-align: right;
+
+  white-space: normal;
+
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+
+/* ==========================================
+   Car Layer
+========================================== */
+
+.carLayer {
+  position: absolute;
+
+  z-index: 0;
+
+  top: var(--car-top);
+  bottom: 0;
+
+  inset-inline: 0;
+
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: center;
+
+  pointer-events: none;
+}
+
+.carImage {
+  display: block;
+
+  width: auto;
+  height: 100%;
+
+  max-width: 100%;
+
+  object-fit: contain;
+}
+
+
+/* ==========================================
+   Footer
+========================================== */
+
+.footer {
+  position: relative;
+
+  z-index: 2;
+
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-top: auto;
+
+  padding-top: 32px;
+}
+
+
+/* ==========================================
+   Details Button
+========================================== */
+
+.detailsButton {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  min-height: 44px;
+
+  padding: 10px 28px;
+
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 12px;
+
+  background: var(--brand, #00b7ce);
+
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  line-height: 1.5;
+
+  text-decoration: none;
+
+  white-space: nowrap;
+
+  box-shadow:
+    inset 0 6px 7px rgba(255, 255, 255, 0.08),
+    0 4px 14px rgba(0, 183, 206, 0.18);
+
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.detailsButton:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.04);
+}
+
+.detailsButton:focus-visible {
+  outline: 2px solid var(--brand, #00b7ce);
+
+  outline-offset: 3px;
+}
+
+
+/* ==========================================
+   Footer Text
+========================================== */
+
 .footerText {
   margin: 0;
 
@@ -415,8 +521,315 @@
 }
 
 
-/* فقط تنظیم کلاس‌های جدید در موبایل */
+/* ==========================================
+   Navigation
+========================================== */
+
+.navLayer {
+  position: absolute;
+
+  z-index: 3;
+
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  width: var(--slide-width);
+
+  margin-inline: auto;
+
+  pointer-events: none;
+}
+
+.navButton {
+  position: absolute;
+
+  top: 50%;
+
+  width: var(--nav-size);
+  height: var(--nav-size);
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  line-height: 0;
+
+  cursor: pointer;
+
+  pointer-events: auto;
+
+  transform: translateY(-50%);
+
+  transition: transform 0.2s ease;
+}
+
+.navButton:hover {
+  transform:
+    translateY(-50%)
+    scale(1.08);
+}
+
+.navButton:focus-visible {
+  outline: 2px solid var(--brand, #00b7ce);
+
+  outline-offset: 3px;
+
+  border-radius: 50%;
+}
+
+.navButton img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+}
+
+.navRight {
+  right: calc(var(--nav-size) / -2);
+}
+
+.navLeft {
+  left: calc(var(--nav-size) / -2);
+}
+
+
+/* ==========================================
+   Desktop
+========================================== */
+
+@media (min-width: 769px) {
+  .carLayer {
+    top: 10%;
+    bottom: 10%;
+  }
+
+  .sideDescription {
+    font-size: 16px;
+
+    line-height: 2;
+  }
+}
+
+
+/* ==========================================
+   Laptop
+========================================== */
+
+@media (max-width: 1200px) {
+  .header {
+    grid-template-columns:
+      minmax(0, 1fr)
+      280px;
+
+    gap: 30px;
+  }
+
+  /*
+    توضیحات بلند همچنان فضای منعطف دارد
+  */
+  .header:has(.modelInfoWide) {
+    grid-template-columns:
+      minmax(250px, 0.8fr)
+      minmax(0, 1.2fr);
+
+    gap: 32px;
+  }
+
+  .modelInfo {
+    width: 280px;
+  }
+
+  .modelInfoWide {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .specCard {
+    width: 100%;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .vehicleName {
+    font-size: 19px;
+  }
+
+  .sideDescription {
+    font-size: 15px;
+  }
+}
+
+
+/* ==========================================
+   Small Laptop / Tablet
+========================================== */
+
+@media (max-width: 1024px) {
+  .section {
+    --frame-padding: 48px;
+    --frame-padding-sides: 35px;
+  }
+
+  /*
+    حالت Specs
+  */
+  .header {
+    grid-template-columns:
+      minmax(0, 1fr)
+      250px;
+
+    gap: 24px;
+  }
+
+  /*
+    حالت توضیحات بلند
+  */
+  .header:has(.modelInfoWide) {
+    grid-template-columns:
+      minmax(220px, 0.75fr)
+      minmax(0, 1.25fr);
+
+    gap: 24px;
+  }
+
+  .modelInfo {
+    width: 250px;
+  }
+
+  .modelInfoWide {
+    width: 100%;
+    max-width: 100%;
+
+    min-width: 0;
+  }
+
+  .specCard {
+    width: 100%;
+
+    padding: 20px 17px;
+
+    border-radius: 20px;
+  }
+
+  .specRow {
+    font-size: 13px;
+  }
+
+  .title {
+    font-size: 21px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .vehicleName {
+    font-size: 18px;
+  }
+
+  .sideDescription {
+    width: 100%;
+    max-width: 100%;
+
+    font-size: 14px;
+
+    line-height: 2;
+  }
+}
+
+
+/* ==========================================
+   Mobile / Tablet
+========================================== */
+
 @media (max-width: 768px) {
+  .section {
+    --frame-min-height: auto;
+    --frame-peek: 14px;
+    --frame-gap: 12px;
+    --nav-size: 32px;
+
+    margin: 40px 0;
+  }
+
+
+  /* ========================================
+     Frame
+  ======================================== */
+
+  .frame {
+    min-height: 0;
+
+    padding: 24px 16px 20px;
+
+    border-radius: 20px;
+  }
+
+
+  /* ========================================
+     Header
+  ======================================== */
+
+  .header,
+  .header:has(.modelInfoWide) {
+    width: 100%;
+
+    grid-template-columns:
+      minmax(0, 1fr);
+
+    justify-items: center;
+
+    gap: 16px;
+  }
+
+
+  /* ========================================
+     Intro
+  ======================================== */
+
+  .intro {
+    width: 100%;
+    max-width: 100%;
+
+    min-width: 0;
+
+    text-align: center;
+  }
+
+  .title {
+    margin-bottom: 8px;
+
+    font-size: 16px;
+
+    line-height: 1.8;
+
+    text-align: center;
+  }
+
+  .description {
+    width: 100%;
+    max-width: 520px;
+
+    margin-inline: auto;
+
+    font-size: 12px;
+
+    line-height: 1.8;
+
+    text-align: center;
+  }
+
+
+  /* ========================================
+     Badge
+  ======================================== */
+
   .badge {
     margin-inline: auto;
     margin-bottom: 10px;
@@ -426,70 +839,321 @@
     font-size: 11px;
   }
 
-  .sideDescription {
+
+  /* ========================================
+     Model Info
+  ======================================== */
+
+  .modelInfo,
+  .modelInfoWide {
+    width: 100%;
     max-width: 100%;
+
+    min-width: 0;
+
+    align-items: center;
+
+    text-align: center;
+  }
+
+
+  /* ========================================
+     Vehicle Name
+  ======================================== */
+
+  .vehicleName {
+    width: 100%;
+
+    margin: 0 0 12px;
+
+    color: var(--brand, #00b7ce);
+
+    font-size: 16px;
+
+    line-height: 1.6;
+
+    text-align: center;
+  }
+
+
+  /* ========================================
+     Specs
+  ======================================== */
+
+  .specCard {
+    width: 100%;
+    max-width: 280px;
+
+    margin-inline: auto;
+
+    padding: 18px 16px;
+
+    gap: 12px;
+
+    border-radius: 18px;
+
+    text-align: right;
+  }
+
+  .specRow {
+    width: 100%;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+
+    text-align: right;
+  }
+
+
+  /* ========================================
+     Long Description
+  ======================================== */
+
+  .sideDescription {
+    width: 100%;
+    max-width: 100%;
+
+    min-width: 0;
+
+    margin: 0;
+
+    padding-inline: 0;
 
     font-size: 12px;
 
     line-height: 2;
+
+    text-align: center;
+
+    white-space: normal;
+
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+
+  /* ========================================
+     Car
+  ======================================== */
+
+  .carLayer {
+    position: relative;
+
+    z-index: 1;
+
+    top: auto;
+    bottom: auto;
+
+    inset-inline: auto;
+
+    width: 100%;
+    height: auto;
+
+    margin-top: 8px;
+
+    padding-inline: 4px;
+
+    pointer-events: none;
+  }
+
+  .carImage {
+    width: 100%;
+    height: auto;
+
+    max-height: 168px;
+
+    object-fit: contain;
+
+    transform: scale(1.2);
+  }
+
+
+  /* ========================================
+     Footer
+  ======================================== */
+
+  .footer {
+    margin-top: 12px;
+
+    padding-top: 4px;
+  }
+
+  .detailsButton {
+    min-height: 41px;
+
+    padding: 9px 24px;
+
+    font-size: 12px;
+
+    border-radius: 10px;
   }
 
   .footerText {
     font-size: 17px;
   }
 }
+
+
 /* ==========================================
-   Long description variant
-   فقط حالت دوم
+   Small Mobile
 ========================================== */
 
-.modelInfoWide {
-  width: min(48vw, 700px);
-  max-width: 700px;
-}
+@media (max-width: 480px) {
+  .section {
+    --frame-peek: 8px;
+    --frame-gap: 8px;
+    --nav-size: 30px;
 
-.sideDescription {
-  width: 100%;
+    margin: 32px 0;
+  }
 
-  margin: 0;
+  .frame {
+    padding:
+      22px
+      14px
+      18px;
 
-  color: #6b7280;
+    border-radius: 18px;
+  }
 
-  font-size: 14px;
-  font-weight: 400;
+  .header,
+  .header:has(.modelInfoWide) {
+    gap: 14px;
+  }
 
-  line-height: 2;
+  .title {
+    font-size: 15px;
 
-  text-align: right;
-}
+    line-height: 1.8;
+  }
 
+  .description {
+    font-size: 10.5px;
 
-/* Desktop */
-@media (min-width: 769px) {
-  .modelInfoWide {
-    width: min(48vw, 700px);
+    line-height: 1.9;
+  }
+
+  .badge {
+    padding: 5px 10px;
+
+    font-size: 10px;
+  }
+
+  .vehicleName {
+    margin-bottom: 10px;
+
+    font-size: 15px;
+  }
+
+  .specCard {
+    max-width: 260px;
+
+    padding: 16px 14px;
+
+    gap: 10px;
+
+    border-radius: 16px;
+  }
+
+  .specRow {
+    gap: 5px;
+
+    font-size: 11px;
   }
 
   .sideDescription {
-    font-size: 16px;
+    width: 100%;
+
+    font-size: 11px;
+
     line-height: 2;
+  }
+
+  .carLayer {
+    margin-top: 6px;
+  }
+
+  .carImage {
+    max-height: 150px;
+
+    transform: scale(1.16);
+  }
+
+  .detailsButton {
+    min-height: 39px;
+
+    padding: 8px 22px;
+
+    font-size: 11px;
+  }
+
+  .footerText {
+    font-size: 15px;
   }
 }
 
 
-/* Mobile */
-@media (max-width: 768px) {
-  .modelInfoWide {
-    width: 100%;
-    max-width: 100%;
+/* ==========================================
+   Very Small Mobile
+========================================== */
+
+@media (max-width: 360px) {
+  .section {
+    --frame-peek: 6px;
+    --frame-gap: 6px;
+  }
+
+  .frame {
+    padding:
+      20px
+      12px
+      16px;
+  }
+
+  .title {
+    font-size: 14px;
+  }
+
+  .description {
+    font-size: 10px;
+  }
+
+  .badge {
+    font-size: 9px;
+  }
+
+  .vehicleName {
+    font-size: 14px;
+  }
+
+  .specCard {
+    max-width: 240px;
+
+    padding: 14px 12px;
+  }
+
+  .specRow {
+    font-size: 10.5px;
   }
 
   .sideDescription {
-    width: 100%;
+    font-size: 10.5px;
 
-    font-size: 12px;
     line-height: 2;
+  }
 
-    text-align: center;
+  .carImage {
+    max-height: 135px;
+  }
+
+  .detailsButton {
+    padding-inline: 20px;
+
+    font-size: 10.5px;
+  }
+
+  .footerText {
+    font-size: 14px;
   }
 }

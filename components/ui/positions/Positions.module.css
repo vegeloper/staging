@@ -2,7 +2,6 @@
   width: 94%;
   margin-inline: auto;
 
-  padding: 60px 0 80px;
 
   box-sizing: border-box;
 
@@ -335,5 +334,315 @@
   .arrowButton {
     width: 30px;
     height: 30px;
+  }
+}
+/* ========================================
+   Empty State
+======================================== */
+
+.emptyWrapper {
+  width: 100%;
+  margin-top: 40px;
+}
+
+.emptyState {
+  position: relative;
+
+  width: 100%;
+  max-width: 900px;
+  min-height: 320px;
+
+  margin-inline: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 45px 30px;
+
+  overflow: hidden;
+
+  border: 1px solid #e8e8e8;
+  border-radius: 28px;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(0, 183, 206, 0.1) 0%,
+      rgba(0, 183, 206, 0.04) 25%,
+      transparent 55%
+    ),
+    #fafafa;
+
+  text-align: center;
+}
+
+/* glow */
+.emptyState::before {
+  content: "";
+
+  position: absolute;
+  top: -110px;
+  left: 50%;
+
+  width: 300px;
+  height: 200px;
+
+  border-radius: 50%;
+
+  background: rgba(0, 183, 206, 0.12);
+
+  filter: blur(65px);
+
+  transform: translateX(-50%);
+
+  pointer-events: none;
+}
+
+/* ========================================
+   Icon
+======================================== */
+
+.emptyIcon {
+  position: relative;
+  z-index: 1;
+
+  width: 68px;
+  height: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 18px;
+
+  border: 1px solid rgba(0, 183, 206, 0.14);
+  border-radius: 20px;
+
+  background: #fff;
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.05),
+    0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.emptyIcon img {
+  width: 29px;
+  height: 29px;
+
+  object-fit: contain;
+
+  opacity: 0.75;
+}
+
+/* ========================================
+   Content
+======================================== */
+
+.emptyContent {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 550px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ========================================
+   Badge
+======================================== */
+
+.emptyBadge {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 13px;
+
+  padding: 7px 13px;
+
+  border-radius: 999px;
+
+  background: rgba(0, 183, 206, 0.09);
+
+  color: #008fa1;
+
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.emptyBadgeDot {
+  width: 6px;
+  height: 6px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #00b7ce;
+
+  box-shadow: 0 0 0 4px rgba(0, 183, 206, 0.1);
+}
+
+/* ========================================
+   Title
+======================================== */
+
+.emptyTitle {
+  margin: 0;
+
+  color: #171717;
+
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.8;
+}
+
+/* ========================================
+   Description
+======================================== */
+
+.emptyDescription {
+  max-width: 480px;
+
+  margin: 7px 0 0;
+
+  color: #737373;
+
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 2;
+
+  text-align: center;
+}
+
+/* ========================================
+   Tablet
+======================================== */
+
+@media (max-width: 900px) {
+  .emptyWrapper {
+    margin-top: 32px;
+  }
+
+  .emptyState {
+    max-width: 700px;
+    min-height: 300px;
+
+    padding: 40px 25px;
+
+    border-radius: 24px;
+  }
+
+  .emptyIcon {
+    width: 62px;
+    height: 62px;
+
+    border-radius: 18px;
+  }
+
+  .emptyIcon img {
+    width: 26px;
+    height: 26px;
+  }
+
+  .emptyTitle {
+    font-size: 22px;
+  }
+
+  .emptyDescription {
+    font-size: 12.5px;
+  }
+}
+
+/* ========================================
+   Mobile
+======================================== */
+
+@media (max-width: 640px) {
+  .emptyWrapper {
+    margin-top: 25px;
+  }
+
+  .emptyState {
+    min-height: 280px;
+
+    padding: 35px 18px;
+
+    border-radius: 20px;
+  }
+
+  .emptyIcon {
+    width: 56px;
+    height: 56px;
+
+    margin-bottom: 16px;
+
+    border-radius: 16px;
+  }
+
+  .emptyIcon img {
+    width: 23px;
+    height: 23px;
+  }
+
+  .emptyBadge {
+    margin-bottom: 10px;
+
+    padding: 6px 11px;
+
+    font-size: 10px;
+  }
+
+  .emptyBadgeDot {
+    width: 5px;
+    height: 5px;
+  }
+
+  .emptyTitle {
+    font-size: 18px;
+    line-height: 1.8;
+  }
+
+  .emptyDescription {
+    max-width: 340px;
+
+    margin-top: 7px;
+
+    font-size: 11.5px;
+    line-height: 2;
+  }
+}
+
+/* ========================================
+   Small Mobile
+======================================== */
+
+@media (max-width: 400px) {
+  .emptyState {
+    min-height: 260px;
+
+    padding: 30px 15px;
+  }
+
+  .emptyIcon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .emptyTitle {
+    font-size: 17px;
+  }
+
+  .emptyDescription {
+    font-size: 11px;
   }
 }
