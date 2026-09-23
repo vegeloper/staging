@@ -264,7 +264,7 @@ function SectionHeading({
 
 export default function Home() {
   return (
-    <main dir="rtl">
+    <main dir="rtl" style={{backgroundColor:"#F6F6F6"}}>
       <Header variant="dark" />
       <section className="hero" id="home">
         <img

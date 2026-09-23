@@ -153,19 +153,14 @@
 /* ========================================
    Phone
 ======================================== */
-
 .phoneInput {
   direction: ltr;
-
   text-align: left;
-
   unicode-bidi: plaintext;
 }
-
 .phoneInput::placeholder {
   direction: rtl;
-
-  text-align: left;
+  text-align: right;
 }
 
 
@@ -761,11 +756,10 @@
     text-align: left;
   }
 
-  .phoneInput::placeholder {
-    direction: rtl;
-
-    text-align: left;
-  }
+.phoneInput::placeholder {
+  direction: rtl;
+  text-align: right;
+}
 
   .categorySection {
     margin-top: 22px;
@@ -888,11 +882,10 @@
     text-align: left;
   }
 
-  .phoneInput::placeholder {
-    direction: rtl;
-
-    text-align: left;
-  }
+ .phoneInput::placeholder {
+  direction: rtl;
+  text-align: right;
+}
 
   .categories {
     gap: 12px 14px;
