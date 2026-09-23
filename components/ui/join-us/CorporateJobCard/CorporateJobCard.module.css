@@ -47,7 +47,7 @@
 
   gap: 10px;
 
-  color: #00b8d4;
+  color: var(--brand, #00b7ce);
 
   font-size: clamp(14px, 1vw, 17px);
   font-weight: 700;

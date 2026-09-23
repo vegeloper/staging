@@ -116,8 +116,8 @@
   background: linear-gradient(
     180deg,
     #15c5dc 0%,
-    #00b7d1 55%,
-    #00a9c4 100%
+    var(--brand, #00b7ce) 55%,
+    var(--brand-dark, #0093a5) 100%
   );
 
   color: #fff;
@@ -177,7 +177,7 @@
 }
 
 .button:focus-visible {
-  outline: 2px solid #00b8d4;
+  outline: 2px solid var(--brand, #00b7ce);
   outline-offset: 3px;
 }
 

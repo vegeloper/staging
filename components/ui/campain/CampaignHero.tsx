@@ -3,6 +3,8 @@
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import HashScrollLink from '@/components/ui/HashScrollLink';
+import { useSiteSettings } from '@/components/site/SiteSettings';
+import { resolvedMedia } from '@/lib/site/defaults';
 import styles from './CampaignHero.module.css';
 
 interface CampaignBannerProps {
@@ -13,9 +15,12 @@ interface CampaignBannerProps {
 }
 
 export const CampaignHero: React.FC<CampaignBannerProps> = ({
-  videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", // آدرس تست ویدیو
-  posterSrc = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1200&auto=format&fit=crop", // تصویر نمونه
+  videoSrc,
+  posterSrc,
 }) => {
+  const media = resolvedMedia(useSiteSettings().theme);
+  const resolvedVideo = videoSrc || media.campaignVideo;
+  const resolvedPoster = posterSrc || media.campaignPoster;
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -73,12 +78,12 @@ export const CampaignHero: React.FC<CampaignBannerProps> = ({
         <video
           ref={videoRef}
           className={styles.videoPlayer}
-          poster={posterSrc}
+          poster={resolvedPoster}
           controls={isPlaying}
           onEnded={() => setIsPlaying(false)}
           playsInline
         >
-          <source src={videoSrc} type="video/mp4" />
+          <source src={resolvedVideo} type="video/mp4" />
           مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
         </video>
 

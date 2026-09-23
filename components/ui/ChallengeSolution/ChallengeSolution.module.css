@@ -273,7 +273,7 @@
     content: attr(data-label);
     display: block;
     margin-bottom: 6px;
-    color: #00b7ce;
+    color: var(--brand, #00b7ce);
     font-size: 13px;
     font-weight: 700;
   }

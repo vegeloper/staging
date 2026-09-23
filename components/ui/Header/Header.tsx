@@ -3,14 +3,15 @@
 import { useEffect, useState, type MouseEvent } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
+import PublicImage from "@/components/site/PublicImage";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 import { ChevronDown, ChevronLeft, Download, Menu, X } from "lucide-react";
 
-import logo from "@/public/figma/logo.png";
-import logoDark from "@/public/figma/logo-footer.png";
 import ShakeHand from "@/public/figma/agreement.png";
+import { useSiteSettings } from "@/components/site/SiteSettings";
+import { resolvedMedia } from "@/lib/site/defaults";
 
 import styles from "./Header.module.css";
 
@@ -110,6 +111,7 @@ export default function Header({ variant = "light" }: HeaderProps) {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   const pathname = usePathname();
+  const media = resolvedMedia(useSiteSettings().theme);
 
   const isLightVariant = variant === "light";
 
@@ -337,8 +339,8 @@ export default function Header({ variant = "light" }: HeaderProps) {
         {/* Logo */}
 
         <Link href="/" aria-label="دات‌وان تریپ" className={styles.brand}>
-          <Image
-            src={isLightVariant ? logoDark : logo}
+          <PublicImage
+            src={isLightVariant ? media.logoFooter : media.logo}
             alt="دات‌وان تریپ"
             width={140}
             height={50}

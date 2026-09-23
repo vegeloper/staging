@@ -2,13 +2,15 @@
 
 import React from "react";
 import Image from "next/image";
+import PublicImage from "@/components/site/PublicImage";
 import Link from "next/link";
 import styles from "./Footer.module.css";
 import linkdinIcon from "@/public/figma/linkdin.png";
 import telegramIcon from "@/public/figma/telegram.png";
 import instagramIcon from "@/public/figma/instagram.png";
 import baleIcon from "@/public/figma/baleIcon.png";
-import logoImage from "@/public/figma/DotOneTrip-Logo.png"; // ایمپورت لوگو
+import { useSiteSettings } from "@/components/site/SiteSettings";
+import { resolvedMedia } from "@/lib/site/defaults";
 
 const footerLinks = [
   {
@@ -69,13 +71,16 @@ const footerLinks = [
 ];
 
 export default function Footer() {
+  const site = useSiteSettings();
+  const media = resolvedMedia(site.theme);
+
   return (
     <footer className={styles.footer} dir="rtl">
       <div className={styles.container}>
         <div className={styles.topSection}>
           <div className={styles.brandWrapper}>
-            <Image
-              src={logoImage}
+            <PublicImage
+              src={media.footerLogo}
               alt="لوگو دات‌وان تریپ"
               width={70}
               height={70}
@@ -132,10 +137,7 @@ export default function Footer() {
 
       {/* === بخش پایینی (کپی‌رایت) === */}
       <div className={styles.bottomSection}>
-        <p>
-          تمامی حقوق این سایت متعلق به شرکت <strong>دات وان تریپ</strong> می
-          باشد
-        </p>
+        <p data-testid="site-copyright">{site.copyright}</p>
       </div>
     </footer>
   );

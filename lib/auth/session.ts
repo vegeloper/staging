@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { getDb } from "@/db";
 import { sessions, users } from "@/db/schema";
 import { getEnv } from "@/lib/env";
+import type { UserRole } from "./rbac";
 import { SESSION_COOKIE } from "./constants";
 
 export { SESSION_COOKIE };
@@ -18,7 +19,7 @@ const LOCKOUT_MS = 15 * 60 * 1000;
 export type AuthUser = {
   id: string;
   username: string;
-  role: "admin" | "operator";
+  role: UserRole;
 };
 
 export function hashSessionToken(token: string) {

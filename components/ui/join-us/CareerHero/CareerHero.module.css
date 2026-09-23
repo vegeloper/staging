@@ -80,7 +80,7 @@
 }
 
 .highlight {
-  color: #00b8d4;
+  color: var(--brand, #00b7ce);
 }
 
 /* =========================

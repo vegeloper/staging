@@ -1,4 +1,9 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
+
+import { SiteSettingsProvider } from "@/components/site/SiteSettings";
+import { themeStyleVars } from "@/lib/site/defaults";
+import { getPublishedSiteSettings } from "@/lib/site/public";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,14 +29,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const site = await getPublishedSiteSettings();
+
   return (
-    <html lang="fa" dir="rtl">
-      <body className="antialiased">{children}</body>
+    <html lang="fa" dir="rtl" data-scroll-behavior="smooth" style={themeStyleVars(site.theme) as CSSProperties}>
+      <body className="antialiased">
+        <SiteSettingsProvider value={site}>{children}</SiteSettingsProvider>
+      </body>
     </html>
   );
 }

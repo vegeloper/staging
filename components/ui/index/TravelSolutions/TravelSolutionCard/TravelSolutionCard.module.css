@@ -50,7 +50,7 @@
 .title {
   margin: 0;
 
-  color: #00b7ce;
+  color: var(--brand, #00b7ce);
 
   font-size: clamp(15px, 1.1vw, 19px);
   font-weight: 700;
@@ -168,7 +168,7 @@
 
   border-radius: 7px;
 
-  background: #00b7ce;
+  background: var(--brand, #00b7ce);
   color: #fff;
 
   font-size: 10px;
@@ -190,7 +190,7 @@
 }
 
 .button:hover {
-  background: #009fb4;
+  background: var(--brand-dark, #0093a5);
 
   transform: translateY(-1px);
 

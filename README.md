@@ -1,6 +1,10 @@
 # DotOne Trip
 
+First run on a new computer, or run again after pulling: **[docs/00-start-here.md](docs/00-start-here.md)**.
+
 Production deployment, secrets, and service topology: **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)**.
+
+Admin dashboards (inbox, CMS, media library, theme, copyright): **[docs/04-admin-dashboards.md](docs/04-admin-dashboards.md)**.
 
 # vinext-starter
 

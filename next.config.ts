@@ -17,6 +17,7 @@ const securityHeaders = [
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob:",
+      "media-src 'self' blob:",
       "font-src 'self' data:",
       "connect-src 'self'",
       "frame-ancestors 'none'",
@@ -31,6 +32,9 @@ const nextConfig: NextConfig = {
   output: "standalone",
   allowedDevOrigins: ["127.0.0.1", "localhost"],
   agentRules: false,
+  experimental: {
+    proxyClientMaxBodySize: "70mb",
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

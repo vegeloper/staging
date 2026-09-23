@@ -80,8 +80,7 @@ Prints:
 POSTGRES_PASSWORD=          # 64 hex chars — also paste into DATABASE_URL
 AUTH_PASSWORD_PEPPER=       # 32-byte Base64 — password hashing; unique per env
 PII_ENCRYPTION_KEY=         # 32-byte Base64 — national ID; unique per env; do not rotate blindly
-SEED_ADMIN_PASSWORD=        # login for user admin — secret store only until step 5
-SEED_OPERATOR_PASSWORD=     # login for user operator
+# Do not set SEED_* here. Step 5 prints passwords with db:bootstrap.
 ```
 
 Save the block in the company secret store. **Never commit it. Never paste it into chat/tickets.**
@@ -93,9 +92,9 @@ Save the block in the company secret store. **Never commit it. Never paste it in
 openssl rand -hex 32
 # 32 bytes Base64 (pepper and PII key) — run twice
 openssl rand -base64 32
-# 12 bytes hex (seed passwords) — run twice
-openssl rand -hex 12
 ```
+
+Operator passwords come from `db:bootstrap` in step 5, not from this block.
 
 Do not use `/dev/urandom` cut short, `date`, or a human-chosen string.
 
@@ -196,18 +195,16 @@ docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no
 
 ---
 
-## 5. SERVER — seed once
-
-Use the `SEED_*` values from **this environment’s** `ops:secrets` / openssl output (step 1b). Add them to `.env` for this command only:
+## 5. SERVER — bootstrap accounts once
 
 ```bash
 cd /opt/dotone-trip
-docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no-deps seed
+docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no-deps seed npm run db:bootstrap
 ```
 
-Expect: `Seeded admin` / `Seeded operator`. **Delete `SEED_*` from `.env`.** Keep passwords in the secret store.
+Expect passwords for `admin`, `operator`, and `creator` on stdout. They are not written to `.env`. Store them in the secret manager. Running it again replaces all three.
 
-Re-seed only to rotate `admin`/`operator`. It overwrites those two hashes.
+`npm run db:seed` inside that container is the older path and reads `SEED_*`. Leave those variables unset.
 
 ---
 

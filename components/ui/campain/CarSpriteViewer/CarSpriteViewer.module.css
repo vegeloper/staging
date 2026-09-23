@@ -61,13 +61,13 @@
 }
 
 .activeBtn {
-  background-color: #00b7d4;
+  background-color: var(--brand, #00b7ce);
   color: #ffffff;
-  border-color: #00b7d4;
+  border-color: var(--brand, #00b7ce);
 }
 
 .activeBtn:hover {
-  background-color: #009cb5;
+  background-color: var(--brand-dark, #0093a5);
 }
 
 /* ریسپانسیو برای موبایل */

@@ -115,10 +115,7 @@ export default function page() {
     <>
       <Header />
       <div className="mt-12 md:mt-15 lg:mt-25">
-        <CampaignHero
-          posterSrc="/videos/campainVideoPoster.png"
-          videoSrc="/videos/campainHero.mp4"
-        />
+        <CampaignHero />
       </div>
       <Car />
       {/* <TripCarViewer /> */}

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { destinationForRole, type UserRole } from "@/lib/auth/rbac";
 import styles from "./Admin.module.css";
 
 export default function LoginForm() {
@@ -25,20 +26,28 @@ export default function LoginForm() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password }),
         });
-        const data = (await response.json().catch(() => ({}))) as { error?: string };
+        const data = (await response.json().catch(() => ({}))) as {
+          error?: string;
+          user?: { role?: string };
+        };
         setPending(false);
         if (!response.ok) {
           setError(data.error || "ورود ناموفق بود.");
           return;
         }
-        const returnTo = searchParams.get("returnTo") || "/admin";
-        router.push(returnTo.startsWith("/admin") ? returnTo : "/admin");
+        const requested = searchParams.get("returnTo") || "/admin";
+        const role = data.user?.role;
+        const destination =
+          role === "admin" || role === "operator" || role === "content_creator"
+            ? destinationForRole(role as UserRole, requested)
+            : "/admin";
+        router.push(destination);
         router.refresh();
       }}
     >
       <div className={styles.brand}>دات‌وان تریپ</div>
-      <h1>ورود اپراتورها</h1>
-      <p>فقط کاربران داخلی شرکت به صندوق درخواست‌ها دسترسی دارند.</p>
+      <h1>ورود کاربران داخلی</h1>
+      <p>مدیر وب‌سایت، اپراتور و تولیدکننده محتوا از اینجا وارد می‌شوند.</p>
       <label>
         نام کاربری
         <input

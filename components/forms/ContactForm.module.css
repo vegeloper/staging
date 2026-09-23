@@ -143,7 +143,7 @@
 
 .control:focus,
 .textarea:focus {
-  border-color: #00b7ce;
+  border-color: var(--brand, #00b7ce);
 
   box-shadow:
     0 0 0 3px rgba(0, 183, 206, 0.08);

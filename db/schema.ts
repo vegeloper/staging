@@ -3,6 +3,7 @@ import {
   boolean,
   index,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   text,
@@ -11,7 +12,21 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
-export const userRoleEnum = pgEnum("user_role", ["admin", "operator"]);
+import type { ArticleBlock } from "@/lib/articles";
+
+export const userRoleEnum = pgEnum("user_role", [
+  "admin",
+  "operator",
+  "content_creator",
+]);
+export const contentKindEnum = pgEnum("content_kind", ["news", "article"]);
+export const mediaKindEnum = pgEnum("media_kind", ["image", "video"]);
+export const contentStatusEnum = pgEnum("content_status", [
+  "draft",
+  "pending_review",
+  "approved",
+  "rejected",
+]);
 export const submissionTypeEnum = pgEnum("submission_type", [
   "contact",
   "driver",
@@ -162,9 +177,102 @@ export const auditEvents = pgTable("audit_events", {
   index("audit_events_created_at_idx").on(table.createdAt),
 ]);
 
+export const contentPosts = pgTable("content_posts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  slug: text("slug").notNull(),
+  kind: contentKindEnum("kind").notNull(),
+  category: text("category").notNull(),
+  title: text("title").notNull(),
+  displayDate: text("display_date").notNull(),
+  commentsLabel: text("comments_label").notNull().default("۰"),
+  likesLabel: text("likes_label").notNull().default("۰"),
+  imageSrc: text("image_src").notNull(),
+  imageAlt: text("image_alt").notNull(),
+  imageObjectPosition: text("image_object_position"),
+  body: jsonb("body").$type<ArticleBlock[]>().notNull(),
+  featured: boolean("featured").notNull().default(false),
+  sortOrder: integer("sort_order").notNull().default(0),
+  status: contentStatusEnum("status").notNull().default("draft"),
+  authorId: uuid("author_id").references(() => users.id, { onDelete: "set null" }),
+  reviewerId: uuid("reviewer_id").references(() => users.id, {
+    onDelete: "set null",
+  }),
+  reviewNote: text("review_note"),
+  submittedAt: timestamp("submitted_at", { withTimezone: true }),
+  reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+  publishedAt: timestamp("published_at", { withTimezone: true }),
+  ...timestamps,
+}, (table) => [
+  uniqueIndex("content_posts_slug_unique").on(table.slug),
+  index("content_posts_status_kind_idx").on(table.status, table.kind),
+  index("content_posts_author_id_idx").on(table.authorId),
+  index("content_posts_published_at_idx").on(table.publishedAt),
+]);
+
+export const contentSettings = pgTable("content_settings", {
+  id: text("id").primaryKey(),
+  seededAt: timestamp("seeded_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const mediaAssets = pgTable("media_assets", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  kind: mediaKindEnum("kind").notNull(),
+  originalName: text("original_name").notNull(),
+  description: text("description").notNull().default(""),
+  altText: text("alt_text").notNull().default(""),
+  mimeType: text("mime_type").notNull(),
+  extension: text("extension").notNull(),
+  byteSize: integer("byte_size").notNull(),
+  width: integer("width"),
+  height: integer("height"),
+  durationMs: integer("duration_ms"),
+  sha256: text("sha256").notNull(),
+  storageKey: text("storage_key").notNull(),
+  thumbnailKey: text("thumbnail_key"),
+  scanEngine: text("scan_engine").notNull(),
+  scanResult: text("scan_result").notNull(),
+  uploadedBy: uuid("uploaded_by").references(() => users.id, { onDelete: "set null" }),
+  ...timestamps,
+}, (table) => [
+  uniqueIndex("media_assets_sha256_unique").on(table.sha256),
+  index("media_assets_kind_created_at_idx").on(table.kind, sql`${table.createdAt} DESC`),
+  index("media_assets_uploaded_by_idx").on(table.uploadedBy),
+]);
+
+export const siteDocuments = pgTable("site_documents", {
+  key: text("key").primaryKey(),
+  draft: jsonb("draft").notNull(),
+  published: jsonb("published"),
+  revision: integer("revision").notNull().default(0),
+  publishedAt: timestamp("published_at", { withTimezone: true }),
+  updatedBy: uuid("updated_by").references(() => users.id, { onDelete: "set null" }),
+  ...timestamps,
+});
+
+export const contentEvents = pgTable("content_events", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  postId: uuid("post_id")
+    .notNull()
+    .references(() => contentPosts.id, { onDelete: "cascade" }),
+  actorUserId: uuid("actor_user_id").references(() => users.id, {
+    onDelete: "set null",
+  }),
+  action: text("action").notNull(),
+  note: text("note"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [
+  index("content_events_post_id_idx").on(table.postId),
+  index("content_events_created_at_idx").on(table.createdAt),
+]);
+
 export const usersRelations = relations(users, ({ many }) => ({
   sessions: many(sessions),
   auditEvents: many(auditEvents),
+  authoredPosts: many(contentPosts, { relationName: "contentAuthor" }),
+  reviewedPosts: many(contentPosts, { relationName: "contentReviewer" }),
+  contentEvents: many(contentEvents, { relationName: "contentEventActor" }),
+  siteDocuments: many(siteDocuments),
+  mediaAssets: many(mediaAssets),
 }));
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -233,3 +341,43 @@ export const sponsorshipRequestsRelations = relations(
     }),
   }),
 );
+
+export const contentPostsRelations = relations(contentPosts, ({ one, many }) => ({
+  author: one(users, {
+    fields: [contentPosts.authorId],
+    references: [users.id],
+    relationName: "contentAuthor",
+  }),
+  reviewer: one(users, {
+    fields: [contentPosts.reviewerId],
+    references: [users.id],
+    relationName: "contentReviewer",
+  }),
+  events: many(contentEvents),
+}));
+
+export const mediaAssetsRelations = relations(mediaAssets, ({ one }) => ({
+  uploader: one(users, {
+    fields: [mediaAssets.uploadedBy],
+    references: [users.id],
+  }),
+}));
+
+export const siteDocumentsRelations = relations(siteDocuments, ({ one }) => ({
+  updatedByUser: one(users, {
+    fields: [siteDocuments.updatedBy],
+    references: [users.id],
+  }),
+}));
+
+export const contentEventsRelations = relations(contentEvents, ({ one }) => ({
+  post: one(contentPosts, {
+    fields: [contentEvents.postId],
+    references: [contentPosts.id],
+  }),
+  actor: one(users, {
+    fields: [contentEvents.actorUserId],
+    references: [users.id],
+    relationName: "contentEventActor",
+  }),
+}));
