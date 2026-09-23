@@ -6,6 +6,7 @@ The console lives at `/admin`. The signed-in role decides which tabs exist.
 | --- | --- | --- | --- | --- |
 | پیشخوان | `/admin` | yes | redirected to درخواست‌ها | redirected to مطالب |
 | درخواست‌ها | `/admin/submissions` | yes | yes | no |
+| موقعیت‌های شغلی | `/admin/positions` | yes | yes | no |
 | مطالب | `/admin/content` | yes | no | yes |
 | رسانه | `/admin/media` | yes | no | yes |
 | پوسته | `/admin/theme` | yes | no | no |
@@ -16,9 +17,10 @@ Usernames from bootstrap are `admin`, `operator`, and `creator`. Passwords come 
 
 ## پیشخوان
 
-The admin home shows five cards:
+The admin home shows six cards:
 
 - new submission count, linked to the inbox filtered to `new`
+- job positions waiting for review
 - posts waiting for review
 - accepted media-library files
 - published theme revision
@@ -28,7 +30,20 @@ The admin can open every other tab from here and can perform the operator and co
 
 ## درخواست‌ها
 
-This is the operator inbox moved from `/admin` to `/admin/submissions`. Filters, detail, status changes, and resume download are unchanged. A creator who opens this path is sent back to مطالب. An operator who opens پوسته, کپی‌رایت, مطالب, or رسانه is sent back to the inbox.
+This is the operator inbox moved from `/admin` to `/admin/submissions`. Filters, detail, status changes, and resume download are unchanged. A creator who opens this path is sent back to مطالب. An operator who opens پوسته, کپی‌رایت, مطالب, or رسانه is sent back to the inbox. The inbox and the job-position list share a tab strip: رزومه‌ها و درخواست‌ها and موقعیت‌های شغلی.
+
+## موقعیت‌های شغلی
+
+`/admin/positions` is where job offers are added, edited, and reviewed. The same tab is in the top navigation for the admin and the operator, and again inside the received-resumes inbox. A content creator does not see it.
+
+The states match the news and articles pipeline: draft, pending review, approved, rejected. Rejection needs a note. The public join pages only list `approved` positions. The built-in organizational catalog is copied in once; later unpublishing stays unpublished.
+
+Role mapping, using the CMS roles that already exist:
+
+- **Admin** is the website manager and the reviewer (the same person who approves news). An admin can create, edit, publish, unpublish, approve, and reject any position without waiting for a second approval. Saving an approved position keeps it approved and updates `/join-us` on the next request.
+- **Operator** follows the content-creator path. An operator can draft a new position and submit it. They can edit their own drafts and rejected positions, withdraw a position that is waiting for review, and read the rejection note. They cannot approve or publish.
+- **Editing a live position** is direct for the admin. An operator uses پیشنهاد ویرایش, which opens a draft linked to that position. The live page stays up until the admin approves the proposal. Approval copies the proposal onto the published position. Rejection leaves the live page unchanged.
+- **Content creator** has no job-position permission, the same way an operator has no news permission. There is no separate content-manager account: review stays with the admin, as it does for مطالب.
 
 ## مطالب
 

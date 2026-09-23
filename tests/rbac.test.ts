@@ -13,7 +13,10 @@ describe("admin destinations", () => {
     expect(destinationForRole("admin", "/admin/content/new")).toBe("/admin/content/new");
     expect(destinationForRole("operator", "/admin")).toBe("/admin/submissions");
     expect(destinationForRole("operator", "/admin/submissions/abc")).toBe("/admin/submissions/abc");
+    expect(destinationForRole("operator", "/admin/positions")).toBe("/admin/positions");
+    expect(destinationForRole("operator", "/admin/positions/new")).toBe("/admin/positions/new");
     expect(destinationForRole("operator", "/admin/content")).toBe("/admin/submissions");
+    expect(destinationForRole("content_creator", "/admin/positions")).toBe("/admin/content");
     expect(destinationForRole("content_creator", "/admin/theme")).toBe("/admin/content");
     expect(destinationForRole("content_creator", "/admin/media")).toBe("/admin/media");
     expect(destinationForRole("content_creator", "/admin/media/abc")).toBe("/admin/media/abc");

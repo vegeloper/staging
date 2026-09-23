@@ -20,7 +20,7 @@ export default async function AdminHomePage() {
     <>
       <h1>پیشخوان مدیریت</h1>
       <p className={styles.meta}>
-        مدیر وب‌سایت درخواست‌ها را رسیدگی می‌کند، مطلب می‌سازد و منتشر می‌کند، رسانه را مدیریت می‌کند، و پوسته و کپی‌رایت را تغییر می‌دهد.
+        مدیر وب‌سایت درخواست‌ها را رسیدگی می‌کند، موقعیت شغلی را مستقیم منتشر می‌کند، مطلب می‌سازد، رسانه را مدیریت می‌کند، و پوسته و کپی‌رایت را تغییر می‌دهد.
       </p>
       {overview ? (
         <div className={styles.cards}>
@@ -28,6 +28,11 @@ export default async function AdminHomePage() {
             <span>صندوق درخواست‌ها</span>
             <strong>{overview.newSubmissions.toLocaleString("fa-IR")}</strong>
             <small>درخواست جدید</small>
+          </Link>
+          <Link className={styles.cardLink} href="/admin/positions?status=pending_review">
+            <span>موقعیت‌های شغلی</span>
+            <strong>{overview.pendingPositions.toLocaleString("fa-IR")}</strong>
+            <small>در انتظار تأیید</small>
           </Link>
           <Link className={styles.cardLink} href="/admin/content?status=pending_review">
             <span>مطالب و اخبار</span>

@@ -13,6 +13,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import type { ArticleBlock } from "@/lib/articles";
+import type { JobMetaItem, JobSection } from "@/lib/jobs/types";
 
 export const userRoleEnum = pgEnum("user_role", [
   "admin",
@@ -249,6 +250,59 @@ export const siteDocuments = pgTable("site_documents", {
   ...timestamps,
 });
 
+export const jobPositions = pgTable("job_positions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  slug: text("slug").notNull(),
+  desiredSlug: text("desired_slug").notNull(),
+  title: text("title").notNull(),
+  employmentType: text("employment_type").notNull(),
+  department: text("department").notNull(),
+  city: text("city").notNull(),
+  summary: text("summary").notNull().default(""),
+  highlights: jsonb("highlights").$type<string[]>().notNull(),
+  sections: jsonb("sections").$type<JobSection[]>().notNull(),
+  meta: jsonb("meta").$type<JobMetaItem[]>().notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+  status: contentStatusEnum("status").notNull().default("draft"),
+  authorId: uuid("author_id").references(() => users.id, { onDelete: "set null" }),
+  reviewerId: uuid("reviewer_id").references(() => users.id, {
+    onDelete: "set null",
+  }),
+  reviewNote: text("review_note"),
+  supersedesId: uuid("supersedes_id"),
+  submittedAt: timestamp("submitted_at", { withTimezone: true }),
+  reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+  publishedAt: timestamp("published_at", { withTimezone: true }),
+  ...timestamps,
+}, (table) => [
+  uniqueIndex("job_positions_slug_unique").on(table.slug),
+  index("job_positions_status_idx").on(table.status),
+  index("job_positions_author_id_idx").on(table.authorId),
+  index("job_positions_supersedes_id_idx").on(table.supersedesId),
+  index("job_positions_published_at_idx").on(table.publishedAt),
+]);
+
+export const jobPositionEvents = pgTable("job_position_events", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  positionId: uuid("position_id")
+    .notNull()
+    .references(() => jobPositions.id, { onDelete: "cascade" }),
+  actorUserId: uuid("actor_user_id").references(() => users.id, {
+    onDelete: "set null",
+  }),
+  action: text("action").notNull(),
+  note: text("note"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [
+  index("job_position_events_position_id_idx").on(table.positionId),
+  index("job_position_events_created_at_idx").on(table.createdAt),
+]);
+
+export const jobSettings = pgTable("job_settings", {
+  id: text("id").primaryKey(),
+  seededAt: timestamp("seeded_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const contentEvents = pgTable("content_events", {
   id: uuid("id").primaryKey().defaultRandom(),
   postId: uuid("post_id")
@@ -271,6 +325,9 @@ export const usersRelations = relations(users, ({ many }) => ({
   authoredPosts: many(contentPosts, { relationName: "contentAuthor" }),
   reviewedPosts: many(contentPosts, { relationName: "contentReviewer" }),
   contentEvents: many(contentEvents, { relationName: "contentEventActor" }),
+  authoredPositions: many(jobPositions, { relationName: "positionAuthor" }),
+  reviewedPositions: many(jobPositions, { relationName: "positionReviewer" }),
+  positionEvents: many(jobPositionEvents, { relationName: "positionEventActor" }),
   siteDocuments: many(siteDocuments),
   mediaAssets: many(mediaAssets),
 }));
@@ -367,6 +424,38 @@ export const siteDocumentsRelations = relations(siteDocuments, ({ one }) => ({
   updatedByUser: one(users, {
     fields: [siteDocuments.updatedBy],
     references: [users.id],
+  }),
+}));
+
+export const jobPositionsRelations = relations(jobPositions, ({ one, many }) => ({
+  author: one(users, {
+    fields: [jobPositions.authorId],
+    references: [users.id],
+    relationName: "positionAuthor",
+  }),
+  reviewer: one(users, {
+    fields: [jobPositions.reviewerId],
+    references: [users.id],
+    relationName: "positionReviewer",
+  }),
+  supersedes: one(jobPositions, {
+    fields: [jobPositions.supersedesId],
+    references: [jobPositions.id],
+    relationName: "positionProposal",
+  }),
+  proposals: many(jobPositions, { relationName: "positionProposal" }),
+  events: many(jobPositionEvents),
+}));
+
+export const jobPositionEventsRelations = relations(jobPositionEvents, ({ one }) => ({
+  position: one(jobPositions, {
+    fields: [jobPositionEvents.positionId],
+    references: [jobPositions.id],
+  }),
+  actor: one(users, {
+    fields: [jobPositionEvents.actorUserId],
+    references: [users.id],
+    relationName: "positionEventActor",
   }),
 }));
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AttachmentBadge } from "@/components/admin/AttachmentBadge";
+import InboxTabs from "@/components/admin/InboxTabs";
 import styles from "@/components/admin/Admin.module.css";
 import {
   submissionStatusLabels,
@@ -67,6 +68,7 @@ export default async function AdminInboxPage({
 
   return (
     <>
+      <InboxTabs current="submissions" />
       <h1>درخواست‌های دریافتی</h1>
       <form className={styles.filters} method="get">
         <select name="type" defaultValue={type ?? ""}>
