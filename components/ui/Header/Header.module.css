@@ -910,6 +910,35 @@
   .backdrop {
     display: block;
   }
+    .navItem > a {
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  /* آیتم‌هایی که زیرمنو دارند */
+  .parentLink > a {
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  /* لینک‌های داخل زیرمنو */
+  .submenu a {
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  /* عنوان بالای منوی موبایل */
+  .mobileMenuHeader {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* دکمه‌های پایین منوی موبایل */
+  .mobilePrimary,
+  .mobileSecondary {
+    font-size: 13px;
+    font-weight: 600;
+  }
 }
 
 
@@ -951,13 +980,34 @@
     border-radius: 18px;
   }
 
-  .navItem > a,
-  .parentLink {
-    min-height: 45px;
+  .navItem > a {
+    font-size: 15px;
+    font-weight: 400;
   }
 
+  /* آیتم‌هایی که زیرمنو دارند */
   .parentLink > a {
-    min-height: 45px;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  /* لینک‌های داخل زیرمنو */
+  .submenu a {
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  /* عنوان بالای منوی موبایل */
+  .mobileMenuHeader {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* دکمه‌های پایین منوی موبایل */
+  .mobilePrimary,
+  .mobileSecondary {
+    font-size: 13px;
+    font-weight: 600;
   }
 }
 
@@ -969,5 +1019,18 @@
 @media (max-width: 380px) {
   .mobileActions {
     grid-template-columns: 1fr;
+  }
+    .navItem > a,
+  .parentLink > a {
+    font-size: 14px;
+  }
+
+  .submenu a {
+    font-size: 12px;
+  }
+
+  .mobilePrimary,
+  .mobileSecondary {
+    font-size: 12px;
   }
 }

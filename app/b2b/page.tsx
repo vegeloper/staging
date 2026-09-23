@@ -55,7 +55,8 @@ export default function page() {
   return (
     <>
       <Header />
-      <Hero
+      <div className="mt-16 md:mt-20 lg:mt-24">
+  <Hero
         badge={{
           text: "در اختیار",
           icon: dotIcon,
@@ -135,6 +136,8 @@ export default function page() {
         items={tripFaqItems}
       />
       <FutureTransportBanner />
+      </div>
+    
       <Footer />
     </>
   );

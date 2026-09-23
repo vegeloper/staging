@@ -7,7 +7,6 @@
 
   width: 100%;
 
-
   padding: 55px 0 0;
 
   font-family: inherit;
@@ -209,17 +208,13 @@
 ======================================== */
 
 .cards {
-  /*
-    کارت‌ها از عرض کل صفحه کمتر هستند
-  */
   width: 88%;
 
   margin-inline: auto;
 
   display: grid;
 
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 10px;
 }
@@ -242,27 +237,77 @@
     width: 92%;
   }
 
+  /* ===============================
+     Heading Center
+  =============================== */
+
   .heading {
     width: 94%;
 
-    gap: 5%;
-
+    margin-inline: auto;
     margin-bottom: 22px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    text-align: center;
   }
 
   .headingMain {
-    width: 40%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    text-align: center;
   }
 
+  /* Badge وسط */
+  .sectionBadge {
+    width: fit-content;
+
+    margin-inline: auto;
+    margin-bottom: 10px;
+  }
+
+  /* Title وسط */
   .title {
+    width: 100%;
+
+    margin-inline: auto;
+
     font-size: 23px;
+
+    text-align: center;
   }
 
+  /* Description وسط */
   .description {
-    width: 55%;
+    width: 100%;
+    max-width: 650px;
+
+    margin: 0 auto;
 
     font-size: 11px;
+
+    line-height: 2;
+
+    text-align: center;
   }
+
+  /* ===============================
+     Cards
+  =============================== */
 
   .cards {
     width: 94%;
@@ -277,7 +322,6 @@
 
 @media (max-width: 700px) {
   .section {
-
     padding-top: 40px;
   }
 
@@ -290,23 +334,44 @@
     width: 90%;
   }
 
+  /* ===============================
+     Heading Center
+  =============================== */
+
   .heading {
     width: 100%;
 
+    margin-inline: auto;
+    margin-bottom: 20px;
+
+    display: flex;
     flex-direction: column;
 
-    align-items: stretch;
+    align-items: center;
+    justify-content: center;
 
-    gap: 12px;
+    gap: 10px;
 
-    margin-bottom: 20px;
+    text-align: center;
   }
 
   .headingMain {
     width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
   }
 
+  /* Badge وسط */
   .sectionBadge {
+    width: fit-content;
+
+    margin-inline: auto;
     margin-bottom: 10px;
 
     padding: 6px 10px;
@@ -314,20 +379,34 @@
     font-size: 9px;
   }
 
+  /* Title وسط */
   .title {
+    width: 100%;
+
+    margin-inline: auto;
+
     font-size: 21px;
+
+    text-align: center;
   }
 
+  /* Description وسط */
   .description {
     width: 100%;
-    max-width: none;
+    max-width: 500px;
 
-    margin: 0;
+    margin: 0 auto;
 
     font-size: 10.5px;
 
     line-height: 2;
+
+    text-align: center;
   }
+
+  /* ===============================
+     Cards
+  =============================== */
 
   .cards {
     width: 100%;
@@ -357,18 +436,57 @@
   }
 
   .heading {
+    width: 100%;
+
+    margin-inline: auto;
     margin-bottom: 18px;
+
+    align-items: center;
+
+    text-align: center;
+  }
+
+  .headingMain {
+    width: 100%;
+
+    align-items: center;
+
+    text-align: center;
+  }
+
+  .sectionBadge {
+    width: fit-content;
+
+    margin-inline: auto;
+    margin-bottom: 9px;
   }
 
   .title {
+    width: 100%;
+
+    margin-inline: auto;
+
     font-size: 19px;
+
+    text-align: center;
   }
 
   .description {
+    width: 100%;
+    max-width: 100%;
+
+    margin-inline: auto;
+
     font-size: 10px;
+
+    line-height: 2;
+
+    text-align: center;
   }
 
   .cards {
+    width: 100%;
+
     gap: 8px;
   }
 }

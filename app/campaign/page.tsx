@@ -114,7 +114,7 @@ export default function page() {
   return (
     <>
       <Header />
-      <div className="mt-12 md:mt-15 lg:mt-25">
+      <div className="mt-16 md:mt-20 lg:mt-24">
         <CampaignHero
           posterSrc="/videos/campainVideoPoster.png"
           videoSrc="/videos/campainHero.mp4"

@@ -21,9 +21,9 @@ export default function CareerHero({
   return (
     <section className={styles.hero} dir="rtl">
       <div className={styles.content}>
-        <div className={styles.badge}>
+      <div className={styles.badge}>
           <span className={styles.badgeDot} />
-          <span>{badge}</span>
+          {badge}
         </div>
 
         <h1 className={styles.title}>

@@ -89,7 +89,7 @@ const navItems: NavItem[] = [
       },
       {
         label: "همکاری با تریپ",
-        href: "https://apply.dotone.ir/",
+        href: "/join-us/organizational",
       },
     ],
   },
