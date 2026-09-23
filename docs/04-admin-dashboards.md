@@ -106,3 +106,5 @@ If Postgres is down, or `next build` runs without `DATABASE_URL` (the Docker bui
 | `npm run docker:deploy` | Production overlay (Caddy, read-only app). The proxy waits for the app health check. |
 | `npm run docker:down` | Stop that stack. Does not delete volumes. |
 | `npm run docker:logs` | Follow the local `app` log. |
+| `npm run setup:fresh` | New computer: `.env`, dependencies, Docker stack, media volume, ClamAV, and admin passwords. See [00-start-here.md](00-start-here.md). |
+| `npm run setup:update` | Existing checkout: rebuild, migrate, and start media plus ClamAV. Does not rotate passwords. |

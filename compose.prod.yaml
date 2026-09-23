@@ -21,6 +21,9 @@ services:
     security_opt:
       - no-new-privileges:true
 
+  clamav:
+    ports: !reset []
+
   app:
     ports: !reset []
     expose:

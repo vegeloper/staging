@@ -475,6 +475,11 @@ Rollback: keep the previous web image digest. `docker compose ... up -d` the old
 ## 13. Command cheat sheet
 
 ```bash
+# New computer, or an existing checkout after git pull
+# Step by step: docs/00-start-here.md
+npm run setup:fresh
+npm run setup:update
+
 # Secrets
 npm run ops:secrets
 

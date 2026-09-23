@@ -29,7 +29,9 @@
     "docker:logs": "docker compose --profile full logs -f app",
     "docker:migrate": "docker compose --profile migrate run --rm --build migrate",
     "docker:bootstrap": "docker compose --profile seed run --rm --build seed npm run db:bootstrap",
-    "docker:bootstrap:prod": "docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no-deps seed npm run db:bootstrap"
+    "docker:bootstrap:prod": "docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no-deps seed npm run db:bootstrap",
+    "setup:fresh": "node scripts/setup-machine.mjs fresh",
+    "setup:update": "node scripts/setup-machine.mjs update"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
