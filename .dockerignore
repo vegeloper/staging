@@ -15,6 +15,9 @@ data
 .env
 .env.local
 .env.*.local
+.env.backup
+.env.prod
+staging
 npm-debug.log*
 .cursor
 .agents

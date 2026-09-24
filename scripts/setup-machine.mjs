@@ -62,7 +62,12 @@ function writeFreshEnv() {
 }
 
 function run(command, args) {
-  const result = spawnSync(command, args, { stdio: "inherit" });
+  // Node on Windows returns EINVAL if it spawns npm.cmd directly.
+  // One shell command string resolves the npm shim. docker.exe does not need that.
+  const result =
+    process.platform === "win32" && command === "npm"
+      ? spawnSync([command, ...args].join(" "), { stdio: "inherit", shell: true })
+      : spawnSync(command, args, { stdio: "inherit" });
   if (result.error) {
     console.error(result.error.message);
     process.exit(1);

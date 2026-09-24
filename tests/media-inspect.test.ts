@@ -30,6 +30,16 @@ describe("media inspection", () => {
       extension: "jpg",
     });
     expect(inspectMedia(Buffer.from([0xff, 0xd8, 0xff, 0xd9]), "photo.jpeg")).toMatchObject({ extension: "jpg" });
+    const sof = Buffer.from([0xff, 0xc0, 0x00, 0x0b, 0x08, 0x00, 0x01, 0x00, 0x01, 0x01, 0x01, 0x11, 0x00]);
+    const sos = Buffer.from([0xff, 0xda, 0x00, 0x08, 0x01, 0x01, 0x00, 0x00, 0x3f, 0x00]);
+    const scanned = Buffer.concat([
+      Buffer.from([0xff, 0xd8]),
+      sof,
+      sos,
+      Buffer.from([0x12, 0xff, 0x00, 0x34]),
+      Buffer.from([0xff, 0xd9]),
+    ]);
+    expect(inspectMedia(scanned, "scan.jpg")).toMatchObject({ extension: "jpg", width: 1, height: 1 });
 
     const gif = Buffer.concat([
       Buffer.from("GIF89a", "ascii"),

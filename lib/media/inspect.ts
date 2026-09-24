@@ -101,6 +101,24 @@ function parsePng(buffer: Buffer) {
   throw new MediaReject("ساختار PNG ناقص یا دستکاری شده است.");
 }
 
+function skipJpegEntropy(buffer: Buffer, offset: number) {
+  while (offset < buffer.length) {
+    if (buffer[offset] !== 0xff) {
+      offset += 1;
+      continue;
+    }
+    let markerAt = offset;
+    while (markerAt < buffer.length && buffer[markerAt] === 0xff) markerAt += 1;
+    if (markerAt >= buffer.length) return buffer.length;
+    if (buffer[markerAt] === 0x00) {
+      offset = markerAt + 1;
+      continue;
+    }
+    return offset;
+  }
+  return offset;
+}
+
 function parseJpeg(buffer: Buffer) {
   if (buffer.length < 4 || buffer[0] !== 0xff || buffer[1] !== 0xd8 || buffer[2] !== 0xff) {
     throw new MediaReject("محتوای فایل JPEG نیست.");
@@ -138,10 +156,12 @@ function parseJpeg(buffer: Buffer) {
       (marker >= 0xc9 && marker <= 0xcb) ||
       (marker >= 0xcd && marker <= 0xcf)
     ) {
+      if (size < 7) throw new MediaReject("ساختار JPEG ناقص یا دستکاری شده است.");
       height = buffer.readUInt16BE(offset + 3);
       width = buffer.readUInt16BE(offset + 5);
     }
     offset += size;
+    if (marker === 0xda) offset = skipJpegEntropy(buffer, offset);
   }
   throw new MediaReject("ساختار JPEG ناقص یا دستکاری شده است.");
 }

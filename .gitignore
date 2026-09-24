@@ -62,3 +62,6 @@ next-env.d.ts
 
 # Cursor Files
 .cursor/
+
+# Accidental nested checkout. TypeScript would compile its examples against this app.
+/staging
