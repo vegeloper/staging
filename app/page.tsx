@@ -267,7 +267,7 @@ export default function Home() {
       <section className="hero" id="home">
         <img
           className="hero-bg"
-          src={`${A}hero-bg.png`}
+          src={`${A}hero-bg.jpg`}
           alt="خودروی دات‌وان تریپ"
         />
 
