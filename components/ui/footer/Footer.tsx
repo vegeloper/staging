@@ -51,8 +51,8 @@ const footerLinks = [
   {
     title: "همکاری با دات‌وان تریپ",
     links: [
-      { label: "استخدام رانندگان", href: "#" },
-      { label: "طرح مشارکت", href: "#" },
+      { label: "استخدام رانندگان", href: "/join-us/drivers" },
+      { label: "طرح مشارکت", href: "https://apply.dotone.ir/" },
       { label: "فرصت‌های همکاری", href: "#" },
       { label: "شرایط همکاری", href: "#" },
       { label: "ثبت درخواست", href: "#" },
@@ -63,6 +63,8 @@ const footerLinks = [
     links: [
       { label: "دانلود برای Android",href: "/#download-banner" },
       { label: "دانلود برای iOS", href: "/#download-banner" },
+      { label: "دانلود نسخه وب اپلیکیشن", href: "/#download-banner" },
+
     ],
   },
 ];
@@ -87,7 +89,7 @@ export default function Footer() {
           </div>
 
           <p className={styles.description}>
-            <strong>مجموعه آوان سفر</strong> با رویکرد ارائه خدمات سفرهای درون
+            <strong>مجموعه دات وان تریپ</strong> با رویکرد ارائه خدمات سفرهای درون
             شهری و برون شهری با <strong>خودروهای برقی و هیبریدی</strong> ضمن
             توجه به سهم خود در <strong>حفظ محیط زیست</strong> با تامین خودروهایی
             که تماما با زیرساخت‌های تکنولوژی روز کشورهای توسعه یافته تجهیز شده

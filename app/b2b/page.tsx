@@ -58,14 +58,14 @@ export default function page() {
       <div className="mt-16 md:mt-20 lg:mt-24">
   <Hero
         badge={{
-          text: "در اختیار",
+          text: "حمل و نقل سازمانی، هوشمند و بدون دغدغه",
           icon: dotIcon,
         }}
         title={{
-          highlight: "خودرو  راننده",
-          text: "در اختیار شما",
+          highlight: "سفر پرسنل و مدیران سازمان شما؛",
+          text: "با ناوگان دات وان",
         }}
-        description="برای زمانی که به خودرو و راننده اختصاصی در طول چند ساعت یا یک بازه مشخص نیاز دارید، خودرو در اختیار دات‌وان تریپ را درخواست کنید."
+        description="سرویس ایاب وذهاب سازمانی با خودروهای کاملا برقی،قرارداد رسمی،فاکتور شفاف و پنل مدیریتی اختصاصی،بدون نیاز به نگهداری ناوگان ملکی."
         buttons={[
           {
             text: "درخواست سفر",
@@ -74,10 +74,10 @@ export default function page() {
             href: "https://app.trip.dotone.ir",
           },
           {
-            text: "دانلود اپلیکیشن",
+            text: "درخواست همکاری سازمانی",
             icon: importIcon,
             variant: "secondary",
-            href: "/b2b/#download-banner",
+            href: "https://apply.dotone.ir/",
           },
         ]}
         image={{
