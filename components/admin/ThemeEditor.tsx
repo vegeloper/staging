@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { builtinMedia, defaultTheme, type SiteTheme } from "@/lib/site/defaults";
 import MediaField from "./MediaField";
+import ResetIconButton from "./ResetIconButton";
 import styles from "./Admin.module.css";
 
 type ThemeEditorProps = {
@@ -63,13 +64,13 @@ export default function ThemeEditor({ initial, revision, publishedAt, assets }: 
     };
     setPending(false);
     if (!response.ok) {
-      setError(data.error || "ذخیره پوسته ناموفق بود.");
+      setError(data.error || "ذخیره تم ناموفق بود.");
       setFields(data.fields ?? {});
       return;
     }
     setMessage(
       action === "publish"
-        ? "پوسته منتشر شد و روی سایت عمومی اعمال می‌شود. کانتینر دوباره راه‌اندازی نمی‌شود."
+        ? "تم منتشر شد و روی سایت عمومی اعمال می‌شود. کانتینر دوباره راه‌اندازی نمی‌شود."
         : "پیش‌نویس ذخیره شد. سایت عمومی هنوز نسخه منتشرشده را نشان می‌دهد.",
     );
     router.refresh();
@@ -85,7 +86,20 @@ export default function ThemeEditor({ initial, revision, publishedAt, assets }: 
       </p>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>پالت رنگ</h2>
+        <div className={styles.sectionHead}>
+          <h2 className={styles.sectionTitle}>پالت رنگ</h2>
+          <button
+            className="button button-dark"
+            type="button"
+            disabled={pending}
+            onClick={() => setTheme((current) => ({ ...current, colors: { ...defaultTheme.colors } }))}
+          >
+            بازگشت به رنگ‌های برند
+          </button>
+        </div>
+        <p className={styles.meta}>
+          رنگ‌های پیش‌نویس را به پالت فعلی برند برمی‌گرداند. سایت عمومی بعد از ذخیره یا انتشار عوض می‌شود.
+        </p>
         <div className={styles.swatches} aria-hidden="true">
           {colorFields.map((field) => (
             <span
@@ -107,13 +121,20 @@ export default function ThemeEditor({ initial, revision, publishedAt, assets }: 
                   onChange={(event) => setColor(field.key, event.target.value)}
                   aria-label={`${field.label} — انتخاب رنگ`}
                 />
-                <input
-                  className={styles.ltr}
-                  value={theme.colors[field.key]}
-                  onChange={(event) => setColor(field.key, event.target.value)}
-                  spellCheck={false}
-                  aria-label={field.label}
-                />
+                <span className={styles.inputShell}>
+                  <input
+                    className={styles.ltr}
+                    value={theme.colors[field.key]}
+                    onChange={(event) => setColor(field.key, event.target.value)}
+                    spellCheck={false}
+                    aria-label={field.label}
+                  />
+                  <ResetIconButton
+                    label={`Reset ${field.label}`}
+                    disabled={pending || theme.colors[field.key] === defaultTheme.colors[field.key]}
+                    onClick={() => setColor(field.key, defaultTheme.colors[field.key])}
+                  />
+                </span>
               </span>
               {fields[`colors.${field.key}`] ? <small>{fields[`colors.${field.key}`]}</small> : null}
             </label>
@@ -137,7 +158,7 @@ export default function ThemeEditor({ initial, revision, publishedAt, assets }: 
           />
           {fields["background.image"] ? <small className={styles.span2}>{fields["background.image"]}</small> : null}
           {imageFields.map((field) => (
-            <div key={field.key} className={styles.span2}>
+            <div key={field.key}>
               <MediaField
                 label={field.label}
                 kind="image"
@@ -154,7 +175,7 @@ export default function ThemeEditor({ initial, revision, publishedAt, assets }: 
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>ویدیو</h2>
-        <p className={styles.meta}>ویدیوی صفحه کمپین جدا از تصاویر پوسته است. پوستر همان ویدیو در بخش تصاویر قرار دارد.</p>
+        <p className={styles.meta}>ویدیوی صفحه کمپین جدا از تصاویر تم است. پوستر همان ویدیو در بخش تصاویر قرار دارد.</p>
         <div className={styles.formGrid}>
           <MediaField
             label="ویدیوی صفحه کمپین"
@@ -178,7 +199,7 @@ export default function ThemeEditor({ initial, revision, publishedAt, assets }: 
           ذخیره پیش‌نویس
         </button>
         <button className="button button-brand" type="button" disabled={pending} onClick={() => send("publish")}>
-          {pending ? "در حال انتشار..." : "انتشار پوسته"}
+          {pending ? "در حال انتشار..." : "انتشار تم"}
         </button>
       </div>
     </div>

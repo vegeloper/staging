@@ -19,7 +19,7 @@ test("admin publishes copyright and theme without restarting the app", async ({ 
   const nav = page.getByRole("navigation", { name: "بخش‌های مدیریت" });
   await expect(nav.getByRole("link", { name: "درخواست‌ها" })).toBeVisible();
   await expect(nav.getByRole("link", { name: "مطالب" })).toBeVisible();
-  await expect(nav.getByRole("link", { name: "پوسته" })).toBeVisible();
+  await expect(nav.getByRole("link", { name: "تم" })).toBeVisible();
   await expect(nav.getByRole("link", { name: "کپی‌رایت" })).toBeVisible();
 
   try {
@@ -33,8 +33,8 @@ test("admin publishes copyright and theme without restarting the app", async ({ 
 
     await page.goto("/admin/theme");
     await page.getByRole("textbox", { name: "رنگ اصلی", exact: true }).fill("#112233");
-    await page.getByRole("button", { name: "انتشار پوسته" }).click();
-    await expect(page.getByText("پوسته منتشر شد")).toBeVisible();
+    await page.getByRole("button", { name: "انتشار تم" }).click();
+    await expect(page.getByText("تم منتشر شد")).toBeVisible();
     await page.screenshot({
       path: "/opt/cursor/artifacts/admin_theme_published.png",
       fullPage: true,
@@ -57,7 +57,7 @@ test("admin publishes copyright and theme without restarting the app", async ({ 
     await expect(page.getByText("کپی‌رایت منتشر شد")).toBeVisible();
     await page.goto("/admin/theme");
     await page.getByRole("button", { name: "بازنشانی فرم" }).click();
-    await page.getByRole("button", { name: "انتشار پوسته" }).click();
-    await expect(page.getByText("پوسته منتشر شد")).toBeVisible();
+    await page.getByRole("button", { name: "انتشار تم" }).click();
+    await expect(page.getByText("تم منتشر شد")).toBeVisible();
   }
 });

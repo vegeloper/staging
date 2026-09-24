@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import styles from "@/components/admin/Admin.module.css";
+import { DeleteCheckbox, DeleteOne, DeleteSelection } from "@/components/admin/DeleteSelection";
 import InboxTabs from "@/components/admin/InboxTabs";
 import { requirePositionsUser } from "@/lib/auth";
 import { HttpError } from "@/lib/http/errors";
@@ -106,49 +107,12 @@ export default async function PositionsPage({
             ? "هنوز موقعیت یا پیشنهادی نساخته‌اید."
             : "هنوز موقعیتی برای نمایش نیست."}
         </div>
+      ) : user.role === "admin" ? (
+        <DeleteSelection kind="position" ids={items.map((item) => item.id)}>
+          <PositionTable items={items} canDelete />
+        </DeleteSelection>
       ) : (
-        <div className={styles.tableWrap}>
-          <table>
-            <thead>
-              <tr>
-                <th>عنوان</th>
-                <th>نوع همکاری</th>
-                <th>شهر</th>
-                <th>وضعیت</th>
-                <th>پیشنهاددهنده</th>
-                <th>به‌روزرسانی</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id}>
-                  <td>
-                    <Link href={`/admin/positions/${item.id}`}>{item.title}</Link>
-                    <div className={styles.subline}>
-                      {item.isProposal
-                        ? `پیشنهاد ویرایش${item.supersedesTitle ? ` · ${item.supersedesTitle}` : ""}`
-                        : item.slug}
-                    </div>
-                  </td>
-                  <td>{item.employmentType}</td>
-                  <td>{item.city}</td>
-                  <td>
-                    <span className={styles.badge} data-status={item.status}>
-                      {positionStatusLabels[item.status]}
-                    </span>
-                  </td>
-                  <td>{item.authorName}</td>
-                  <td>
-                    {item.updatedAt.toLocaleString("fa-IR", {
-                      dateStyle: "short",
-                      timeStyle: "short",
-                    })}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <PositionTable items={items} canDelete={false} />
       )}
 
       {totalPages > 1 ? (
@@ -173,5 +137,70 @@ export default async function PositionsPage({
         </nav>
       ) : null}
     </>
+  );
+}
+
+function PositionTable({
+  items,
+  canDelete,
+}: {
+  items: Awaited<ReturnType<typeof listManagedPositions>>["items"];
+  canDelete: boolean;
+}) {
+  return (
+    <div className={styles.tableWrap}>
+      <table>
+        <thead>
+          <tr>
+            {canDelete ? <th>انتخاب</th> : null}
+            <th>عنوان</th>
+            <th>نوع همکاری</th>
+            <th>شهر</th>
+            <th>وضعیت</th>
+            <th>پیشنهاددهنده</th>
+            <th>به‌روزرسانی</th>
+            {canDelete ? <th>حذف</th> : null}
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item) => (
+            <tr key={item.id}>
+              {canDelete ? (
+                <td>
+                  <DeleteCheckbox id={item.id} />
+                </td>
+              ) : null}
+              <td>
+                <Link href={`/admin/positions/${item.id}`}>{item.title}</Link>
+                <div className={styles.subline}>
+                  {item.isProposal
+                    ? `پیشنهاد ویرایش${item.supersedesTitle ? ` · ${item.supersedesTitle}` : ""}`
+                    : item.slug}
+                </div>
+              </td>
+              <td>{item.employmentType}</td>
+              <td>{item.city}</td>
+              <td>
+                <span className={styles.badge} data-status={item.status}>
+                  {positionStatusLabels[item.status]}
+                </span>
+              </td>
+              <td>{item.authorName}</td>
+              <td>
+                {item.updatedAt.toLocaleString("fa-IR", {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                })}
+              </td>
+              {canDelete ? (
+                <td>
+                  <DeleteOne kind="position" id={item.id} />
+                </td>
+              ) : null}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

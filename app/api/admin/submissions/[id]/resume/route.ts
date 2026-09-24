@@ -42,6 +42,12 @@ export async function GET(
       },
     });
   } catch {
+    const accept = _request.headers.get("accept") ?? "";
+    if (accept.includes("text/html")) {
+      const url = new URL("/admin/files/missing", _request.url);
+      url.searchParams.set("name", resume.resumeOriginalName.slice(0, 180));
+      return Response.redirect(url, 303);
+    }
     return jsonError(404, "فایل رزومه در دسترس نیست.");
   }
 }

@@ -1,4 +1,4 @@
-import { canAccessCms, readSessionUser } from "@/lib/auth";
+import { canAccessCms, canManageSite, readSessionUser } from "@/lib/auth";
 import { readJsonBody } from "@/lib/http/body";
 import { HttpError, isSameOrigin, jsonError } from "@/lib/http/errors";
 import { MediaFailure, deleteMedia, getMedia, publicMedia, updateMediaMeta } from "@/lib/media/library";
@@ -14,7 +14,9 @@ async function authorized(request: Request, method: "GET" | "PATCH" | "DELETE") 
   }
   const user = await readSessionUser();
   if (!user) return { error: jsonError(401, "نشست نامعتبر است.") } as const;
-  if (!canAccessCms(user.role)) return { error: jsonError(403, "به کتابخانه رسانه دسترسی ندارید.") } as const;
+  if (method === "DELETE" ? !canManageSite(user.role) : !canAccessCms(user.role)) {
+    return { error: jsonError(403, method === "DELETE" ? "فقط مدیر وب‌سایت می‌تواند رسانه را حذف کند." : "به کتابخانه رسانه دسترسی ندارید.") } as const;
+  }
   return { user } as const;
 }
 

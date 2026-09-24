@@ -29,6 +29,7 @@ export class MediaFailure extends Error {
 export type MediaListQuery = {
   q?: string;
   kind?: MediaKind | "";
+  ext?: string;
   sort?: "newest" | "oldest" | "name" | "size" | "type";
   from?: string;
   to?: string;
@@ -173,6 +174,10 @@ export async function listMedia(query: MediaListQuery) {
       ),
     );
   }
+  const ext = query.ext?.trim().toLowerCase().replace(/^\./, "") ?? "";
+  if (ext && /^[a-z0-9]{1,8}$/.test(ext)) {
+    filters.push(eq(mediaAssets.extension, ext === "jpeg" ? "jpg" : ext));
+  }
   if (query.from && /^\d{4}-\d{2}-\d{2}$/.test(query.from)) {
     filters.push(gte(mediaAssets.createdAt, new Date(`${query.from}T00:00:00.000Z`)));
   }
@@ -251,7 +256,7 @@ export async function ingestMedia(input: {
   try {
     scan = await scanBuffer(input.buffer);
   } catch {
-    throw new MediaFailure("unavailable", "پویشگر ویروس در دسترس نیست. فایل ذخیره نشد.");
+    throw new MediaFailure("unavailable", "اسکن ویروس در دسترس نیست. فایل ذخیره نشد.");
   }
   if (!scan.clean) {
     throw new MediaFailure("infected", `فایل آلوده است و ذخیره نشد${scan.signature ? ` (${scan.signature})` : ""}.`);
@@ -330,17 +335,35 @@ export async function updateMediaMeta(
   return publicMedia(updated);
 }
 
-export async function deleteMedia(user: AuthUser, id: string) {
-  const existing = await getDb()
-    .select()
+export async function deleteMediaIds(ids: string[]) {
+  if (!ids.length) return 0;
+  const rows = await getDb()
+    .select({
+      id: mediaAssets.id,
+      storageKey: mediaAssets.storageKey,
+      thumbnailKey: mediaAssets.thumbnailKey,
+    })
     .from(mediaAssets)
-    .where(eq(mediaAssets.id, id))
-    .limit(1);
-  const row = existing[0];
-  if (!row) throw new HttpError(404, "رسانه پیدا نشد.");
-  assertOwner(user, row.uploadedBy);
-  await getDb().delete(mediaAssets).where(eq(mediaAssets.id, id));
-  await removeMediaKeys([row.storageKey, row.thumbnailKey]);
+    .where(inArray(mediaAssets.id, ids));
+  if (!rows.length) return 0;
+  await getDb()
+    .delete(mediaAssets)
+    .where(
+      inArray(
+        mediaAssets.id,
+        rows.map((row) => row.id),
+      ),
+    );
+  await removeMediaKeys(rows.flatMap((row) => [row.storageKey, row.thumbnailKey]));
+  return rows.length;
+}
+
+export async function deleteMedia(user: AuthUser, id: string) {
+  if (!canManageSite(user.role)) {
+    throw new HttpError(403, "فقط مدیر وب‌سایت می‌تواند رسانه را حذف کند.");
+  }
+  const deleted = await deleteMediaIds([id]);
+  if (!deleted) throw new HttpError(404, "رسانه پیدا نشد.");
 }
 
 export async function assertLibraryImage(src: string) {
@@ -388,8 +411,8 @@ export async function assertThemeAssets(theme: SiteTheme) {
       throw new HttpError(
         422,
         check.kind === "image"
-          ? "یکی از تصاویر پوسته در کتابخانه معتبر نیست."
-          : "ویدیوی پوسته در کتابخانه معتبر نیست.",
+          ? "یکی از تصاویر تم در کتابخانه معتبر نیست."
+          : "ویدیوی تم در کتابخانه معتبر نیست.",
       );
     }
   }

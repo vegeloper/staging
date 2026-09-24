@@ -18,12 +18,12 @@ export default async function ThemePage() {
   }
 
   if (!document) {
-    return <div className={styles.empty}>پایگاه داده پوسته در دسترس نیست. مهاجرت را اجرا کنید.</div>;
+    return <div className={styles.empty}>پایگاه داده تم در دسترس نیست. مهاجرت را اجرا کنید.</div>;
   }
 
   return (
     <>
-      <h1>پوسته سایت</h1>
+      <h1>تم سایت</h1>
       <p className={styles.meta}>
         رنگ‌ها، پس‌زمینه، لوگوها و ویدیوی کمپین از اینجا منتشر می‌شوند. انتشار، کش همین فرآیند Next.js را باطل می‌کند و مقدار تازه را ذخیره می‌کند.
       </p>

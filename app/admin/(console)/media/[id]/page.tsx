@@ -18,5 +18,5 @@ export default async function MediaDetailPage({
   if (!asset) notFound();
   const { ownerId, ...item } = asset;
 
-  return <MediaDetail asset={item} canManage={canManageSite(user.role) || ownerId === user.id} />;
+  return <MediaDetail asset={item} canManage={canManageSite(user.role) || ownerId === user.id} canDelete={canManageSite(user.role)} />;
 }

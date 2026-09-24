@@ -25,14 +25,21 @@ export default function MediaViewer({ id, kind, name, onClose }: MediaViewerProp
   const src = mediaFilePath(id);
 
   return (
-    <div className={styles.viewer} role="dialog" aria-modal="true" aria-label={name}>
-      <button className={styles.viewerClose} type="button" onClick={onClose}>
+    <div className={styles.viewer} role="dialog" aria-modal="true" aria-label={name} onClick={onClose}>
+      <button
+        className={styles.viewerClose}
+        type="button"
+        onClick={(event) => {
+          event.stopPropagation();
+          onClose();
+        }}
+      >
         بستن
       </button>
       {kind === "image" ? (
-        <img src={src} alt={name} />
+        <img src={src} alt={name} onClick={(event) => event.stopPropagation()} />
       ) : (
-        <video src={src} controls autoPlay playsInline />
+        <video src={src} controls autoPlay playsInline onClick={(event) => event.stopPropagation()} />
       )}
     </div>
   );

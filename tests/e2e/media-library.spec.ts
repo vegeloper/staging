@@ -41,11 +41,14 @@ test("admin uploads only files that pass structure and virus checks", async ({ p
   await page.goto("/admin/media");
   await expect(page.getByRole("heading", { name: "کتابخانه رسانه" })).toBeVisible();
   const upload = page.getByLabel("بارگذاری رسانه از رایانه");
+  const confirmUpload = page.getByRole("button", { name: "بارگذاری در کتابخانه" });
   await upload.setInputFiles({
     name: "tampered.png",
     mimeType: "image/png",
     buffer: Buffer.concat([CLEAN_PNG, Buffer.from("MZ-not-a-png")]),
   });
+  await expect(page.getByText("tampered.png")).toBeVisible();
+  await confirmUpload.click();
   await expect(page.getByText("بعد از پایان PNG داده اضافه وجود دارد.")).toBeVisible();
   await page.screenshot({ path: "/opt/cursor/artifacts/media_scan_rejected.png" });
 
@@ -55,6 +58,8 @@ test("admin uploads only files that pass structure and virus checks", async ({ p
     mimeType: "image/png",
     buffer: uniquePng(Number(stamp.slice(-6))),
   });
+  await expect(page.getByText(`e2e-${stamp}.png`).first()).toBeVisible();
+  await confirmUpload.click();
   await expect(page.getByText("فایل سالم است و به کتابخانه رسانه اضافه شد.")).toBeVisible();
   await expect(page.getByText(`e2e-${stamp}.png`)).toBeVisible();
   expect(fullFileRequests).toEqual([]);
@@ -78,6 +83,7 @@ test("admin uploads only files that pass structure and virus checks", async ({ p
     mimeType: "image/png",
     buffer: fromCms,
   });
+  await page.getByRole("button", { name: "بارگذاری در کتابخانه" }).click();
   await expect(page.getByText("فایل سالم است و به کتابخانه رسانه اضافه شد.")).toBeVisible();
   await expect(page.getByText(/\/media\/file\/[0-9a-f-]{36}/)).toBeVisible();
 

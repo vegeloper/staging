@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 
 import { contentImages } from "@/lib/cms/images";
 import MediaField from "./MediaField";
+import ResetIconButton from "./ResetIconButton";
+import ShamsiDateField from "./ShamsiDateField";
 import { emptyContentForm, type ContentFormValues } from "@/lib/cms/input";
 import {
   categoriesForKind,
@@ -179,24 +181,27 @@ export default function ContentEditor({
         </label>
 
         <label>
-          نشانی
-          <input
-            className={styles.ltr}
-            value={values.slug}
-            disabled={disabled}
-            placeholder="city-trip-guide"
-            onChange={(event) => update("slug", event.target.value.trim().toLowerCase())}
-          />
+          URL slug
+          <span className={styles.inputShell}>
+            <input
+              className={styles.ltr}
+              value={values.slug}
+              disabled={disabled}
+              placeholder="city-trip-guide"
+              onChange={(event) => update("slug", event.target.value.trim().toLowerCase())}
+            />
+            <ResetIconButton label="Reset URL slug" disabled={disabled} onClick={() => update("slug", emptyContentForm.slug)} />
+          </span>
           {fields.slug ? <small>{fields.slug}</small> : null}
         </label>
 
         <label>
           تاریخ نمایش
-          <input
+          <ShamsiDateField
+            mode="text"
             value={values.displayDate}
             disabled={disabled}
-            placeholder="۱ شهریور ۱۴۰۵"
-            onChange={(event) => update("displayDate", event.target.value)}
+            onChange={(displayDate) => update("displayDate", displayDate)}
           />
           {fields.displayDate ? <small>{fields.displayDate}</small> : null}
         </label>
@@ -219,14 +224,16 @@ export default function ContentEditor({
           </select>
           {fields.imageSrc ? <small>{fields.imageSrc}</small> : null}
         </label>
-        <MediaField
-          label="تصویر مطلب"
-          kind="image"
-          value={values.imageSrc}
-          disabled={disabled}
-          hint="از کتابخانه، کشیدن فایل، یا انتخاب از رایانه"
-          onChange={(src) => update("imageSrc", src)}
-        />
+        <div className={styles.span2}>
+          <MediaField
+            label="تصویر مطلب"
+            kind="image"
+            value={values.imageSrc}
+            disabled={disabled}
+            hint="از کتابخانه، کشیدن فایل، یا انتخاب از رایانه"
+            onChange={(src) => update("imageSrc", src)}
+          />
+        </div>
 
         <label>
           توضیح تصویر
@@ -239,32 +246,53 @@ export default function ContentEditor({
         </label>
 
         <label>
-          کادر تصویر
-          <input
-            className={styles.ltr}
-            value={values.imageObjectPosition}
-            disabled={disabled}
-            placeholder="center 18%"
-            onChange={(event) => update("imageObjectPosition", event.target.value)}
-          />
+          Image focal point
+          <span className={styles.inputShell}>
+            <input
+              className={styles.ltr}
+              value={values.imageObjectPosition}
+              disabled={disabled}
+              placeholder="center 18%"
+              onChange={(event) => update("imageObjectPosition", event.target.value)}
+            />
+            <ResetIconButton
+              label="Reset image focal point"
+              disabled={disabled}
+              onClick={() => update("imageObjectPosition", emptyContentForm.imageObjectPosition)}
+            />
+          </span>
         </label>
 
         <label>
-          دیدگاه
-          <input
-            value={values.commentsLabel}
-            disabled={disabled}
-            onChange={(event) => update("commentsLabel", event.target.value)}
-          />
+          Comment count
+          <span className={styles.inputShell}>
+            <input
+              value={values.commentsLabel}
+              disabled={disabled}
+              onChange={(event) => update("commentsLabel", event.target.value)}
+            />
+            <ResetIconButton
+              label="Reset comment count"
+              disabled={disabled}
+              onClick={() => update("commentsLabel", emptyContentForm.commentsLabel)}
+            />
+          </span>
         </label>
 
         <label>
-          پسند
-          <input
-            value={values.likesLabel}
-            disabled={disabled}
-            onChange={(event) => update("likesLabel", event.target.value)}
-          />
+          Like count
+          <span className={styles.inputShell}>
+            <input
+              value={values.likesLabel}
+              disabled={disabled}
+              onChange={(event) => update("likesLabel", event.target.value)}
+            />
+            <ResetIconButton
+              label="Reset like count"
+              disabled={disabled}
+              onClick={() => update("likesLabel", emptyContentForm.likesLabel)}
+            />
+          </span>
         </label>
 
         <label className={styles.check}>

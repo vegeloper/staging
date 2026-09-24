@@ -25,7 +25,7 @@ test("content creator submits and the website admin publishes it", async ({ page
 
   await page.getByRole("link", { name: "مطلب جدید" }).click();
   await page.getByLabel("عنوان").fill(title);
-  await page.getByLabel("نشانی").fill(slug);
+  await page.getByLabel("URL slug").fill(slug);
   await page.getByLabel("تاریخ نمایش").fill("امروز");
   await page.getByLabel("توضیح تصویر").fill("تصویر آزمایش گردش‌کار");
   await page.getByLabel("متن").fill("این مطلب آزمایشی است و فقط پس از تأیید مدیر باید در سایت دیده شود.");
@@ -48,7 +48,7 @@ test("content creator submits and the website admin publishes it", async ({ page
   await page.getByRole("button", { name: "ورود" }).click();
   await expect(page.getByRole("heading", { name: "پیشخوان مدیریت" })).toBeVisible();
   await expect(page.getByRole("navigation", { name: "بخش‌های مدیریت" }).getByRole("link", { name: "درخواست‌ها" })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "بخش‌های مدیریت" }).getByRole("link", { name: "پوسته" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "بخش‌های مدیریت" }).getByRole("link", { name: "تم" })).toBeVisible();
   await page.getByRole("navigation", { name: "بخش‌های مدیریت" }).getByRole("link", { name: "مطالب" }).click();
   await page.locator('input[name="q"]').fill(slug);
   await page.getByRole("button", { name: "فیلتر" }).click();
@@ -112,7 +112,7 @@ test("content creator submits and the website admin publishes it", async ({ page
     await expect(page.getByRole("heading", { name: "درخواست‌های دریافتی" })).toBeVisible();
     await expect(page.getByRole("link", { name: "مطالب" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "رسانه" })).toHaveCount(0);
-    await expect(page.getByRole("link", { name: "پوسته" })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "تم" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "کپی‌رایت" })).toHaveCount(0);
     await page.goto("/admin/content");
     await expect(page.getByRole("heading", { name: "درخواست‌های دریافتی" })).toBeVisible();

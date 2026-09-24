@@ -6,12 +6,14 @@ import { useEffect, useState } from "react";
 import type { MediaKind, MediaListItem } from "@/lib/media/types";
 import { formatBytes, formatWhen } from "./media-format";
 import MediaViewer from "./MediaViewer";
+import ShamsiDateField from "./ShamsiDateField";
 import styles from "./Admin.module.css";
 
 type MediaBrowserProps = {
   mode: "navigate" | "select";
   revision?: number;
   lockedKind?: MediaKind;
+  canDelete?: boolean;
   onSelect?: (asset: MediaListItem) => void;
 };
 
@@ -30,18 +32,26 @@ const sorts = [
   { value: "type", label: "نوع فایل" },
 ] as const;
 
-export default function MediaBrowser({ mode, revision = 0, lockedKind, onSelect }: MediaBrowserProps) {
+const extensions = ["jpg", "png", "gif", "webp", "mp4", "webm"] as const;
+
+export default function MediaBrowser({ mode, revision = 0, lockedKind, canDelete = false, onSelect }: MediaBrowserProps) {
   const [query, setQuery] = useState("");
   const [kind, setKind] = useState<"" | MediaKind>(lockedKind ?? "");
+  const [ext, setExt] = useState("");
   const [sort, setSort] = useState<(typeof sorts)[number]["value"]>("newest");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [page, setPage] = useState(1);
+  const [reload, setReload] = useState(0);
   const [data, setData] = useState<ListResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [viewer, setViewer] = useState<MediaListItem | null>(null);
   const [brokenThumbs, setBrokenThumbs] = useState<Record<string, boolean>>({});
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [armed, setArmed] = useState(false);
+  const [armedId, setArmedId] = useState<string | null>(null);
+  const [removing, setRemoving] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -52,6 +62,7 @@ export default function MediaBrowser({ mode, revision = 0, lockedKind, onSelect 
       const activeKind = lockedKind ?? kind;
       if (query.trim()) params.set("q", query.trim());
       if (activeKind) params.set("kind", activeKind);
+      if (ext) params.set("ext", ext);
       params.set("sort", sort);
       if (from) params.set("from", from);
       if (to) params.set("to", to);
@@ -76,9 +87,40 @@ export default function MediaBrowser({ mode, revision = 0, lockedKind, onSelect 
       controller.abort();
       window.clearTimeout(handle);
     };
-  }, [query, kind, sort, from, to, page, revision, lockedKind]);
+  }, [query, kind, ext, sort, from, to, page, revision, lockedKind, reload]);
 
   const pages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
+  const pageIds = data?.items.map((item) => item.id) ?? [];
+  const allSelected = pageIds.length > 0 && pageIds.every((id) => selected.has(id));
+
+  function toggle(id: string) {
+    setArmed(false);
+    setSelected((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  async function remove(ids: string[]) {
+    setRemoving(true);
+    setError("");
+    const response = await fetch("/api/admin/records", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ kind: "media", ids }),
+    });
+    const body = (await response.json().catch(() => ({}))) as { error?: string };
+    setRemoving(false);
+    if (!response.ok) {
+      setError(body.error || "حذف ناموفق بود.");
+      return;
+    }
+    setSelected(new Set());
+    setArmed(false);
+    setReload((current) => current + 1);
+  }
 
   return (
     <div className={styles.browser}>
@@ -111,6 +153,23 @@ export default function MediaBrowser({ mode, revision = 0, lockedKind, onSelect 
           </label>
         )}
         <label>
+          پسوند فایل
+          <select
+            value={ext}
+            onChange={(event) => {
+              setPage(1);
+              setExt(event.target.value);
+            }}
+          >
+            <option value="">همه پسوندها</option>
+            {extensions.map((value) => (
+              <option key={value} value={value}>
+                .{value}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
           مرتب‌سازی
           <select
             value={sort}
@@ -128,31 +187,58 @@ export default function MediaBrowser({ mode, revision = 0, lockedKind, onSelect 
         </label>
         <label>
           از تاریخ
-          <input
-            className={styles.ltr}
-            type="date"
+          <ShamsiDateField
+            mode="iso"
             value={from}
-            onChange={(event) => {
+            onChange={(next) => {
               setPage(1);
-              setFrom(event.target.value);
+              setFrom(next);
             }}
           />
         </label>
         <label>
           تا تاریخ
-          <input
-            className={styles.ltr}
-            type="date"
+          <ShamsiDateField
+            mode="iso"
             value={to}
-            onChange={(event) => {
+            onChange={(next) => {
               setPage(1);
-              setTo(event.target.value);
+              setTo(next);
             }}
           />
         </label>
       </div>
 
       {error ? <p className={styles.warning}>{error}</p> : null}
+      {canDelete && mode === "navigate" ? (
+        <div className={styles.deleteBar}>
+          <button
+            className="button button-dark"
+            type="button"
+            disabled={removing || pageIds.length === 0}
+            onClick={() => {
+              setArmed(false);
+              setSelected(allSelected ? new Set() : new Set(pageIds));
+            }}
+          >
+            {allSelected ? "لغو انتخاب صفحه" : "انتخاب همه این صفحه"}
+          </button>
+          <button
+            className="button button-dark"
+            type="button"
+            disabled={removing || selected.size === 0}
+            onClick={() => {
+              if (!armed) {
+                setArmed(true);
+                return;
+              }
+              void remove([...selected]);
+            }}
+          >
+            {armed ? "تأیید حذف گروهی" : `حذف گروهی (${selected.size.toLocaleString("fa-IR")})`}
+          </button>
+        </div>
+      ) : null}
       {loading ? <p className={styles.meta}>در حال بارگذاری فهرست...</p> : null}
 
       <div className={styles.mediaGrid}>
@@ -169,10 +255,25 @@ export default function MediaBrowser({ mode, revision = 0, lockedKind, onSelect 
               ) : (
                 <span className={styles.typeBadge}>{item.extension.toUpperCase()}</span>
               )}
+              <span className={styles.extMark}>
+                <FileTypeIcon kind={item.kind} />
+                {item.extension.toUpperCase()}
+              </span>
             </span>
           );
           return (
             <article key={item.id} className={styles.mediaCard}>
+              {canDelete && mode === "navigate" ? (
+                <label className={styles.pickRow}>
+                  <input
+                    type="checkbox"
+                    checked={selected.has(item.id)}
+                    aria-label={`انتخاب ${item.originalName}`}
+                    onChange={() => toggle(item.id)}
+                  />
+                  انتخاب برای حذف
+                </label>
+              ) : null}
               <button
                 className={styles.thumbButton}
                 type="button"
@@ -189,12 +290,34 @@ export default function MediaBrowser({ mode, revision = 0, lockedKind, onSelect 
                 <span>{item.description || "بدون توضیح"}</span>
                 <span>{formatWhen(item.createdAt)}</span>
                 <span>{item.uploaderName ? `بارگذاری: ${item.uploaderName}` : "بارگذاری‌کننده نامشخص"}</span>
-                <span>پویش: {item.scanResult === "clean" ? "سالم" : item.scanResult}</span>
+                {item.scanResult === "clean" ? (
+                  <span className={styles.scanClean}>NO VIRUS, CLEAN</span>
+                ) : (
+                  <span>اسکن: {item.scanResult}</span>
+                )}
               </div>
               {mode === "navigate" ? (
-                <Link className="button button-dark" href={`/admin/media/${item.id}`}>
-                  جزئیات
-                </Link>
+                <div className={styles.pendingActions}>
+                  <Link className="button button-dark" href={`/admin/media/${item.id}`}>
+                    جزئیات
+                  </Link>
+                  {canDelete ? (
+                    <button
+                      className={styles.deleteOne}
+                      type="button"
+                      disabled={removing}
+                      onClick={() => {
+                        if (armedId !== item.id) {
+                          setArmedId(item.id);
+                          return;
+                        }
+                        void remove([item.id]);
+                      }}
+                    >
+                      {armedId === item.id ? "تأیید" : "حذف"}
+                    </button>
+                  ) : null}
+                </div>
               ) : (
                 <button className="button button-brand" type="button" onClick={() => onSelect?.(item)}>
                   انتخاب
@@ -237,5 +360,24 @@ export default function MediaBrowser({ mode, revision = 0, lockedKind, onSelect 
         />
       ) : null}
     </div>
+  );
+}
+
+function FileTypeIcon({ kind }: { kind: MediaKind }) {
+  return (
+    <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+      <path
+        d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path d="M14 3v5h5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      {kind === "image" ? (
+        <path d="M8 16l2.2-2.2a1 1 0 0 1 1.4 0L14 16l1-1a1 1 0 0 1 1.4 0L18 16.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      ) : (
+        <path d="M10 11.5v5l4-2.5-4-2.5z" fill="currentColor" />
+      )}
+    </svg>
   );
 }

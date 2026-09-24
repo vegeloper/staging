@@ -27,6 +27,7 @@ export async function GET(request: Request) {
     const result = await listMedia({
       q: url.searchParams.get("q") ?? "",
       kind: kindParam(url.searchParams.get("kind")),
+      ext: url.searchParams.get("ext") ?? "",
       sort: sortParam(url.searchParams.get("sort")),
       from: url.searchParams.get("from") ?? "",
       to: url.searchParams.get("to") ?? "",

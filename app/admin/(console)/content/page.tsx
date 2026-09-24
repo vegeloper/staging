@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import styles from "@/components/admin/Admin.module.css";
+import { DeleteCheckbox, DeleteOne, DeleteSelection } from "@/components/admin/DeleteSelection";
 import { requireCmsUser } from "@/lib/auth";
 import { HttpError } from "@/lib/http/errors";
 import { listManagedContent } from "@/lib/cms/service";
@@ -112,45 +113,12 @@ export default async function ContentListPage({
             ? "هنوز مطلبی نساخته‌اید."
             : "هنوز مطلبی برای نمایش نیست."}
         </div>
+      ) : user.role === "admin" ? (
+        <DeleteSelection kind="content" ids={items.map((item) => item.id)}>
+          <ContentTable items={items} canDelete />
+        </DeleteSelection>
       ) : (
-        <div className={styles.tableWrap}>
-          <table>
-            <thead>
-              <tr>
-                <th>عنوان</th>
-                <th>نوع</th>
-                <th>دسته</th>
-                <th>وضعیت</th>
-                <th>نویسنده</th>
-                <th>به‌روزرسانی</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id}>
-                  <td>
-                    <Link href={`/admin/content/${item.id}`}>{item.title}</Link>
-                    <div className={styles.subline}>{item.slug}</div>
-                  </td>
-                  <td>{contentKindLabels[item.kind]}</td>
-                  <td>{item.category}</td>
-                  <td>
-                    <span className={styles.badge} data-status={item.status}>
-                      {contentStatusLabels[item.status]}
-                    </span>
-                  </td>
-                  <td>{item.authorName}</td>
-                  <td>
-                    {item.updatedAt.toLocaleString("fa-IR", {
-                      dateStyle: "short",
-                      timeStyle: "short",
-                    })}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ContentTable items={items} canDelete={false} />
       )}
 
       {totalPages > 1 ? (
@@ -175,5 +143,66 @@ export default async function ContentListPage({
         </nav>
       ) : null}
     </>
+  );
+}
+
+function ContentTable({
+  items,
+  canDelete,
+}: {
+  items: Awaited<ReturnType<typeof listManagedContent>>["items"];
+  canDelete: boolean;
+}) {
+  return (
+    <div className={styles.tableWrap}>
+      <table>
+        <thead>
+          <tr>
+            {canDelete ? <th>انتخاب</th> : null}
+            <th>عنوان</th>
+            <th>نوع</th>
+            <th>دسته</th>
+            <th>وضعیت</th>
+            <th>نویسنده</th>
+            <th>به‌روزرسانی</th>
+            {canDelete ? <th>حذف</th> : null}
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item) => (
+            <tr key={item.id}>
+              {canDelete ? (
+                <td>
+                  <DeleteCheckbox id={item.id} />
+                </td>
+              ) : null}
+              <td>
+                <Link href={`/admin/content/${item.id}`}>{item.title}</Link>
+                <div className={styles.subline}>{item.slug}</div>
+              </td>
+              <td>{contentKindLabels[item.kind]}</td>
+              <td>{item.category}</td>
+              <td>
+                <span className={styles.badge} data-status={item.status}>
+                  {contentStatusLabels[item.status]}
+                </span>
+              </td>
+              <td>{item.authorName}</td>
+              <td>
+                {item.updatedAt.toLocaleString("fa-IR", {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                })}
+              </td>
+              {canDelete ? (
+                <td>
+                  <DeleteOne kind="content" id={item.id} />
+                </td>
+              ) : null}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

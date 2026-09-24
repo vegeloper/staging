@@ -55,7 +55,7 @@ export async function loadPublishedSite(): Promise<PublishedSite> {
 
 function assertAdmin(user: AuthUser) {
   if (user.role !== "admin") {
-    throw new HttpError(403, "فقط مدیر وب‌سایت می‌تواند پوسته و کپی‌رایت را تغییر دهد.");
+    throw new HttpError(403, "فقط مدیر وب‌سایت می‌تواند تم و کپی‌رایت را تغییر دهد.");
   }
 }
 
@@ -63,7 +63,7 @@ function parseDocument(key: SiteDocumentKey, input: unknown) {
   if (key === "theme") {
     const parsed = parseTheme(input);
     if (!parsed.success) {
-      throw new HttpError(422, "تنظیمات پوسته نامعتبر است.", {
+      throw new HttpError(422, "تنظیمات تم نامعتبر است.", {
         fields: fieldErrorsFromZod(parsed.error),
       });
     }

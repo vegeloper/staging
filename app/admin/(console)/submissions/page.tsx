@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AttachmentBadge } from "@/components/admin/AttachmentBadge";
+import { DeleteCheckbox, DeleteOne, DeleteSelection } from "@/components/admin/DeleteSelection";
 import InboxTabs from "@/components/admin/InboxTabs";
 import styles from "@/components/admin/Admin.module.css";
 import {
@@ -33,7 +34,7 @@ export default async function AdminInboxPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await requireInboxUser();
+  const user = await requireInboxUser();
   const params = await searchParams;
   const type = firstString(params.type);
   const status = firstString(params.status);
@@ -111,59 +112,12 @@ export default async function AdminInboxPage({
 
       {items.length === 0 ? (
         <div className={styles.empty}>هنوز درخواستی ثبت نشده است.</div>
+      ) : user.role === "admin" ? (
+        <DeleteSelection kind="submission" ids={items.map((item) => item.id)}>
+          <SubmissionTable items={items} canDelete />
+        </DeleteSelection>
       ) : (
-        <div className={styles.tableWrap}>
-          <table>
-            <thead>
-              <tr>
-                <th>پیوست</th>
-                <th>نوع</th>
-                <th>نام</th>
-                <th>تماس</th>
-                <th>وضعیت</th>
-                <th>زمان دریافت</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id}>
-                  <td>
-                    <AttachmentBadge
-                      kind={item.attachmentKind}
-                      fileName={safeDisplayText(item.attachmentName, "")}
-                    />
-                  </td>
-                  <td>{submissionTypeLabels[item.type]}</td>
-                  <td>
-                    <Link href={`/admin/submissions/${item.id}`}>
-                      {safeDisplayText(item.name)}
-                    </Link>
-                    {item.brand ? (
-                      <div className={styles.subline}>{safeDisplayText(item.brand)}</div>
-                    ) : null}
-                  </td>
-                  <td>
-                    <div>{safeDisplayText(item.phone)}</div>
-                    {item.email ? (
-                      <div className={styles.subline}>{safeDisplayText(item.email)}</div>
-                    ) : null}
-                  </td>
-                  <td>
-                    <span className={styles.badge}>
-                      {submissionStatusLabels[item.status]}
-                    </span>
-                  </td>
-                  <td>
-                    {item.createdAt.toLocaleString("fa-IR", {
-                      dateStyle: "short",
-                      timeStyle: "short",
-                    })}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <SubmissionTable items={items} canDelete={false} />
       )}
 
       {totalPages > 1 ? (
@@ -188,5 +142,80 @@ export default async function AdminInboxPage({
         </nav>
       ) : null}
     </>
+  );
+}
+
+function SubmissionTable({
+  items,
+  canDelete,
+}: {
+  items: Awaited<ReturnType<typeof listSubmissions>>["items"];
+  canDelete: boolean;
+}) {
+  return (
+    <div className={styles.tableWrap}>
+      <table>
+        <thead>
+          <tr>
+            {canDelete ? <th>انتخاب</th> : null}
+            <th>پیوست</th>
+            <th>نوع</th>
+            <th>نام</th>
+            <th>تماس</th>
+            <th>وضعیت</th>
+            <th>زمان دریافت</th>
+            {canDelete ? <th>حذف</th> : null}
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item) => (
+            <tr key={item.id}>
+              {canDelete ? (
+                <td>
+                  <DeleteCheckbox id={item.id} />
+                </td>
+              ) : null}
+              <td>
+                <AttachmentBadge
+                  kind={item.attachmentKind}
+                  fileName={safeDisplayText(item.attachmentName, "")}
+                />
+              </td>
+              <td>{submissionTypeLabels[item.type]}</td>
+              <td>
+                <Link href={`/admin/submissions/${item.id}`}>
+                  {safeDisplayText(item.name)}
+                </Link>
+                {item.brand ? (
+                  <div className={styles.subline}>{safeDisplayText(item.brand)}</div>
+                ) : null}
+              </td>
+              <td>
+                <div>{safeDisplayText(item.phone)}</div>
+                {item.email ? (
+                  <div className={styles.subline}>{safeDisplayText(item.email)}</div>
+                ) : null}
+              </td>
+              <td>
+                <span className={styles.badge}>
+                  {submissionStatusLabels[item.status]}
+                </span>
+              </td>
+              <td>
+                {item.createdAt.toLocaleString("fa-IR", {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                })}
+              </td>
+              {canDelete ? (
+                <td>
+                  <DeleteOne kind="submission" id={item.id} />
+                </td>
+              ) : null}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

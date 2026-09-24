@@ -18,18 +18,20 @@ export default async function AdminConsoleLayout({
 
   return (
     <ScanToastProvider>
-      <div className={styles.page}>
+      <div className={styles.frame}>
         <header className={styles.topbar}>
-          <div className={styles.topbarStart}>
-            <Link href={homePathForRole(user.role)}>دات‌وان تریپ</Link>
-            <AdminNav role={user.role} />
-          </div>
+          <Link href={homePathForRole(user.role)}>دات‌وان تریپ</Link>
           <Link href="/admin/profile">
             {user.username} · {roleLabel(user.role)}
           </Link>
           <LogoutButton />
         </header>
-        <div className={styles.shell}>{children}</div>
+        <div className={styles.body}>
+          <AdminNav role={user.role} />
+          <div className={styles.mainColumn}>
+            <div className={styles.shell}>{children}</div>
+          </div>
+        </div>
       </div>
     </ScanToastProvider>
   );

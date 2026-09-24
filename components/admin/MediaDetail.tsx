@@ -12,9 +12,10 @@ import styles from "./Admin.module.css";
 type MediaDetailProps = {
   asset: MediaListItem;
   canManage: boolean;
+  canDelete: boolean;
 };
 
-export default function MediaDetail({ asset, canManage }: MediaDetailProps) {
+export default function MediaDetail({ asset, canManage, canDelete }: MediaDetailProps) {
   const router = useRouter();
   const [description, setDescription] = useState(asset.description);
   const [altText, setAltText] = useState(asset.altText);
@@ -71,8 +72,8 @@ export default function MediaDetail({ asset, canManage }: MediaDetailProps) {
     ["مدت", formatDuration(current.durationMs)],
     ["شناسه", current.id],
     ["اثرانگشت", current.sha256],
-    ["موتور پویش", current.scanEngine],
-    ["نتیجه پویش", current.scanResult === "clean" ? "سالم" : current.scanResult],
+    ["موتور اسکن", current.scanEngine],
+    ["نتیجه اسکن", current.scanResult === "clean" ? "NO VIRUS, CLEAN" : current.scanResult],
     ["بارگذاری‌کننده", current.uploaderName || "—"],
     ["زمان بارگذاری", formatWhen(current.createdAt)],
     ["آخرین تغییر", formatWhen(current.updatedAt)],
@@ -100,7 +101,13 @@ export default function MediaDetail({ asset, canManage }: MediaDetailProps) {
           {rows.map(([label, value]) => (
             <div key={label}>
               <dt>{label}</dt>
-              <dd className={label === "شناسه" || label === "اثرانگشت" ? styles.ltr : undefined}>{value}</dd>
+              <dd className={label === "شناسه" || label === "اثرانگشت" ? styles.ltr : undefined}>
+                {label === "نتیجه اسکن" && value === "NO VIRUS, CLEAN" ? (
+                  <span className={styles.scanClean}>{value}</span>
+                ) : (
+                  value
+                )}
+              </dd>
             </div>
           ))}
         </dl>
@@ -122,9 +129,11 @@ export default function MediaDetail({ asset, canManage }: MediaDetailProps) {
           <button className="button button-brand" type="button" disabled={pending} onClick={() => void save()}>
             ذخیره توضیح
           </button>
-          <button className="button button-dark" type="button" disabled={pending} onClick={() => void remove()}>
-            {confirmDelete ? "تأیید حذف" : "حذف از کتابخانه"}
-          </button>
+          {canDelete ? (
+            <button className="button button-dark" type="button" disabled={pending} onClick={() => void remove()}>
+              {confirmDelete ? "تأیید حذف" : "حذف از کتابخانه"}
+            </button>
+          ) : null}
         </div>
       ) : (
         <p className={styles.meta}>فقط مدیر یا کسی که این فایل را بارگذاری کرده می‌تواند توضیح آن را تغییر دهد.</p>

@@ -20,7 +20,7 @@ export default async function AdminHomePage() {
     <>
       <h1>پیشخوان مدیریت</h1>
       <p className={styles.meta}>
-        مدیر وب‌سایت درخواست‌ها را رسیدگی می‌کند، موقعیت شغلی را مستقیم منتشر می‌کند، مطلب می‌سازد، رسانه را مدیریت می‌کند، و پوسته و کپی‌رایت را تغییر می‌دهد.
+        مدیر وب‌سایت درخواست‌ها را رسیدگی می‌کند، موقعیت شغلی را مستقیم منتشر می‌کند، مطلب می‌سازد، رسانه را مدیریت می‌کند، و تم و کپی‌رایت را تغییر می‌دهد.
       </p>
       {overview ? (
         <div className={styles.cards}>
@@ -45,9 +45,9 @@ export default async function AdminHomePage() {
             <small>فایل تأییدشده</small>
           </Link>
           <Link className={styles.cardLink} href="/admin/theme">
-            <span>پوسته و رنگ‌ها</span>
+            <span>تم و رنگ‌ها</span>
             <strong>{overview.themeRevision.toLocaleString("fa-IR")}</strong>
-            <small>نسخه منتشرشده پوسته</small>
+            <small>نسخه منتشرشده تم</small>
           </Link>
           <Link className={styles.cardLink} href="/admin/copyright">
             <span>متن کپی‌رایت</span>
