@@ -12,6 +12,7 @@ import { parseBody, serializeBody } from "./body";
 import {
   arrangeFeeds,
   fallbackFeeds,
+  normalizeCategory,
   relatedArticles,
   seedToPublic,
   starterCatalog,
@@ -140,7 +141,7 @@ export async function ensureStarterCatalog() {
 function rowToPublic(row: typeof contentPosts.$inferSelect): PublicArticle {
   return {
     id: row.slug,
-    category: row.category,
+    category: normalizeCategory(row.category),
     title: row.title,
     date: row.displayDate,
     comments: row.commentsLabel,
