@@ -77,7 +77,7 @@ export default function page() {
             text: "درخواست همکاری سازمانی",
             icon: importIcon,
             variant: "secondary",
-            href: "https://apply.dotone.ir/",
+            href: "/contact-us",
           },
         ]}
         image={{
