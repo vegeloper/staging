@@ -180,7 +180,7 @@
 }
 
 .featuredTitle a:hover {
-  color: var(--brand, #00b7ce);
+  color: #00b7ce;
 }
 
 .featuredDescription {
@@ -226,37 +226,6 @@
 
 .featuredFooter .newsButton {
   margin-right: auto;
-}
-
-.meta {
-  min-width: 0;
-
-  display: flex;
-  align-items: center;
-
-  gap: 8px;
-
-  color: #777;
-
-  font-size: 10px;
-  font-weight: 400;
-}
-
-.metaDivider {
-  width: 3px;
-  height: 3px;
-
-  flex-shrink: 0;
-
-  border-radius: 50%;
-
-  background: #aaa;
-}
-
-.category {
-  color: var(--brand, #00b7ce);
-
-  font-weight: 600;
 }
 
 
@@ -423,7 +392,7 @@
 }
 
 .newsTitle a:hover {
-  color: var(--brand, #00b7ce);
+  color: #00b7ce;
 }
 
 

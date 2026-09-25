@@ -33,8 +33,6 @@ test("contact form appears in the admin inbox", async ({ page }) => {
   await page.getByLabel("نام کاربری").fill("admin");
   await page.getByLabel("رمز عبور").fill(adminPassword!);
   await page.getByRole("button", { name: "ورود" }).click();
-  await expect(page.getByRole("heading", { name: "پیشخوان مدیریت" })).toBeVisible();
-  await page.getByRole("navigation", { name: "بخش‌های مدیریت" }).getByRole("link", { name: "درخواست‌ها" }).click();
   await expect(page.getByRole("heading", { name: "درخواست‌های دریافتی" })).toBeVisible();
   await page.locator('input[name="q"]').fill(`e2e${stamp}@gmail.com`);
   await page.getByRole("button", { name: "فیلتر" }).click();

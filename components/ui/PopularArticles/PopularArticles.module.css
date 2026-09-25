@@ -101,7 +101,7 @@
 .item:focus-visible,
 .navButton:focus-visible,
 .dot:focus-visible {
-  outline: 2px solid var(--brand, #00b7ce);
+  outline: 2px solid #00b7ce;
   outline-offset: 3px;
 }
 

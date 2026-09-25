@@ -172,18 +172,16 @@ curl -fsS https://HOST/api/ready
 
 ---
 
-## 6. SERVER — bootstrap accounts **once**
+## 6. SERVER — seed **once**
 
-Do not put passwords in `.env`.
+Set `SEED_ADMIN_PASSWORD` and `SEED_OPERATOR_PASSWORD` in `.env` for this command only.
 
 ```bash
 cd /opt/dotone-trip
-docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no-deps seed npm run db:bootstrap
+docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no-deps seed
 ```
 
-Expect one password each for `admin`, `operator`, and `creator`, printed once. Store them outside the server env. Re-running replaces all three hashes. It does not restart the web container.
-
-`db:seed` remains for a case where the passwords already exist: set `SEED_*` only for that command, then delete them. Bootstrap is the supported path.
+Expect: `Seeded admin` / `Seeded operator`. Then **remove `SEED_*` from `.env`**.
 
 **Do not:**
 

@@ -53,7 +53,7 @@ POSTGRES_PASSWORD=<from ops:secrets>
 DATABASE_URL=postgresql://dotone_app:<SAME_PASSWORD>@127.0.0.1:5432/dotone_trip
 ```
 
-Do not put operator passwords in `.env`. After migrate, `npm run db:bootstrap` (or `npm run docker:bootstrap`) prints `admin`, `operator`, and `creator` passwords once. Store that terminal output in a password manager. The commented `SEED_*` lines are only the older `db:seed` path.
+Leave `SEED_*` commented. Save `SEED_*` from `ops:secrets` in a password manager (needed for e2e + admin login).
 
 ---
 
@@ -72,15 +72,13 @@ docker compose --profile migrate up migrate
 
 Expect: `[✓] migrations applied successfully!` and exit **0**.
 
-Preferred — one shot, no passwords in `.env`:
+Put `SEED_ADMIN_PASSWORD` and `SEED_OPERATOR_PASSWORD` in `.env` for this command only:
 
 ```powershell
-npm run db:bootstrap
+docker compose --profile seed up seed
 ```
 
-Expect three lines: `admin …`, `operator …`, `creator …`. Copy them into the password manager. The command ignores `SEED_*`.
-
-Older path, only if you already have passwords and accept putting them in `.env` for one command: set `SEED_ADMIN_PASSWORD` and `SEED_OPERATOR_PASSWORD`, run `docker compose --profile seed up seed`, then remove those lines. Add `SEED_CREATOR_PASSWORD` when that path should also upsert `creator`.
+Expect: `Seeded admin` / `Seeded operator`, exit **0**. Then **comment out `SEED_*`**.
 
 ---
 
@@ -104,8 +102,8 @@ Browser:
 
 1. `http://localhost:3000/forms` — forms render  
 2. Submit **contact** — expect HTTP **201**  
-3. `http://localhost:3000/admin/login` — user `admin` + the bootstrap password  
-4. The admin home is **پیشخوان مدیریت**. Open **درخواست‌ها** and the new inbox row. Theme and copyright are **پوسته** and **کپی‌رایت**. See [04 — admin dashboards](04-admin-dashboards.md).  
+3. `http://localhost:3000/admin/login` — user `admin` + local `SEED_ADMIN_PASSWORD`  
+4. Open the new inbox row  
 5. Cookie `trip_session`: HttpOnly **yes**, Secure **empty/no**, SameSite **Lax**, Path `/`
 
 ---
@@ -118,7 +116,7 @@ Dev server still on :3000.
 npm test
 ```
 
-Expect: 35 passed.
+Expect: 22 passed.
 
 First time on a PC:
 
@@ -126,16 +124,14 @@ First time on a PC:
 npx playwright install chromium
 ```
 
-Playwright does **not** read `.env`. Put the bootstrap passwords in **this shell only** (admin, and for the CMS spec also operator and creator):
+Playwright does **not** read `.env`. Password in **this shell only**:
 
 ```powershell
-$env:SEED_ADMIN_PASSWORD='<bootstrap admin password>'
-$env:SEED_OPERATOR_PASSWORD='<bootstrap operator password>'
-$env:SEED_CREATOR_PASSWORD='<bootstrap creator password>'
+$env:SEED_ADMIN_PASSWORD='<local SEED_ADMIN_PASSWORD>'
 npm run test:e2e
 ```
 
-Expect the suite to pass, not skip. Close that shell afterward. Dashboard behaviour is in [04 — admin dashboards](04-admin-dashboards.md).
+Expect: `1 passed` (not skipped). Close that shell afterward.
 
 ---
 
@@ -340,16 +336,17 @@ Expect the same JSON as local. Certificate errors → DNS not pointing, orange c
 docker compose --profile seed up seed
 ```
 
-**Right** — same compose files as production, do not recreate Postgres, and do not put passwords in `.env`:
+**Right** — same compose files as production, do not recreate Postgres:
 
 ```bash
+# VPS — add SEED_* to .env first (this environment’s secrets file, not LOCAL .env)
 cd /opt/dotone-trip
-docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no-deps seed npm run db:bootstrap
+docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no-deps seed
 ```
 
-Expect `admin`, `operator`, and `creator` passwords printed once. Store them, then clear the terminal scrollback if the host keeps it. Compose v5 `run` has **no** `--no-build`. This does not restart `app`.
+Expect: `Seeded admin` / `Seeded operator`. Compose v5 `run` has **no** `--no-build`.
 
-The older `db:seed` command (no extra arguments) still reads `SEED_*` from `.env`. Prefer bootstrap so those values are never saved.
+Then **delete `SEED_*` from `.env`**. Do not restart the stack for that.
 
 If `up --no-build` later reports migrate exit 1 but logs already show `[✓] migrations applied`:
 
@@ -566,12 +563,13 @@ scp "$env:USERPROFILE\Desktop\dotone-trip-migrate.tar" root@VPS_IP:/tmp/
 ```
 
 ```bash
-# VPS — replaces admin, operator, and creator passwords. Nothing is written to .env.
+# VPS — overwrites admin/operator password hashes. Put SEED_* in .env for this command only.
 docker load -i /tmp/dotone-trip-migrate.tar
 docker tag dotone-trip-migrate:latest dotone-trip-seed:latest
 rm -f /tmp/dotone-trip-migrate.tar
 cd /opt/dotone-trip
-docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no-deps seed npm run db:bootstrap
+docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no-deps seed
+# then delete SEED_* from .env
 ```
 
 Do **not** seed on every UI release. Form submissions are not seed data.

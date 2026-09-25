@@ -15,7 +15,6 @@ type ArticleDetailProps = {
   article: Article;
   related?: Article[];
   relatedTitle?: string;
-  backHref?: string;
   backLabel?: string;
 };
 
@@ -23,7 +22,6 @@ export default function ArticleDetail({
   article,
   related = [],
   relatedTitle = "مطالب محبوب:",
-  backHref,
   backLabel = "بازگشت",
 }: ArticleDetailProps) {
   const router = useRouter();
@@ -45,38 +43,23 @@ export default function ArticleDetail({
       <header className={styles.header}>
         {/* Back */}
 
-        {backHref ? (
-          <Link href={backHref} className={styles.back} aria-label={backLabel}>
-            <Image
-              src="/figma/arrow/backArrow.svg"
-              alt=""
-              width={20}
-              height={20}
-              unoptimized
-              className={styles.backArrow}
-            />
+        <button
+          type="button"
+          className={styles.back}
+          onClick={() => router.back()}
+          aria-label={backLabel}
+        >
+          <Image
+            src="/figma/arrow/backArrow.svg"
+            alt=""
+            width={20}
+            height={20}
+            unoptimized
+            className={styles.backArrow}
+          />
 
-            {backLabel}
-          </Link>
-        ) : (
-          <button
-            type="button"
-            className={styles.back}
-            onClick={() => router.back()}
-            aria-label={backLabel}
-          >
-            <Image
-              src="/figma/arrow/backArrow.svg"
-              alt=""
-              width={20}
-              height={20}
-              unoptimized
-              className={styles.backArrow}
-            />
-
-            {backLabel}
-          </button>
-        )}
+          {backLabel}
+        </button>
 
         {/* Category */}
 

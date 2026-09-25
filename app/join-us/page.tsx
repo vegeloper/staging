@@ -17,7 +17,7 @@ import FAQ, {
 } from "@/components/ui/Faq/Faq";
 
 import { getDriverJobCards } from "@/lib/driverJobs";
-import { getPublicPositions } from "@/lib/jobs/service";
+import { getCorporateJobCards } from "@/lib/corporateJobs";
 
 import careerHeroImage from "@/public/figma/careerHeroImage.png";
 import driverImage from "@/public/figma/femailDrivers.png";
@@ -25,11 +25,10 @@ import partnershipImage from "@/public/figma/partenrShip.png";
 import careerImage from "@/public/figma/parkedCars.png";
 import partnershipCarImage from "@/public/figma/driver-Highway.png";
 
-export const dynamic = "force-dynamic";
-
 /* ========================================
    Cooperation Cards
 ======================================== */
+
 const cooperationCards: CooperationCard[] = [
   {
     title: "همکاری به عنوان راننده",
@@ -99,9 +98,13 @@ const tripFaqItems: FAQItem[] = [
    Page
 ======================================== */
 
-export default async function Page() {
+export default function Page() {
+  /*
+   * همان دیتای صفحات اصلی
+   * ولی در Join Us فقط 4 مورد اول
+   */
   const driverJobs = getDriverJobCards().slice(0, 4);
-  const corporateJobs = (await getPublicPositions()).slice(0, 4);
+  const corporateJobs = getCorporateJobCards().slice(0, 4);
 
   return (
     <>

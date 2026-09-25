@@ -1,12 +1,11 @@
 import Footer from "@/components/ui/footer/Footer";
 import Header from "@/components/ui/Header/Header";
 import Positions from "@/components/ui/positions/Positions";
-import { getPublicPositions } from "@/lib/jobs/service";
 
-export const dynamic = "force-dynamic";
+import { getCorporateJobCards } from "@/lib/corporateJobs";
 
-export default async function page() {
-  const jobs = await getPublicPositions();
+export default function CorporateJobsPage() {
+  const jobs = getCorporateJobCards();
 
   return (
     <>
@@ -21,6 +20,7 @@ export default async function page() {
           itemsPerPage={5}
         />
       </main>
+
       <Footer />
     </>
   );

@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { mkdir, readFile, stat, unlink, writeFile } from "node:fs/promises";
+import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { getEnv } from "@/lib/env";
@@ -152,15 +152,6 @@ export async function saveResume(input: {
 
 export async function readResume(storageKey: string) {
   return readFile(resolveStoragePath(storageKey));
-}
-
-export async function resumeFileExists(storageKey: string) {
-  try {
-    await stat(resolveStoragePath(storageKey));
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 export async function deleteResume(storageKey: string) {

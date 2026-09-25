@@ -53,7 +53,6 @@ services:
       AUTH_PASSWORD_PEPPER: ${AUTH_PASSWORD_PEPPER:?AUTH_PASSWORD_PEPPER is required}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
       SEED_OPERATOR_PASSWORD: ${SEED_OPERATOR_PASSWORD:-}
-      SEED_CREATOR_PASSWORD: ${SEED_CREATOR_PASSWORD:-}
     depends_on:
       postgres:
         condition: service_healthy
@@ -78,40 +77,6 @@ services:
     profiles:
       - full
 
-  media-init:
-    image: busybox:1.37
-    user: "0:0"
-    restart: "no"
-    network_mode: none
-    volumes:
-      - ${MEDIA_HOST_PATH:-media_data}:/data
-    command:
-      [
-        "sh",
-        "-c",
-        "mkdir -p /data && chown -R 1000:1000 /data && chmod 775 /data",
-      ]
-    profiles:
-      - full
-
-  clamav:
-    image: clamav/clamav:1.4
-    restart: unless-stopped
-    ports:
-      - "127.0.0.1:3310:3310"
-    volumes:
-      - clamav_data:/var/lib/clamav
-    networks:
-      - backend
-    healthcheck:
-      test: ["CMD", "clamdcheck.sh"]
-      interval: 30s
-      timeout: 10s
-      retries: 12
-      start_period: 180s
-    profiles:
-      - full
-
   app:
     build:
       context: .
@@ -127,12 +92,7 @@ services:
       DATABASE_SSL: ${DATABASE_SSL:-disable}
       APP_ORIGIN: ${APP_ORIGIN:?APP_ORIGIN is required}
       UPLOAD_ROOT: /app/data/resumes
-      MEDIA_ROOT: /app/data/media
-      CLAMAV_HOST: clamav
-      CLAMAV_PORT: 3310
       MAX_RESUME_BYTES: ${MAX_RESUME_BYTES:-5242880}
-      MAX_MEDIA_IMAGE_BYTES: ${MAX_MEDIA_IMAGE_BYTES:-8388608}
-      MAX_MEDIA_VIDEO_BYTES: ${MAX_MEDIA_VIDEO_BYTES:-67108864}
       AUTH_PASSWORD_PEPPER: ${AUTH_PASSWORD_PEPPER:?AUTH_PASSWORD_PEPPER is required}
       PII_ENCRYPTION_KEY: ${PII_ENCRYPTION_KEY:?PII_ENCRYPTION_KEY is required}
       TRUST_PROXY: ${TRUST_PROXY:-false}
@@ -142,7 +102,6 @@ services:
       # Default named volume `resumes_data`. resume-init chowns uid 1000 so a
       # host bind (RESUME_HOST_PATH) also works without a manual chown.
       - ${RESUME_HOST_PATH:-resumes_data}:/app/data/resumes
-      - ${MEDIA_HOST_PATH:-media_data}:/app/data/media
     depends_on:
       postgres:
         condition: service_healthy
@@ -150,10 +109,6 @@ services:
         condition: service_completed_successfully
       resume-init:
         condition: service_completed_successfully
-      media-init:
-        condition: service_completed_successfully
-      clamav:
-        condition: service_healthy
     networks:
       - edge
       - backend
@@ -177,10 +132,6 @@ volumes:
     name: dotone-trip-postgres-data
   resumes_data:
     name: dotone-trip-resumes-data
-  media_data:
-    name: dotone-trip-media-data
-  clamav_data:
-    name: dotone-trip-clamav-data
 
 networks:
   edge:

@@ -3,7 +3,12 @@ import { notFound } from "next/navigation";
 
 import Header from "@/components/ui/Header/Header";
 import ArticleDetail from "@/components/ui/ArticleDetail/ArticleDetail";
-import { getPublishedArticle } from "@/lib/cms/service";
+
+import {
+  articles,
+  getArticle,
+  getRelatedArticles,
+} from "@/lib/articles";
 
 type ArticlePageProps = {
   params: Promise<{
@@ -11,26 +16,31 @@ type ArticlePageProps = {
   }>;
 };
 
-export const dynamic = "force-dynamic";
+export function generateStaticParams() {
+  return articles.map((article) => ({
+    id: article.id,
+  }));
+}
 
 export async function generateMetadata({
   params,
 }: ArticlePageProps): Promise<Metadata> {
   const { id } = await params;
-  const result = await getPublishedArticle(id);
 
-  if (!result) {
+  const article = getArticle(id);
+
+  if (!article) {
     return {
       title: "مقاله | دات‌وان تریپ",
     };
   }
 
-  const firstParagraph = result.article.body.find(
+  const firstParagraph = article.body.find(
     (block) => block.type === "p",
   );
 
   return {
-    title: `${result.article.title} | دات‌وان تریپ`,
+    title: `${article.title} | دات‌وان تریپ`,
     description: firstParagraph?.text,
   };
 }
@@ -39,16 +49,24 @@ export default async function ArticlePage({
   params,
 }: ArticlePageProps) {
   const { id } = await params;
-  const result = await getPublishedArticle(id);
 
-  if (!result) {
+  const article = getArticle(id);
+
+  if (!article) {
     notFound();
   }
 
   return (
     <>
       <Header variant="light" />
-      <ArticleDetail article={result.article} related={result.related} />
+
+      <ArticleDetail
+        article={article}
+        related={getRelatedArticles(
+          article.id,
+          3,
+        )}
+      />
     </>
   );
 }

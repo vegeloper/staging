@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, notInArray, or, sql } from "drizzle-orm";
 
 import { getDb } from "@/db";
 import { contentEvents, contentPosts, contentSettings, users } from "@/db/schema";
@@ -106,15 +106,16 @@ export async function ensureStarterCatalog() {
     const [marker] = await tx
       .select({ id: contentSettings.id })
       .from(contentSettings)
-      .where(eq(contentSettings.id, "starter-catalog"))
+      .where(eq(contentSettings.id, "starter-catalog-content-v2"))
       .limit(1);
     if (marker) return;
 
     const publishedAt = new Date();
-    await tx
-      .insert(contentPosts)
-      .values(
-        starterCatalog().map((item) => ({
+    const catalog = starterCatalog();
+    for (const item of catalog) {
+      await tx
+        .insert(contentPosts)
+        .values({
           slug: item.slug,
           kind: item.kind,
           category: item.category,
@@ -130,10 +131,47 @@ export async function ensureStarterCatalog() {
           sortOrder: item.sortOrder,
           status: "approved" as const,
           publishedAt,
-        })),
-      )
-      .onConflictDoNothing({ target: contentPosts.slug });
-    await tx.insert(contentSettings).values({ id: "starter-catalog" });
+        })
+        .onConflictDoUpdate({
+          target: contentPosts.slug,
+          set: {
+            kind: item.kind,
+            category: item.category,
+            title: item.title,
+            displayDate: item.displayDate,
+            commentsLabel: item.commentsLabel,
+            likesLabel: item.likesLabel,
+            imageSrc: item.imageSrc,
+            imageAlt: item.imageAlt,
+            imageObjectPosition: item.imageObjectPosition,
+            body: item.body,
+            featured: item.featured,
+            sortOrder: item.sortOrder,
+            status: "approved",
+            publishedAt,
+            updatedAt: publishedAt,
+          },
+        });
+    }
+    await tx
+      .delete(contentPosts)
+      .where(
+        and(
+          sql`${contentPosts.body}::text like ${"%لورم ایپسوم%"}`,
+          notInArray(
+            contentPosts.slug,
+            catalog.map((item) => item.slug),
+          ),
+        ),
+      );
+    await tx
+      .insert(contentSettings)
+      .values({ id: "starter-catalog-content-v2" })
+      .onConflictDoNothing();
+    await tx
+      .insert(contentSettings)
+      .values({ id: "starter-catalog" })
+      .onConflictDoNothing();
   });
   catalogReady = true;
 }

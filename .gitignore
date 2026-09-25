@@ -41,15 +41,10 @@ yarn-error.log*
 /data/resumes/**
 !/data/resumes/.gitkeep
 
-# private media library (keep the directory, ignore uploads)
-/data/media/**
-!/data/media/.gitkeep
-
 # vercel
 .vercel
 
 # typescript
-*.tsbuildinfo
 next-env.d.ts
 /dist/
 /.wrangler/
@@ -63,6 +58,3 @@ next-env.d.ts
 
 # Cursor Files
 .cursor/
-
-# Accidental nested checkout. TypeScript would compile its examples against this app.
-/staging

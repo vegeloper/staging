@@ -7,6 +7,7 @@ import { Search } from "lucide-react";
 
 import {
   Article,
+  ArticleCategory,
   articleHref,
 } from "@/lib/articles";
 
@@ -21,10 +22,15 @@ type LatestArticlesProps = {
   featuredCount?: number;
   compact?: boolean;
   articles: Article[];
-  categories?: readonly string[];
 };
 
-const defaultCategories = ["همه", "مقالات", "راهنما", "اطلاعیه", "اخبار"] as const;
+const categories: Array<"همه" | ArticleCategory> = [
+  "همه",
+  "مقالات",
+  "راهنما",
+  "اطلاعیه",
+  "اخبار",
+];
 
 /* ========================================
    Normalize Search Text
@@ -53,7 +59,6 @@ export default function LatestArticles({
   featuredCount = 3,
   compact = false,
   articles,
-  categories = defaultCategories,
 }: LatestArticlesProps) {
   const [query, setQuery] = useState("");
   const [category, setCategory] =

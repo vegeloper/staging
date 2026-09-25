@@ -3,11 +3,11 @@ import { articles, type Article, type ArticleBlock } from "@/lib/articles";
 import type { ContentCategory, ContentKind } from "./workflow";
 
 const featuredSlugs = [
+  "tehran-fleet-expansion",
+  "electric-hybrid-fleet-employment",
+  "route-destination-marketing",
   "online-trips",
-  "fifty-thousand",
-  "weight-update",
-  "support-guide",
-  "org-guide",
+  "electric-hybrid-taxi-pollution",
 ];
 
 export type CatalogSeed = {
