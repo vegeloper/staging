@@ -126,7 +126,7 @@ export default function page() {
           },
         ]}
       />
-      <div style={{ marginTop: "200px" }}>
+      <div className="lg:mt-40">
         <DownloadBanner />
       </div>
       <FAQ

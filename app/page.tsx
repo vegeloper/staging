@@ -264,46 +264,66 @@ export default function Home() {
   return (
     <main dir="rtl" style={{backgroundColor:"#F6F6F6"}}>
       <Header variant="dark" />
-      <section className="hero" id="home">
-        <img
-          className="hero-bg"
-          src={`${A}hero-bg.jpg`}
-          alt="خودروی دات‌وان تریپ"
-        />
+<section className="hero" id="home">
+  <picture className="hero-picture">
+    <source
+      media="(max-width: 700px)"
+      srcSet={`${A}hero-mobile.png`}
+    />
 
-        <div className="hero-content">
-          <h1>
-            نسل جدید حمل‌ونقل،
-            <br />
-            <span>همین‌جاست</span>
-          </h1>
-          <p>
-            با دات‌وان تریپ تجربه‌ای متفاوت از سفر شهری و بین‌شهری را تجربه
-            کنید؛ با ناوگان برقی، رانندگان آموزش‌دیده و فناوری‌ای که سفر را
-            ساده‌تر، امن‌تر و هوشمندتر می‌کند.
-          </p>
-          <div className="hero-buttons">
-            <Link href="https://app.trip.dotone.ir">
-              <BrandButton>
-                <CarFront size={18} /> درخواست سفر
-              </BrandButton>
-            </Link>
-            <Link href={"/about"}>
-              <BrandButton subtle>درباره دات‌وان تریپ</BrandButton>
-            </Link>
-          </div>
-        </div>
-        <div className="hero-stats">
-          <div>
-            <strong>۱٬۲۵۰+</strong>
-            <span>تعداد رانندگان فعال</span>
-          </div>
-          <div>
-            <strong>۱۵۰٬۰۰۰+</strong>
-            <span>سفرهای انجام شده</span>
-          </div>
-        </div>
-      </section>
+    <source
+      media="(max-width: 1000px)"
+      srcSet={`${A}hero-tablet.png`}
+    />
+
+    <img
+      className="hero-bg"
+      src={`${A}hero-desktop.jpg`}
+      alt="خودروی دات‌وان تریپ"
+    />
+  </picture>
+
+  <div className="hero-content">
+    <h1>
+      نسل جدید حمل‌ونقل،
+      <br />
+      <span>همین‌جاست</span>
+    </h1>
+
+    <p>
+      با دات‌وان تریپ تجربه‌ای متفاوت از سفر شهری و بین‌شهری را تجربه
+      کنید؛ با ناوگان برقی، رانندگان آموزش‌دیده و فناوری‌ای که سفر را
+      ساده‌تر، امن‌تر و هوشمندتر می‌کند.
+    </p>
+
+    <div className="hero-buttons">
+      <Link href="https://app.trip.dotone.ir">
+        <BrandButton>
+          <CarFront size={18} />
+          درخواست سفر
+        </BrandButton>
+      </Link>
+
+      <Link href="/about">
+        <BrandButton subtle>
+          درباره دات‌وان تریپ
+        </BrandButton>
+      </Link>
+    </div>
+  </div>
+
+  <div className="hero-stats">
+    <div>
+      <strong>۱٬۲۵۰+</strong>
+      <span>تعداد رانندگان فعال</span>
+    </div>
+
+    <div>
+      <strong>۱۵۰٬۰۰۰+</strong>
+      <span>سفرهای انجام شده</span>
+    </div>
+  </div>
+</section>
       <AboutIntro
         badge="درباره دات‌وان تریپ"
         title={`دات‌وان تریپ؛
