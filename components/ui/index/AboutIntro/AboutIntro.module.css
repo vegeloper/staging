@@ -1,15 +1,24 @@
+/* ========================================
+   Section
+======================================== */
+
 .section {
   width: 100%;
 
   padding: clamp(55px, 7vw, 105px) 0;
 
-
   font-family: inherit;
 }
 
 .section * {
+  box-sizing: border-box;
   font-family: inherit;
 }
+
+
+/* ========================================
+   Container
+======================================== */
 
 .container {
   width: 82%;
@@ -23,6 +32,7 @@
 
   gap: 8%;
 }
+
 
 /* ========================================
    Right Side
@@ -39,6 +49,7 @@
 
   text-align: right;
 }
+
 
 /* ========================================
    Badge
@@ -62,8 +73,9 @@
 
   color: #333;
 
-  font-size: clamp(12px, 0.65vw, 11px);
+  font-size: clamp(11px, 0.65vw, 12px);
   font-weight: 600;
+
   line-height: 1.6;
 
   white-space: nowrap;
@@ -80,6 +92,7 @@
   background: #171717;
 }
 
+
 /* ========================================
    Title
 ======================================== */
@@ -94,8 +107,14 @@
 
   line-height: 1.65;
 
+  /*
+    دسکتاپ:
+    اگر داخل متن \n وجود داشته باشد
+    خط جدید حفظ می‌شود
+  */
   white-space: pre-line;
 }
+
 
 /* ========================================
    Left Content
@@ -121,8 +140,11 @@
 
 .description strong {
   color: #171717;
+
   font-weight: 700;
 }
+
+
 /* ========================================
    Tablet
 ======================================== */
@@ -150,11 +172,13 @@
     font-size: 24px;
   }
 
-    .description {
+  .description {
     font-size: 13px;
+
     line-height: 2.1;
   }
 }
+
 
 /* ========================================
    Mobile
@@ -177,11 +201,15 @@
 
   .heading {
     width: 100%;
+
+    min-width: 0;
   }
 
   .content {
     width: 100%;
     max-width: none;
+
+    min-width: 0;
   }
 
   .badge {
@@ -192,14 +220,25 @@
     font-size: 9px;
   }
 
+  /*
+    عنوان در موبایل همیشه یک خط
+  */
   .title {
-    font-size: 22px;
+    width: 100%;
+
+    margin: 0;
+
+    font-size: clamp(16px, 4.8vw, 22px);
+    font-weight: 800;
 
     line-height: 1.7;
+
+    white-space: nowrap;
   }
 
   .description {
     font-size: 12px;
+
     line-height: 2.1;
   }
 
@@ -207,6 +246,7 @@
     display: none;
   }
 }
+
 
 /* ========================================
    Small Mobile
@@ -218,10 +258,37 @@
   }
 
   .title {
-    font-size: 20px;
+    font-size: clamp(14px, 4.6vw, 18px);
+
+    white-space: nowrap;
   }
 
   .description {
-    font-size: 10.5px;
+    font-size: 12px;
+  }
+}
+
+
+/* ========================================
+   Very Small Mobile
+======================================== */
+
+@media (max-width: 360px) {
+  .container {
+    width: calc(100% - 24px);
+  }
+
+  .title {
+    font-size: clamp(13px, 4.5vw, 16px);
+
+    white-space: nowrap;
+  }
+
+  .badge {
+    font-size: 8.5px;
+  }
+
+  .description {
+    font-size: 10px;
   }
 }

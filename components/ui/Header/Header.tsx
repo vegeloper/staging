@@ -47,15 +47,15 @@ const navItems: NavItem[] = [
   },
 
   {
-    label: "خدمات",
+    label: "سرویس ها",
     href: "/services",
     children: [
       {
-        label: "حمل و نقل شهری",
+        label: "سرویس شهری",
         href: "/services",
       },
       {
-        label: "حمل‌ونقل سازمانی",
+        label: "سرویس سازمانی",
         href: "/b2b",
       },
       {
@@ -71,36 +71,35 @@ const navItems: NavItem[] = [
   },
 
   {
-    label: "اخبار",
+    label: "بلاگ",
     href: "/blog",
   },
+  {
+    label: "تبلیغات",
+    href: "/campaign",
+  },
 
   {
-    label: "درباره تریپ",
-    href: "/about",
-  },
-  {
-    label: "به ما بپیوندید",
+    label: "همکاری با تریپ",
     href: "/join-us",
     children: [
-
       {
         label: "همکاری با رانندگان",
         href: "/join-us/drivers",
       },
       {
-        label: "همکاری با تریپ",
-        href: "https://apply.dotone.ir/",
+        label: "همکاری سازمانی",
+        href: "/join-us/organizational",
       },
     ],
   },
   {
+    label: "درباره ما",
+    href: "/about",
+  },
+    {
     label: "تماس با ما",
     href: "/contact-us",
-  },
-  {
-    label: "کمپین",
-    href: "/campaign",
   },
 ];
 

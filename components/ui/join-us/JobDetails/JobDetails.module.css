@@ -1,13 +1,9 @@
 .section {
   width: 100%;
   max-width: 100%;
-
   padding: 45px 0 25px;
-
   background: #fff;
-
   overflow-x: clip;
-
   font-family: inherit;
 }
 
@@ -21,12 +17,9 @@
 .container {
   width: 92%;
   max-width: 1120px;
-
   margin-inline: auto;
-
   color: #171717;
 }
-
 
 /* ========================================
    Header
@@ -34,21 +27,16 @@
 
 .header {
   width: 100%;
-
   text-align: right;
 }
 
 .title {
   margin: 0;
-
   color: #111;
-
-  font-size: clamp(24px, 2vw, 32px);
+  font-size: clamp(27px, 2.2vw, 36px);
   font-weight: 800;
-
   line-height: 1.6;
 }
-
 
 /* ========================================
    Highlights
@@ -57,23 +45,17 @@
 .highlights {
   display: flex;
   flex-direction: column;
-
   gap: 8px;
-
   margin-top: 18px;
 }
 
 .highlight {
   display: flex;
   align-items: center;
-
   gap: 7px;
-
   color: #5f5f5f;
-
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-
   line-height: 1.8;
 }
 
@@ -81,15 +63,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   flex-shrink: 0;
-
   color: #555;
-
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
 }
-
 
 /* ========================================
    Description
@@ -97,30 +75,23 @@
 
 .description {
   width: 100%;
-
   margin-top: 30px;
 }
 
 .descriptionTitle {
   margin: 0 0 24px;
-
   color: #111;
-
-  font-size: 18px;
+  font-size: 21px;
   font-weight: 800;
-
   line-height: 1.7;
 }
 
 .sections {
   width: 100%;
-
   display: flex;
   flex-direction: column;
-
   gap: 17px;
 }
-
 
 /* ========================================
    Job Section
@@ -132,55 +103,40 @@
 
 .jobSection h3 {
   margin: 0 0 6px;
-
   color: #222;
-
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
-
   line-height: 1.9;
 }
 
 .jobSection p {
   margin: 0;
-
   color: #555;
-
-  font-size: 11.5px;
+  font-size: 13.5px;
   font-weight: 400;
-
   line-height: 2;
-
   text-align: right;
 }
 
 .jobSection ul {
   margin: 2px 0 0;
-
   padding: 0 18px 0 0;
-
   color: #555;
-
   list-style-position: outside;
 }
 
 .jobSection li {
   padding-right: 2px;
-
   color: #555;
-
-  font-size: 11.5px;
+  font-size: 13.5px;
   font-weight: 400;
-
   line-height: 2;
 }
 
 .jobSection li::marker {
   color: #555;
-
-  font-size: 8px;
+  font-size: 9px;
 }
-
 
 /* ========================================
    Meta Information
@@ -188,57 +144,41 @@
 
 .meta {
   width: 100%;
-
   display: flex;
   flex-direction: column;
-
   gap: 8px;
-
   margin-top: 20px;
 }
 
 .metaRow {
   width: 100%;
-
   display: grid;
-
   grid-template-columns: 29% minmax(0, 1fr);
-
   gap: 10px;
 }
 
 .metaLabel,
 .metaValue {
-  min-height: 38px;
-
+  min-height: 42px;
   display: flex;
   align-items: center;
-
-  padding: 7px 14px;
-
+  padding: 8px 14px;
   border-radius: 3px;
-
   background: #f5f5f5;
-
   color: #171717;
-
-  font-size: 11px;
-
+  font-size: 13px;
   line-height: 1.7;
 }
 
 .metaLabel {
   justify-content: flex-start;
-
   font-weight: 700;
 }
 
 .metaValue {
   justify-content: flex-start;
-
   font-weight: 600;
 }
-
 
 /* ========================================
    Tablet
@@ -254,7 +194,15 @@
   }
 
   .title {
-    font-size: 25px;
+    font-size: 28px;
+  }
+
+  .highlight {
+    font-size: 13px;
+  }
+
+  .check {
+    font-size: 14px;
   }
 
   .description {
@@ -263,15 +211,27 @@
 
   .descriptionTitle {
     margin-bottom: 20px;
+    font-size: 20px;
+  }
 
-    font-size: 17px;
+  .jobSection h3 {
+    font-size: 13.5px;
+  }
+
+  .jobSection p,
+  .jobSection li {
+    font-size: 13px;
   }
 
   .metaRow {
     grid-template-columns: 30% minmax(0, 1fr);
   }
-}
 
+  .metaLabel,
+  .metaValue {
+    font-size: 12.5px;
+  }
+}
 
 /* ========================================
    Mobile
@@ -287,19 +247,21 @@
   }
 
   .title {
-    font-size: 22px;
+    font-size: 24px;
   }
 
   .highlights {
     margin-top: 14px;
-
     gap: 6px;
   }
 
   .highlight {
     align-items: flex-start;
+    font-size: 12.5px;
+  }
 
-    font-size: 11px;
+  .check {
+    font-size: 13px;
   }
 
   .description {
@@ -308,8 +270,7 @@
 
   .descriptionTitle {
     margin-bottom: 18px;
-
-    font-size: 16px;
+    font-size: 18px;
   }
 
   .sections {
@@ -317,38 +278,32 @@
   }
 
   .jobSection h3 {
-    font-size: 11.5px;
+    font-size: 13px;
   }
 
   .jobSection p,
   .jobSection li {
-    font-size: 10.5px;
-
+    font-size: 12px;
     line-height: 2.1;
   }
 
   .meta {
     gap: 7px;
-
     margin-top: 22px;
   }
 
   .metaRow {
     grid-template-columns: 100px minmax(0, 1fr);
-
     gap: 7px;
   }
 
   .metaLabel,
   .metaValue {
-    min-height: 40px;
-
-    padding: 7px 10px;
-
-    font-size: 10px;
+    min-height: 42px;
+    padding: 8px 10px;
+    font-size: 11.5px;
   }
 }
-
 
 /* ========================================
    Small Mobile
@@ -360,7 +315,24 @@
   }
 
   .title {
-    font-size: 20px;
+    font-size: 22px;
+  }
+
+  .highlight {
+    font-size: 12px;
+  }
+
+  .descriptionTitle {
+    font-size: 17px;
+  }
+
+  .jobSection h3 {
+    font-size: 12.5px;
+  }
+
+  .jobSection p,
+  .jobSection li {
+    font-size: 11.5px;
   }
 
   .metaRow {
@@ -370,7 +342,6 @@
   .metaLabel,
   .metaValue {
     padding-inline: 8px;
-
-    font-size: 9.5px;
+    font-size: 11px;
   }
 }

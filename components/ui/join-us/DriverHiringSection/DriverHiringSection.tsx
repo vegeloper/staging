@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import DriverHiringCard, {
-  DriverHiringCardProps,
+  type DriverHiringCardProps,
 } from "../DriverHiringCard/DriverHiringCard";
 
 import styles from "./DriverHiringSection.module.css";
@@ -10,7 +10,6 @@ type DriverHiringSectionProps = {
   title: string;
   subtitle?: string;
   jobs: DriverHiringCardProps[];
-
   showAllText?: string;
   showAllHref?: string;
 };
@@ -22,6 +21,8 @@ export default function DriverHiringSection({
   showAllText = "مشاهده همه",
   showAllHref = "/hiring",
 }: DriverHiringSectionProps) {
+  const hasJobs = jobs.length > 0;
+
   return (
     <section className={styles.section} dir="rtl">
       <div className={styles.heading}>
@@ -34,21 +35,50 @@ export default function DriverHiringSection({
         )}
       </div>
 
-      <div className={styles.grid}>
-        {jobs.map((job, index) => (
-          <DriverHiringCard
-            key={`${job.city}-${index}`}
-            {...job}
-          />
-        ))}
-      </div>
+      {hasJobs ? (
+        <>
+          <div className={styles.grid}>
+            {jobs.slice(0, 4).map((job) => (
+              <DriverHiringCard
+                key={job.id}
+                {...job}
+              />
+            ))}
+          </div>
 
-      <Link
-        href={showAllHref}
-        className={styles.showAllButton}
-      >
-        {showAllText}
-      </Link>
+          <Link
+            href={showAllHref}
+            className={styles.showAllButton}
+          >
+            {showAllText}
+          </Link>
+        </>
+      ) : (
+        <div className={styles.emptyState}>
+          <div className={styles.emptyIcon}>
+            <img
+              src="/figma/svgs/building.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </div>
+
+          <span className={styles.emptyBadge}>
+            <span className={styles.emptyBadgeDot} />
+            فرصت‌های همکاری
+          </span>
+
+          <h3 className={styles.emptyTitle}>
+            در حال حاضر موقعیت فعالی وجود ندارد
+          </h3>
+
+          <p className={styles.emptyDescription}>
+            در حال حاضر فرصت همکاری فعالی برای رانندگان
+            وجود ندارد. موقعیت‌های جدید به‌زودی در همین
+            بخش منتشر خواهند شد.
+          </p>
+        </div>
+      )}
     </section>
   );
 }

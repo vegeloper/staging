@@ -83,17 +83,17 @@
 ======================================== */
 
 .description {
-  width: 100%;
-
-  margin: 18px 0 0;
-
-  color: #555;
-
-  font-size: clamp(12px, 0.9vw, 15px);
+  margin: 0;
+  color: #666;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 2.1;
+  line-height: 2;
+  margin-top: 5px;
+}
 
-  text-align: right;
+.description strong {
+  color: #171717;
+  font-weight: 700;
 }
 
 /* ========================================

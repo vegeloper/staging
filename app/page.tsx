@@ -13,12 +13,7 @@ import carSideView from "@/public/figma/vehicles/Car-SideView.svg";
 import carSideView2 from "@/public/figma/carousel2.png";
 import carSideView3 from "@/public/figma/carousel3.png";
 
-import mainNewsImage from "@/public/figma/mainNewsImage.png";
 import TripStartHero from "@/components/ui/index/TripStartHero/TripStartHero";
-import news1Image from "@/public/figma/news-1.png";
-import news2Image from "@/public/figma/news-2.png";
-import news3Image from "@/public/figma/news-3.png";
-import news4Image from "@/public/figma/news-4.png";
 
 import IranCoverage, {
   CoverageItem,
@@ -37,6 +32,8 @@ import NewsSection, {
 import FutureTransportBanner from "@/components/ui/FutureTransportBanner/FutureTransportBanner";
 import FAQ, { FAQItem } from "@/components/ui/Faq/Faq";
 import Link from "next/link";
+import { articles } from "@/lib/articles";
+import { getHomepageNews } from "@/lib/news";
 import { resolvedMedia } from "@/lib/site/defaults";
 import { getPublishedSiteSettings } from "@/lib/site/public";
 const A = "/figma/";
@@ -49,23 +46,28 @@ export const tripFaqItems: FAQItem[] = [
   },
   {
     question: "چطور می‌توانم از دات‌وان تریپ سفر بگیرم؟",
-    answer: "در دات‌وان تریپ دو نوع سرویس دات‌وان و در اختیار ارائه می‌شود. در سرویس دات‌وان کافی است مبدا و مقصد خود را انتخاب و درخواست سفر را ثبت کنید. در سرویس در اختیار تنها مبدأ را مشخص می‌کنید و خودرو برای مدت موردنیاز در اختیار شما قرار می‌گیرد.",
+    answer:
+      "در دات‌وان تریپ دو نوع سرویس دات‌وان و در اختیار ارائه می‌شود. در سرویس دات‌وان کافی است مبدا و مقصد خود را انتخاب و درخواست سفر را ثبت کنید. در سرویس در اختیار تنها مبدأ را مشخص می‌کنید و خودرو برای مدت موردنیاز در اختیار شما قرار می‌گیرد.",
   },
   {
     question: "آیا خودروهای دات‌وان تریپ برقی هستند؟",
-    answer: "ناوگان دات‌وان تریپ شامل خودروهای برقی و هیبریدی نسل جدید است. توسعه ناوگان پاک و استفاده از خودروهای کم‌مصرف و سازگارتر با محیط‌زیست، یکی از محورهای اصلی توسعه مجموعه است.",
+    answer:
+      "ناوگان دات‌وان تریپ شامل خودروهای برقی و هیبریدی نسل جدید است. توسعه ناوگان پاک و استفاده از خودروهای کم‌مصرف و سازگارتر با محیط‌زیست، یکی از محورهای اصلی توسعه مجموعه است.",
   },
   {
     question: "رانندگان دات‌وان تریپ چگونه انتخاب می‌شوند؟",
-    answer: "رانندگان دات‌وان تریپ پیش از شروع فعالیت، طی فرآیند جذب، بررسی مدارک، ارزیابی، آموزش و احراز صلاحیت انتخاب می‌شوند. همچنین عملکرد رانندگان در طول فعالیت به‌صورت مستمر پایش می‌شود.",
+    answer:
+      "رانندگان دات‌وان تریپ پیش از شروع فعالیت، طی فرآیند جذب، بررسی مدارک، ارزیابی، آموزش و احراز صلاحیت انتخاب می‌شوند. همچنین عملکرد رانندگان در طول فعالیت به‌صورت مستمر پایش می‌شود.",
   },
   {
     question: "چطور می‌توانم به‌عنوان راننده با دات‌وان تریپ همکاری کنم؟",
-    answer: "متقاضیان همکاری می‌توانند از طریق مراجعه به بخش همکاری با دات وان تریپ درخواست خود را ثبت کنند. پس از بررسی اولیه، مراحل ارزیابی، احراز صلاحیت و آموزش انجام خواهد شد.",
+    answer:
+      "متقاضیان همکاری می‌توانند از طریق مراجعه به بخش همکاری با دات وان تریپ درخواست خود را ثبت کنند. پس از بررسی اولیه، مراحل ارزیابی، احراز صلاحیت و آموزش انجام خواهد شد.",
   },
   {
     question: "آیا امکان خرید خودرو و همکاری با دات‌وان تریپ وجود دارد؟",
-    answer: "دات‌وان تریپ برای متقاضیان، طرح‌های مشارکت و همکاری در نظر گرفته است. برای مشاهده شرایط، ثبت درخواست و دریافت اطلاعات بیشتر می‌توانید به سایت apply.dotone.ir مراجعه کنید.",
+    answer:
+      "دات‌وان تریپ برای متقاضیان، طرح‌های مشارکت و همکاری در نظر گرفته است. برای مشاهده شرایط، ثبت درخواست و دریافت اطلاعات بیشتر می‌توانید به سایت apply.dotone.ir مراجعه کنید.",
   },
 ];
 // FleetFeature data
@@ -91,6 +93,9 @@ const modernFleetItems = [
   },
   {
     text: "سرویس و نگهداری دوره‌ای مطابق استاندارد ناوگان",
+  },
+    {
+    text: "نمایشگرهای دیجیتال داخل خودرو برای ارائه محتوای سرگرمی،اطلاع رسانی و تبلیغات در طول سفر",
   },
 ];
 
@@ -224,81 +229,7 @@ const solutionCards: TravelSolutionCardProps[] = [
   },
 ];
 
-//news data
-
-const featuredNews: NewsItem = {
-  id: "featured-news",
-
-  title:
-    "بهره‌برداری رسمی از ناوگان تاکسی‌های هوشمند دات‌وان در کرج با حضور مهندس بابک زنجانی",
-
-  description:
-    "مهندس زنجانی با اشاره به نقش حیاتی هوشمندسازی ناوگان، بر توسعه خدمات حمل‌ونقل مدرن و ایجاد تجربه‌ای متفاوت برای شهروندان تأکید کرد.",
-
-  date: "۲۴ آذر ۱۴۰۴",
-
-  category: "دات وان تریپ",
-
-  image: mainNewsImage,
-
-  href: "/news/featured",
-
-  buttonText: "مشاهده خبر",
-};
-
-const newsData: NewsItem[] = [
-  {
-    id: "news-1",
-
-    title:
-      "آغاز بهره‌برداری از هزار تاکسی دات‌وان تریپ در کرج؛ زیرساختی مدرن برای حمل‌ونقل پاک",
-
-    date: "۵ آذر ۱۴۰۴",
-
-    image: news1Image,
-
-    href: "/news/1",
-  },
-
-  {
-    id: "news-2",
-
-    title: "اختلالات موقتی در برخی سرویس‌های حمل و نقل شهری در البرز",
-
-    date: "۵ آذر ۱۴۰۴",
-
-    image: news2Image,
-
-    href: "/news/2",
-  },
-
-  {
-    id: "news-3",
-
-    title:
-      "رئیس شورای عالی استان‌ها: عدم حمایت از سرمایه‌گذار، خیانت به کشور است",
-
-    date: "۵ آذر ۱۴۰۴",
-
-    image: news3Image,
-
-    href: "/news/3",
-  },
-
-  {
-    id: "news-4",
-
-    title:
-      "آغاز بهره‌برداری از هزار تاکسی دات‌وان تریپ در کرج؛ زیرساختی مدرن برای حمل‌ونقل پاک",
-
-    date: "۵ آذر ۱۴۰۴",
-
-    image: news4Image,
-
-    href: "/news/4",
-  },
-];
-
+const homepageNews = getHomepageNews(articles, 5);
 function BrandButton({
   children,
   subtle = false,
@@ -333,48 +264,68 @@ function SectionHeading({
 export default async function Home() {
   const media = resolvedMedia((await getPublishedSiteSettings()).theme);
   return (
-    <main dir="rtl">
-        <Header variant="dark" />
-      <section className="hero" id="home">
-        <img
-          className="hero-bg"
-          src={`${A}hero-bg.png`}
-          alt="خودروی دات‌وان تریپ"
-        />
+    <main dir="rtl" style={{backgroundColor:"#F6F6F6"}}>
+      <Header variant="dark" />
+<section className="hero" id="home">
+  <picture className="hero-picture">
+    <source
+      media="(max-width: 700px)"
+      srcSet={`${A}hero-mobile.png`}
+    />
 
-        <div className="hero-content">
-          <h1>
-            نسل جدید حمل‌ونقل،
-            <br />
-            <span>همین‌جاست</span>
-          </h1>
-          <p>
-            با دات‌وان تریپ تجربه‌ای متفاوت از سفر شهری و بین‌شهری را
-            تجربه کنید؛ با ناوگان برقی، رانندگان آموزش‌دیده و فناوری‌ای که سفر
-            را ساده‌تر، امن‌تر و هوشمندتر می‌کند.
-          </p>
-          <div className="hero-buttons">
-            <Link href="https://app.trip.dotone.ir">
-              <BrandButton>
-                <CarFront size={18} /> درخواست سفر
-              </BrandButton>
-            </Link>
-            <Link href={"/about"}>
-              <BrandButton subtle>درباره دات‌وان تریپ</BrandButton>
-            </Link>
-          </div>
-        </div>
-        <div className="hero-stats">
-          <div>
-            <strong>۱٬۲۵۰+</strong>
-            <span>تعداد رانندگان فعال</span>
-          </div>
-          <div>
-            <strong>۱۵۰٬۰۰۰+</strong>
-            <span>سفرهای انجام شده</span>
-          </div>
-        </div>
-      </section>
+    <source
+      media="(max-width: 1000px)"
+      srcSet={`${A}hero-tablet.png`}
+    />
+
+    <img
+      className="hero-bg"
+      src={`${A}hero-desktop.jpg`}
+      alt="خودروی دات‌وان تریپ"
+    />
+  </picture>
+
+  <div className="hero-content">
+    <h1>
+      نسل جدید حمل‌ونقل،
+      <br />
+      <span>همین‌جاست</span>
+    </h1>
+
+    <p>
+      با دات‌وان تریپ تجربه‌ای متفاوت از سفر شهری و بین‌شهری را تجربه
+      کنید؛ با ناوگان برقی، رانندگان آموزش‌دیده و فناوری‌ای که سفر را
+      ساده‌تر، امن‌تر و هوشمندتر می‌کند.
+    </p>
+
+    <div className="hero-buttons">
+      <Link href="https://app.trip.dotone.ir">
+        <BrandButton>
+          <CarFront size={18} />
+          درخواست سفر
+        </BrandButton>
+      </Link>
+
+      <Link href="/about">
+        <BrandButton subtle>
+          درباره دات‌وان تریپ
+        </BrandButton>
+      </Link>
+    </div>
+  </div>
+
+  <div className="hero-stats">
+    <div>
+      <strong>۱٬۲۵۰+</strong>
+      <span>تعداد رانندگان فعال</span>
+    </div>
+
+    <div>
+      <strong>۱۵۰٬۰۰۰+</strong>
+      <span>سفرهای انجام شده</span>
+    </div>
+  </div>
+</section>
       <AboutIntro
         badge="درباره دات‌وان تریپ"
         title={`دات‌وان تریپ؛
@@ -441,14 +392,13 @@ export default async function Home() {
         description={
           <>
             <strong>دات‌وان تریپ با توسعه ناوگان و زیرساخت حمل‌ونقل،</strong>{" "}
-            خدمات خود را به‌صورت مرحله‌ای
-            <br />
-            در <strong>استان‌های مختلف ایران</strong> ارائه می‌دهد.
+            <br /> خود را به‌صورت مرحله‌ای در{" "}
+            <strong>استان‌های مختلف ایران</strong> ارائه می‌دهد.
           </>
         }
       />
       <TravelSolutions
-        badge="همه‌جا دات‌وان تریپ"
+        badge="همه‌جا با دات‌وان تریپ"
         title="هر سفر، یک راه‌حل متناسب"
         description="دات‌وان تریپ، مجموعه‌ای از خدمات حمل‌ونقل را برای نیازهای مختلف مسافران، سازمان‌ها و مجموعه‌ها ارائه می‌دهد."
         cards={solutionCards}
@@ -521,15 +471,17 @@ export default async function Home() {
         <DownloadBanner />
       </div>
 
-      <NewsSection
-        eyebrow="اخبار و رویدادها"
-        title="دات‌وان تریپ در مسیر توسعه"
-        description="آخرین اخبار، رویدادها و اتفاقات دات‌وان تریپ را دنبال کنید."
-        featuredNews={featuredNews}
-        news={newsData}
-        allNewsHref="/news"
-        allNewsLabel="مشاهده همه اخبار"
-      />
+      {homepageNews && (
+        <NewsSection
+          eyebrow="اخبار و رویدادها"
+          title="دات‌وان تریپ در مسیر توسعه"
+          description="آخرین اخبار، رویدادها و اتفاقات دات‌وان تریپ را دنبال کنید."
+          featuredNews={homepageNews.featuredNews}
+          news={homepageNews.newsData}
+          allNewsHref="/blog"
+          allNewsLabel="مشاهده همه اخبار"
+        />
+      )}
       <FAQ
         subtitle="آشنایی با دات‌وان تریپ"
         title="سؤالات متداول"

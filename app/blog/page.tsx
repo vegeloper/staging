@@ -13,7 +13,7 @@ export default async function page() {
     <>
       <Header variant="light" />
 
-      <div className="mt-20 max-lg:mt-[5vh]">
+      <main className="mt-16 md:mt-20 lg:mt-24">
         <PopularArticles articles={popular} />
         <LatestArticles
           articles={articles}
@@ -30,7 +30,8 @@ export default async function page() {
             title="آخرین اخبار:"
           />
         ) : null}
-      </div>
+      </main>
+
       <Footer />
     </>
   );

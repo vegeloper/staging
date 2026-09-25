@@ -1,5 +1,6 @@
 .hero {
   width: 92%;
+
   margin-inline: auto;
 
   display: flex;
@@ -9,7 +10,8 @@
   gap: 5%;
 
   padding: 70px 0;
-    margin-top: 100px;
+
+
   box-sizing: border-box;
 }
 
@@ -22,6 +24,7 @@
 
   display: flex;
   flex-direction: column;
+
   align-items: flex-start;
 
   text-align: right;
@@ -33,32 +36,31 @@
 
 .badge {
   display: inline-flex;
+
   align-items: center;
-  gap: 7px;
+  justify-content: center;
 
-  padding: 6px 10px;
+  gap: 5px;
 
-  border: 1px solid #e5e5e5;
+  padding: 7px 14px;
+
+  border: 1px solid #e8e8e8;
   border-radius: 999px;
 
   background: #fff;
 
-  color: #333;
+  color: #222;
 
-  font-size: clamp(9px, 0.7vw, 12px);
+  font-size: 13px;
   font-weight: 500;
+
   line-height: 1.5;
+
+  white-space: nowrap;
 }
 
-.badgeDot {
-  width: 5px;
-  height: 5px;
-
-  flex-shrink: 0;
-
-  border-radius: 50%;
-
-  background: #111;
+.badge span {
+  font-size: 7px;
 }
 
 /* =========================
@@ -73,7 +75,9 @@
   color: #111;
 
   font-size: clamp(26px, 2.7vw, 44px);
+
   font-weight: 800;
+
   line-height: 1.45;
 
   letter-spacing: -0.5px;
@@ -96,7 +100,9 @@
   color: #555;
 
   font-size: clamp(10px, 0.8vw, 14px);
+
   font-weight: 400;
+
   line-height: 2;
 
   text-align: right;
@@ -111,10 +117,6 @@
 
   width: 52%;
 
-  /*
-    Keeps the same general image proportion
-    as the screenshot.
-  */
   aspect-ratio: 1.75 / 1;
 
   overflow: hidden;
@@ -126,16 +128,18 @@
 
 .image {
   object-fit: cover;
+
   object-position: center;
 }
 
 /* =========================
-   Large screens
+   Large Screens
 ========================= */
 
 @media (min-width: 1500px) {
   .hero {
     width: 92%;
+
     max-width: 1700px;
 
     gap: 6%;
@@ -165,6 +169,11 @@
 
   .content {
     width: 45%;
+  }
+
+  /* Badge وسط در تبلت */
+  .badge {
+    align-self: center;
   }
 
   .imageWrapper {
@@ -205,7 +214,10 @@
     align-items: flex-start;
   }
 
+  /* Badge وسط در موبایل */
   .badge {
+    align-self: center;
+
     padding: 5px 9px;
 
     font-size: 10px;
@@ -215,16 +227,19 @@
     margin-top: 16px;
 
     font-size: clamp(25px, 7vw, 34px);
+
     line-height: 1.5;
   }
 
   .description {
     width: 100%;
+
     max-width: none;
 
     margin-top: 10px;
 
     font-size: 12px;
+
     line-height: 2;
   }
 
@@ -248,6 +263,11 @@
     gap: 24px;
 
     padding: 32px 0;
+  }
+
+  /* Badge همچنان وسط */
+  .badge {
+    align-self: center;
   }
 
   .title {

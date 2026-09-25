@@ -80,7 +80,7 @@ export default function Hero({
             <span>{title.highlight}</span>
           )}
 
-          {title.highlight && "، "}
+          {title.highlight && ""}
 
           {title.text}
         </h1>

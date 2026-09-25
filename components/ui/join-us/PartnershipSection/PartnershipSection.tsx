@@ -1,16 +1,20 @@
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
+import { ReactNode } from "react";
 
 import styles from "./PartnershipSection.module.css";
 
 type PartnershipSectionProps = {
   title: string;
-  description: string;
+
+  description: ReactNode;
 
   image: string | StaticImageData;
+
   imageAlt?: string;
 
   buttonText?: string;
+
   buttonHref?: string;
 };
 
@@ -36,11 +40,13 @@ export default function PartnershipSection({
         </div>
 
         <div className={styles.content}>
-          <h2 className={styles.title}>{title}</h2>
+          <h2 className={styles.title}>
+            {title}
+          </h2>
 
-          <p className={styles.description}>
+          <div className={styles.description}>
             {description}
-          </p>
+          </div>
 
           <Link
             href={buttonHref}

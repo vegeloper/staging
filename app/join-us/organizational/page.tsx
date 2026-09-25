@@ -11,7 +11,8 @@ export default async function page() {
   return (
     <>
       <Header />
-      <div className="mt-20">
+
+      <main className="mt-12 md:mt-20 lg:mt-40">
         <Positions
           type="corporate"
           title="موقعیت‌های شغلی سازمانی"
@@ -19,7 +20,7 @@ export default async function page() {
           jobs={jobs}
           itemsPerPage={5}
         />
-      </div>
+      </main>
       <Footer />
     </>
   );

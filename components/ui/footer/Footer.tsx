@@ -17,28 +17,27 @@ const footerLinks = [
     title: "خدمات",
     links: [
       { label: "سفر شهری", href: "/services" },
-      { label: "سفر بین‌شهری", href: "/vehicles" },
+      { label: "سفر بین‌شهری", href: "#" },
       { label: "حمل‌ونقل سازمانی", href: "/b2b" },
-      { label: "سرویس اختصاصی", href: "/oncall" },
-      { label: "دانلود اپلیکیشن", href: "/#cta" },
+      { label: "در اختیار", href: "/oncall" },
     ],
   },
   {
     title: "درباره دات‌وان تریپ",
     links: [
-      { label: "درباره ما", href: "/#about" },
-      { label: "تماس با ما", href: "/forms#contact" },
-      { label: "پرسش‌های متداول", href: "/#faq" },
-      { label: "حریم خصوصی", href: "/forms#contact" },
-      { label: "قوانین و مقررات", href: "/forms#contact" },
+      { label: "درباره ما", href: "/about" },
+      { label: "تماس با ما", href: "/contact-us" },
+      { label: "پرسش‌های متداول", href: "#" },
+      { label: "حریم خصوصی", href: "#" },
+      { label: "قوانین و مقررات", href: "#" },
     ],
   },
   {
-    title: "",
+    title: "توسعه کسب و کارها",
     links: [
-      { label: "تبلیغات در اپلیکیشن", href: "/forms#sponsorship" },
-      { label: "تبلیغات در خودروها", href: "/forms#sponsorship" },
-      { label: "همکاری در تبلیغات", href: "/forms#sponsorship" },
+      { label: "تبلیغات در اپلیکیشن", href: "#" },
+      { label: "تبلیغات داخل خودروها", href: "#" },
+      { label: "همکاری در تبلیغات", href: "#" },
     ],
   },
   {
@@ -54,18 +53,20 @@ const footerLinks = [
   {
     title: "همکاری با دات‌وان تریپ",
     links: [
-      { label: "استخدام رانندگان", href: "/forms#join-drivers" },
-      { label: "طرح‌های لیزینگ", href: "/forms#join-drivers" },
-      { label: "فرصت‌های همکاری", href: "/forms#join-office" },
-      { label: "شرایط همکاری", href: "/forms#join-office" },
-      { label: "ثبت درخواست", href: "/forms#join-drivers" },
+      { label: "استخدام رانندگان", href: "/join-us/drivers" },
+      { label: "طرح مشارکت", href: "https://apply.dotone.ir/" },
+      { label: "فرصت‌های همکاری", href: "#" },
+      { label: "شرایط همکاری", href: "#" },
+      { label: "ثبت درخواست", href: "#" },
     ],
   },
   {
     title: "دانلود اپلیکیشن",
     links: [
-      { label: "دانلود برای Android", href: "/#cta" },
-      { label: "دانلود برای iOS", href: "/#cta" },
+      { label: "دانلود برای Android",href: "/#download-banner" },
+      { label: "دانلود برای iOS", href: "/#download-banner" },
+      { label: "دانلود نسخه وب اپلیکیشن", href: "/#download-banner" },
+
     ],
   },
 ];
@@ -93,7 +94,7 @@ export default function Footer() {
           </div>
 
           <p className={styles.description}>
-            <strong>مجموعه آوان سفر</strong> با رویکرد ارائه خدمات سفرهای درون
+            <strong>مجموعه دات وان تریپ</strong> با رویکرد ارائه خدمات سفرهای درون
             شهری و برون شهری با <strong>خودروهای برقی و هیبریدی</strong> ضمن
             توجه به سهم خود در <strong>حفظ محیط زیست</strong> با تامین خودروهایی
             که تماما با زیرساخت‌های تکنولوژی روز کشورهای توسعه یافته تجهیز شده

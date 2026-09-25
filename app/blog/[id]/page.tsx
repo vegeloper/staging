@@ -6,7 +6,9 @@ import ArticleDetail from "@/components/ui/ArticleDetail/ArticleDetail";
 import { getPublishedArticle } from "@/lib/cms/service";
 
 type ArticlePageProps = {
-  params: Promise<{ id: string }>;
+  params: Promise<{
+    id: string;
+  }>;
 };
 
 export const dynamic = "force-dynamic";
@@ -16,18 +18,32 @@ export async function generateMetadata({
 }: ArticlePageProps): Promise<Metadata> {
   const { id } = await params;
   const result = await getPublishedArticle(id);
-  if (!result) return { title: "مقاله | دات‌وان تریپ" };
+
+  if (!result) {
+    return {
+      title: "مقاله | دات‌وان تریپ",
+    };
+  }
+
+  const firstParagraph = result.article.body.find(
+    (block) => block.type === "p",
+  );
 
   return {
     title: `${result.article.title} | دات‌وان تریپ`,
-    description: result.article.body.find((block) => block.type === "p")?.text,
+    description: firstParagraph?.text,
   };
 }
 
-export default async function ArticlePage({ params }: ArticlePageProps) {
+export default async function ArticlePage({
+  params,
+}: ArticlePageProps) {
   const { id } = await params;
   const result = await getPublishedArticle(id);
-  if (!result) notFound();
+
+  if (!result) {
+    notFound();
+  }
 
   return (
     <>

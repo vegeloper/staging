@@ -150,7 +150,8 @@
   }
 
   .content h2 {
-    font-size: 23px;
+    font-size: 18px;
+    font-weight: 800;
   }
 
   .description {

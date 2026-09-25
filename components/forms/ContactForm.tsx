@@ -263,19 +263,20 @@ export default function ContactForm() {
                   label="پیام"
                   error={form.formState.errors.message?.message}
                 >
-                  <textarea
-                    className={styles.textarea}
-                    placeholder="پیام خود را در این قسمت برای ما بنویسید"
-                    maxLength={450}
-                    {...form.register("message")}
-                  />
+                  <div className={styles.textareaWrapper}>
+                    <textarea
+                      className={styles.textarea}
+                      placeholder="پیام خود را در این قسمت برای ما بنویسید"
+                      maxLength={450}
+                      {...form.register("message")}
+                    />
+
+                    <span className={styles.counter}>
+                      {form.watch("message")?.length ?? 0}/۴۵۰
+                    </span>
+                  </div>
                 </Field>
-
-                <span className={styles.counter}>
-                  {form.watch("message")?.length ?? 0}/۴۵۰
-                </span>
               </div>
-
               {/* ========================================
                   Form Error
               ======================================== */}

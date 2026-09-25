@@ -1,10 +1,8 @@
 import FeatureSection from "@/components/ui/FeatureSection/FeatureSection";
 import FleetShowcase from "@/components/ui/FleetShowcase/FleetShowcase";
 import Header from "@/components/ui/Header/Header";
-import Hero from "@/components/ui/Hero/HeroDynamic";
 import VehicleFlexibleServices from "@/components/ui/VehicleFlexibleServices/VehicleFlexibleServices";
 import VehicleShowcase from "@/components/ui/VehicleShowcase/VehicleShowcase";
-import React from "react";
 import tripQualityImage from "@/public/figma/sea.png";
 import exebitionImage from "@/public/figma/exebition.png";
 import DownloadBanner from "@/components/ui/DownloadBanner/DownloadBanner";
@@ -12,7 +10,8 @@ import FAQ, { FAQItem } from "@/components/ui/Faq/Faq";
 import FutureTransportBanner from "@/components/ui/FutureTransportBanner/FutureTransportBanner";
 import Footer from "@/components/ui/footer/Footer";
 import carSideView from "@/public/figma/vehicles/Car-SideView.svg";
-
+import carSideView2 from "@/public/figma/carousel2.png";
+import carSideView3 from "@/public/figma/carousel3.png";
 export const tripFaqItems: FAQItem[] = [
   {
     question: "خودرو در اختیار چه تفاوتی با سفر معمولی دارد؟",
@@ -44,38 +43,14 @@ export default function page() {
         <FleetShowcase />
       </div>
       <VehicleFlexibleServices />
-     <VehicleShowcase
+<VehicleShowcase
   title="خودروی موردنظر خود را دقیق‌تر بشناسید"
   description="در هر مدل، اطلاعاتی را که برای انتخاب خودرو اهمیت دارد بررسی کنید."
   vehicles={[
     {
       id: "byd-seal",
 
-      image: {
-        src: carSideView,
-        alt: "BYD Seal",
-      },
-
-      specs: [
-        {
-          label: "نوع خودرو",
-          value: "سواری",
-        },
-        {
-          label: "ظرفیت",
-          value: "۴ مسافر",
-        },
-        {
-          label: "نوع کاربری",
-          value: "شهری",
-        },
-      ],
-
-      detailsHref: "/vehicles/byd-seal",
-      detailsLabel: "مشاهده جزییات",
-    },
-      {
-      id: "byd-seal2",
+      name: "بی‌وای‌دی سیل ۵ دی‌ام-آی هیبریدی",
 
       image: {
         src: carSideView,
@@ -100,11 +75,43 @@ export default function page() {
       detailsHref: "/vehicles/byd-seal",
       detailsLabel: "مشاهده جزییات",
     },
-      {
+
+    {
+      id: "byd-",
+
+      name: "تویوتا BZ3X سفید بنزینی",
+
+      image: {
+        src: carSideView2,
+        alt: "BYD Seal",
+      },
+
+      specs: [
+        {
+          label: "نوع خودرو",
+          value: "سواری",
+        },
+        {
+          label: "ظرفیت",
+          value: "۴ مسافر",
+        },
+        {
+          label: "نوع کاربری",
+          value: "شهری",
+        },
+      ],
+
+      detailsHref: "/vehicles/byd-seal",
+      detailsLabel: "مشاهده جزییات",
+    },
+
+    {
       id: "byd-seal3",
 
+      name: "چانگان ایدو EV460 برقی",
+
       image: {
-        src: carSideView,
+        src: carSideView3,
         alt: "BYD Seal",
       },
 

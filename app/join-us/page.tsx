@@ -1,21 +1,35 @@
 import Header from "@/components/ui/Header/Header";
-import { CooperationCard } from "@/components/ui/join-us/CooperationCardItem/CooperationCardItem";
+
+import {
+  CooperationCard,
+} from "@/components/ui/join-us/CooperationCardItem/CooperationCardItem";
+
 import CooperationSection from "@/components/ui/join-us/CooperationSection/CooperationSection";
+import CareerHero from "@/components/ui/join-us/CareerHero/CareerHero";
+import DriverHiringSection from "@/components/ui/join-us/DriverHiringSection/DriverHiringSection";
+import CorporateJobsSection from "@/components/ui/join-us/CorporateJobsSection/CorporateJobsSection";
+import PartnershipSection from "@/components/ui/join-us/PartnershipSection/PartnershipSection";
+
+import Footer from "@/components/ui/footer/Footer";
+
+import FAQ, {
+  FAQItem,
+} from "@/components/ui/Faq/Faq";
+
+import { getDriverJobCards } from "@/lib/driverJobs";
+import { getPublicPositions } from "@/lib/jobs/service";
+
 import careerHeroImage from "@/public/figma/careerHeroImage.png";
 import driverImage from "@/public/figma/femailDrivers.png";
 import partnershipImage from "@/public/figma/partenrShip.png";
 import careerImage from "@/public/figma/parkedCars.png";
-import CareerHero from "@/components/ui/join-us/CareerHero/CareerHero";
-import { type DriverHiringCardProps } from "@/components/ui/join-us/DriverHiringCard/DriverHiringCard";
-import DriverHiringSection from "@/components/ui/join-us/DriverHiringSection/DriverHiringSection";
-import CorporateJobsSection from "@/components/ui/join-us/CorporateJobsSection/CorporateJobsSection";
-import PartnershipSection from "@/components/ui/join-us/PartnershipSection/PartnershipSection";
 import partnershipCarImage from "@/public/figma/driver-Highway.png";
-import Footer from "@/components/ui/footer/Footer";
-import FAQ, { FAQItem } from "@/components/ui/Faq/Faq";
-import { getPublicPositions } from "@/lib/jobs/service";
 
 export const dynamic = "force-dynamic";
+
+/* ========================================
+   Cooperation Cards
+======================================== */
 const cooperationCards: CooperationCard[] = [
   {
     title: "همکاری به عنوان راننده",
@@ -25,8 +39,7 @@ const cooperationCards: CooperationCard[] = [
     image: driverImage,
     imageAlt: "همکاری به عنوان راننده",
     position: "bottom",
-    href:"/join-us/drivers"
-
+    href: "/join-us/drivers",
   },
 
   {
@@ -37,9 +50,9 @@ const cooperationCards: CooperationCard[] = [
     image: careerImage,
     imageAlt: "فرصت‌های شغلی",
     position: "top",
-    href:"/join-us/organizational"
-
+    href: "/join-us/organizational",
   },
+
   {
     title: "همکاری به‌صورت مشارکتی",
     description:
@@ -48,121 +61,108 @@ const cooperationCards: CooperationCard[] = [
     image: partnershipImage,
     imageAlt: "همکاری به صورت مشارکتی",
     position: "bottom",
-    href:"https://apply.dotone.ir/"
-  },
-];
-export const driverJobs: DriverHiringCardProps[] = [
-  {
-    id: "1",
-    city: "مشهد",
-    driverCount: 20,
-    title: "فراخوان استخدام",
-    description:
-      "دات‌وان تریپ برای استان مشهد به تعداد ۲۰ نفر فراخوان استخدام راننده دارد.",
-  },
-  {
-    id: "2",
-
-    city: "مشهد",
-    driverCount: 20,
-    title: "فراخوان استخدام",
-    description:
-      "دات‌وان تریپ برای استان مشهد به تعداد ۲۰ نفر فراخوان استخدام راننده دارد.",
-  },
-  {
-    id: "3",
-
-    city: "مشهد",
-    driverCount: 20,
-    title: "فراخوان استخدام",
-    description:
-      "دات‌وان تریپ برای استان مشهد به تعداد ۲۰ نفر فراخوان استخدام راننده دارد.",
-  },
-  {
-    id: "4",
-
-    city: "مشهد",
-    driverCount: 20,
-    title: "فراخوان استخدام",
-    description:
-      "دات‌وان تریپ برای استان مشهد به تعداد ۲۰ نفر فراخوان استخدام راننده دارد.",
+    href: "https://apply.dotone.ir/",
   },
 ];
 
-export const tripFaqItems: FAQItem[] = [
+/* ========================================
+   FAQ
+======================================== */
+
+const tripFaqItems: FAQItem[] = [
   {
-    question: "از چه راه‌هایی می‌تونم رزومه‌ی خودم رو برای موقعیت",
+    question: "فرآیند استخدام راننده چگونه انجام می‌شود؟",
     answer:
-      "تبلیغات شما روی نمایشگر داخل خودرو و در طول سفر مسافر نمایش داده می‌شود. کمپین‌ها قابلیت زمان‌بندی، هدف‌گیری منطقه‌ای و دریافت گزارش عملکرد را دارند.",
+      "پس از ثبت درخواست، مدارک و شرایط متقاضی بررسی می‌شود و مراحل ارزیابی، احراز صلاحیت و آموزش انجام خواهد شد. پس از تأیید نهایی، راننده وارد فرآیند همکاری می‌شود.",
   },
+
   {
-    question: "آیا می‌توانم موقعیت خودرو را در طول سفر ببینم؟",
+    question: "برای استخدام راننده چه مدارکی لازم است؟",
     answer:
-      "بله، پس از تأیید سفر توسط راننده، می‌توانید موقعیت لحظه‌ای خودرو را روی نقشه اپلیکیشن مشاهده کنید.",
+      "مدارک هویتی، گواهینامه معتبر و سایر مدارک موردنیاز در فرآیند بررسی اولیه از متقاضی دریافت می‌شود. جزئیات مدارک در زمان شروع فرآیند اعلام خواهد شد.",
   },
+
   {
-    question: "رانندگان دات‌وان چگونه انتخاب می‌شوند؟",
+    question: "آیا رانندگان پیش از شروع فعالیت آموزش می‌بینند؟",
     answer:
-      "رانندگان پس از احراز هویت، ارزیابی سوابق، آموزش و تأیید صلاحیت وارد ناوگان می‌شوند.",
+      "بله. رانندگان پیش از شروع فعالیت، آموزش‌های لازم درباره خودرو، اپلیکیشن، فرآیند سفر، الزامات ایمنی و استانداردهای ارائه خدمات را دریافت می‌کنند.",
   },
+
   {
-    question: "خودروهای دات‌وان چه ویژگی‌هایی دارند؟",
+    question: "چطور می‌توانم برای استخدام راننده اقدام کنم؟",
     answer:
-      "بخش بزرگی از ناوگان دات‌وان تریپ از خودروهای برقی و هیبریدی کم‌آلاینده تشکیل شده است.",
-  },
-  {
-    question: "دات‌وان در چه شهرهایی فعال است؟",
-    answer:
-      "دات‌وان تریپ خدمات خود را به‌صورت مرحله‌ای توسعه می‌دهد. برای مشاهده شهرهای فعال، فهرست به‌روز را بررسی کنید.",
+      "برای مشاهده شرایط و شروع فرآیند استخدام، به apply.dotone.ir مراجعه کرده و مراحل ثبت درخواست را دنبال کنید.",
   },
 ];
-export default async function page() {
+
+/* ========================================
+   Page
+======================================== */
+
+export default async function Page() {
+  const driverJobs = getDriverJobCards().slice(0, 4);
   const corporateJobs = (await getPublicPositions()).slice(0, 4);
 
   return (
     <>
       <Header />
-      <CareerHero
-        badge="فرصت‌های همکاری"
-        highlightedText="مسیر همکاری"
-        title="خود را انتخاب کنید"
-        description="چه قصد داشته باشید به‌عنوان راننده با ناوگان تریپ همکاری کنید، چه از طریق فرصت‌های شغلی وارد مجموعه شوید، با تیم حرفه‌ای ما همراه شوید و مسیر مناسب همکاری را انتخاب کنید."
-        image={careerHeroImage}
-        imageAlt="همکاری با دات‌وان تریپ"
-      />
-      <CooperationSection
-        title="سه مسیر برای همکاری با ما"
-        subtitle="متناسب با هدف و شرایط خود، مسیر همکاری مناسب را انتخاب کنید."
-        cards={cooperationCards}
-      />
 
-      <DriverHiringSection
-        title="به عنوان راننده با ما همکاری کنید"
-        subtitle="فرصت‌های همکاری رانندگان در شهرهای مختلف را ببینید و بر اساس وضعیت شهر خود، برای استخدام یا پیش‌ثبت‌نام اقدام کنید."
-        jobs={driverJobs}
-        showAllText="مشاهده همه"
-        showAllHref="/join-us/drivers"
-      />
-      <PartnershipSection
-        title="با ما به‌صورت مشارکتی همکاری کنید"
-        description="با سرمایه‌گذاری روی خودروهای مدرن و به‌روز ناوگان دات‌وان تریپ، وارد مدل همکاری مشارکتی شوید."
-        image={partnershipCarImage}
-        imageAlt="خودروی ناوگان دات‌وان تریپ"
-        buttonText="مشاهده فرصت‌های شغلی"
-        buttonHref="https://apply.dotone.ir/"
-      />
-      <CorporateJobsSection
-        title="فرصت‌های شغلی سازمانی"
-        subtitle="اگر به‌دنبال یک فرصت شغلی در تیم‌های سازمانی هستید، موقعیت‌های باز را ببینید و برای جایگاه مناسب خود درخواست دهید."
-        jobs={corporateJobs}
-        showAllText="مشاهده فرصت‌های شغلی"
-        showAllHref="/join-us/organizational"
-      />
-      <FAQ
-        description="تبلیغات روی نمایشگرهای دات‌وان چگونه نمایش داده می‌شود؟"
-        title="سؤالات متداول"
-        items={tripFaqItems}
-      />
+      <div className="mt-16 md:mt-20 lg:mt-24">
+        <CareerHero
+          badge="فرصت‌های همکاری"
+          highlightedText="مسیر همکاری"
+          title="خود را انتخاب کنید"
+          description="چه قصد داشته باشید به عنوان راننده با دات وان تریپ همکاری کنید، چه از طریق طرح‌های مشارکتی وارد مجموعه شوید یا به تیم سازمانی بپیوندید، می‌توانید متناسب با شرایط و تخصص خود، مسیر مناسب همکاری را انتخاب کنید."
+          image={careerHeroImage}
+          imageAlt="همکاری با دات‌وان تریپ"
+        />
+
+        <CooperationSection
+          title="سه مسیر برای همکاری با ما"
+          subtitle="متناسب با هدف و شرایط خود، مسیر همکاری مناسب را انتخاب کنید."
+          cards={cooperationCards}
+        />
+
+        <DriverHiringSection
+          title="به عنوان راننده با ما همکاری کنید"
+          subtitle="فرصت‌های همکاری رانندگان در شهرهای مختلف را ببینید و بر اساس وضعیت شهر خود، برای استخدام یا پیش‌ثبت‌نام اقدام کنید."
+          jobs={driverJobs}
+          showAllText="مشاهده همه"
+          showAllHref="/join-us/drivers"
+        />
+
+        <PartnershipSection
+          title="با ما به‌صورت مشارکتی همکاری کنید"
+          description={
+            <>
+              با سرمایه‌گذاری روی{" "}
+              <strong>
+                خودروهای مدرن و به‌روز ناوگان دات‌وان تریپ
+              </strong>
+              ، وارد مدل همکاری مشارکتی شوید
+            </>
+          }
+          image={partnershipCarImage}
+          imageAlt="خودروی ناوگان دات‌وان تریپ"
+          buttonText="مشاهده فرصت‌های شغلی"
+          buttonHref="https://apply.dotone.ir/"
+        />
+
+        <CorporateJobsSection
+          title="فرصت‌های شغلی سازمانی"
+          subtitle="اگر به‌دنبال یک فرصت شغلی در تیم‌های سازمانی هستید، موقعیت‌های باز را ببینید و برای جایگاه مناسب خود درخواست دهید."
+          jobs={corporateJobs}
+          showAllText="مشاهده فرصت‌های شغلی"
+          showAllHref="/join-us/organizational"
+        />
+
+        <FAQ
+          description="تبلیغات روی نمایشگرهای دات‌وان چگونه نمایش داده می‌شود؟"
+          title="سؤالات متداول"
+          items={tripFaqItems}
+        />
+      </div>
+
       <Footer />
     </>
   );

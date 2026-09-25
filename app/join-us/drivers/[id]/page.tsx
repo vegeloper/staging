@@ -1,85 +1,74 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+
 import DriverForm from "@/components/forms/DriverForm";
 import Footer from "@/components/ui/footer/Footer";
 import Header from "@/components/ui/Header/Header";
-import JobDetails, { JobDetailsProps } from "@/components/ui/join-us/JobDetails/JobDetails";
-import React from "react";
-export const jobDetails: JobDetailsProps = {
-  title: "نوع پوزیشن کاری",
 
-  highlights: [
-    "۳ سال سابقه کار در گروه شغلی مشابه",
-    "کارشناسی مدیریت / بازرگانی / کسب و کار یا اقتصاد",
-  ],
+import JobDetails from "@/components/ui/join-us/JobDetails/JobDetails";
 
-  sections: [
-    {
-      title: "هدف شغل:",
-      description:
-        "پیگیری و انجام کلیه امور مرتبط با ترخیص خودرو از گمرک، اخذ مجوزهای موردنیاز، مدیریت اسناد و مدارک گمرکی و هماهنگی فرآیند شماره‌گذاری خودرو تا تحویل نهایی.",
-    },
+import {
+  driverJobs,
+  getDriverJob,
+} from "@/lib/driverJobs";
 
-    {
-      title: "شرح وظایف و مسئولیت‌ها:",
-      items: [
-        "انجام و پیگیری امور مربوط به ترخیص خودرو از گمرک از زمان ورود تا خروج کالا",
-        "تهیه، بررسی و پیگیری قبض انبار، اظهارنامه گمرکی، ترخیصیه و سایر اسناد مرتبط",
-        "ثبت و پیگیری اظهارنامه‌ها و فرآیندهای مربوط در سامانه‌های گمرکی",
-        "اخذ و پیگیری مجوزهای قانونی و گمرکی موردنیاز برای ترخیص خودرو",
-      ],
-    },
-
-    {
-      title: "مرتبط با مجوزهای خودرو:",
-      items: [
-        "پیگیری کامل و فرآیندهای گمرکی، ترخیص کالا و ورود خودرو",
-        "هماهنگی و پیگیری فرآیندهای شماره‌گذاری خودروهای گمرکی",
-        "آشنایی با فرآیندها و مدارک موردنیاز برای شماره‌گذاری خودروهای وارداتی",
-        "آشنایی با سامانه‌های مرتبط با امور گمرکی و تجاری خودرو",
-        "آشنایی مناسب با قوانین و مقررات واردات خودرو",
-      ],
-    },
-
-    {
-      title: "شرایط تحصیلی و سابقه کار:",
-      items: [
-        "ترجیحاً دارای مدرک کارشناسی در رشته‌های مدیریت بازرگانی، بازرگانی بین‌الملل، مدیریت، اقتصاد یا رشته‌های مرتبط",
-        "داشتن سابقه کار مرتبط در حوزه بازرگانی، گمرک، واردات و ترخیص خودرو مزیت محسوب می‌شود",
-        "تجربه عملی در زمینه فرآیند شماره‌گذاری خودرو و تعامل با مراجع مرتبط مزیت مهم محسوب می‌شود",
-      ],
-    },
-  ],
-
-  meta: [
-    {
-      label: "سن",
-      value: "۲۵ - ۳۵ سال",
-    },
-    {
-      label: "جنسیت",
-      value: "فقط آقا",
-    },
-    {
-      label: "خدمت سربازی",
-      value: "اتمام خدمت سربازی و یا معافیت از آن الزامی است",
-    },
-    {
-      label: "تحصیلات",
-      value: "کارشناسی مهندسی نرم افزار",
-    },
-    {
-      label: "نرم افزارها",
-      value: "Microsoft Excel",
-    },
-  ],
+type DriverJobPageProps = {
+  params: Promise<{
+    id: string;
+  }>;
 };
-export default function page() {
+
+export function generateStaticParams() {
+  return driverJobs.map((job) => ({
+    id: job.id,
+  }));
+}
+
+export async function generateMetadata({
+  params,
+}: DriverJobPageProps): Promise<Metadata> {
+  const { id } = await params;
+
+  const job = getDriverJob(id);
+
+  if (!job) {
+    return {
+      title: "استخدام راننده | دات‌وان تریپ",
+    };
+  }
+
+  return {
+    title: `${job.title} | دات‌وان تریپ`,
+    description: job.description,
+  };
+}
+
+export default async function DriverJobPage({
+  params,
+}: DriverJobPageProps) {
+  const { id } = await params;
+
+  const job = getDriverJob(id);
+
+  if (!job) {
+    notFound();
+  }
+
   return (
     <>
       <Header />
-      <div className="mt-20">
-        <JobDetails {...jobDetails} />
-      </div>
-      <DriverForm />
+
+      <main>
+        <div className="mt-20">
+
+          {/* همان JobDetails قبلی */}
+          <JobDetails {...job.details} />
+
+        </div>
+
+        <DriverForm />
+      </main>
+
       <Footer />
     </>
   );

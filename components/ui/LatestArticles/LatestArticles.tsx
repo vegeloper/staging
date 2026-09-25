@@ -5,20 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { Search } from "lucide-react";
 
-import styles from "./LatestArticles.module.css";
+import {
+  Article,
+  articleHref,
+} from "@/lib/articles";
 
-export type LatestArticle = {
-  id: string;
-  category: string;
-  title: string;
-  date: string;
-  href?: string;
-  image: {
-    src: string;
-    alt: string;
-    objectPosition?: string;
-  };
-};
+import styles from "./LatestArticles.module.css";
 
 type LatestArticlesProps = {
   title?: string;
@@ -28,154 +20,144 @@ type LatestArticlesProps = {
   seeAllHref?: string;
   featuredCount?: number;
   compact?: boolean;
-  articles?: LatestArticle[];
+  articles: Article[];
   categories?: readonly string[];
 };
 
 const defaultCategories = ["همه", "مقالات", "راهنما", "اطلاعیه", "اخبار"] as const;
 
-const defaultArticles: LatestArticle[] = [
-  {
-    id: "online-trips",
-    category: "مقالات",
-    title: "سفرهای آنلاین چه تأثیری بر زندگی مردم گذاشته است؟",
-    date: "۲ ساعت پیش",
-    image: {
-      src: "/figma/png/passenger-insideCar.jpg",
-      alt: "مسافر در حال استفاده از اپلیکیشن دات‌وان تریپ",
-      objectPosition: "center 18%",
-    },
-  },
-  {
-    id: "intercity",
-    category: "اخبار",
-    title: "دات‌وان تریپ سفر بین شهری را به خدمات خود اضافه کرد.",
-    date: "۱ هفته پیش",
-    image: {
-      src: "/figma/png/cars-insideCabin.png",
-      alt: "کابین هوشمند خودروی دات‌وان تریپ",
-      objectPosition: "center 80%",
-    },
-  },
-  {
-    id: "city-trip-guide",
-    category: "راهنما",
-    title: "راهنمای درخواست سفر شهری",
-    date: "۱ شهریور ۱۴۰۵",
-    image: {
-      src: "/figma/png/mobilephone.png",
-      alt: "درخواست سفر شهری روی موبایل",
-    },
-  },
-  {
-    id: "org-guide",
-    category: "راهنما",
-    title: "راهنمای استفاده از خدمات سازمانی",
-    date: "۵ مرداد ۱۴۰۵",
-    image: {
-      src: "/figma/png/mobilephone.png",
-      alt: "استفاده از خدمات سازمانی روی موبایل",
-    },
-  },
-  {
-    id: "fifty-thousand",
-    category: "اخبار",
-    title: "آمار نشان می‌دهد که دات‌وان تریپ بیش از ۵۰ هزار سفر موفق داشته است",
-    date: "۲۴ مرداد ۱۴۰۵",
-    image: {
-      src: "/figma/png/driver-backneck.png",
-      alt: "راننده دات‌وان تریپ در مسیر",
-    },
-  },
-  {
-    id: "online-taxi",
-    category: "اخبار",
-    title: "دات‌وان تریپ، تجربه‌ای متفاوت از تاکسی‌های آنلاین را عرضه می‌کند",
-    date: "۲۰ مرداد ۱۴۰۵",
-    image: {
-      src: "/figma/png/cars-navy.jpg",
-      alt: "ناوگان دات‌وان تریپ",
-    },
-  },
-  {
-    id: "support-guide",
-    category: "راهنما",
-    title: "راهنمای ثبت درخواست پشتیبانی",
-    date: "۱۲ مرداد ۱۴۰۵",
-    image: {
-      src: "/figma/png/callCenter.png",
-      alt: "پشتیبانی دات‌وان تریپ",
-    },
-  },
-  {
-    id: "lorestan",
-    category: "اطلاعیه",
-    title: "از ۲۹ آذر دات‌وان تریپ در لرستان شروع به خدمت‌رسانی می‌کند",
-    date: "۱۰ مرداد ۱۴۰۵",
-    image: {
-      src: "/figma/png/information.png",
-      alt: "تابلوی اطلاع‌رسانی",
-    },
-  },
-  {
-    id: "weight-update",
-    category: "اطلاعیه",
-    title: "آپدیت وزن ۵.۴ دات‌وان تریپ عرضه شد.",
-    date: "۱۸ مرداد ۱۴۰۵",
-    image: {
-      src: "/figma/png/information.png",
-      alt: "تابلوی اطلاع‌رسانی",
-    },
-  },
-];
+/* ========================================
+   Normalize Search Text
+======================================== */
+
+function normalizeSearchText(value: string) {
+  return value
+    .toLocaleLowerCase("fa-IR")
+    .replace(/ي/g, "ی")
+    .replace(/ك/g, "ک")
+    .replace(/\u200c/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/* ========================================
+   Component
+======================================== */
 
 export default function LatestArticles({
   title = "آخرین مطالب:",
   searchPlaceholder = "جستجو...",
   allLabel = "همه",
   seeAllLabel = "همه مطالب",
-  seeAllHref = "#",
+  seeAllHref = "/blog",
   featuredCount = 3,
   compact = false,
-  articles = defaultArticles,
+  articles,
   categories = defaultCategories,
 }: LatestArticlesProps) {
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<string>(allLabel);
+  const [category, setCategory] =
+    useState<string>(allLabel);
+
+  /* ========================================
+     Filter Articles
+  ======================================== */
 
   const filtered = useMemo(() => {
-    const needle = query.trim();
-    return articles.filter((article) => {
-      const matchesCategory =
-        category === allLabel || article.category === category;
-      const matchesQuery =
-        !needle ||
-        article.title.includes(needle) ||
-        article.category.includes(needle) ||
-        article.date.includes(needle);
-      return matchesCategory && matchesQuery;
-    });
-  }, [allLabel, articles, category, query]);
+    const normalizedQuery = normalizeSearchText(query);
 
-  const showFeatured = !compact && featuredCount > 0;
-  const featured = showFeatured ? filtered.slice(0, featuredCount) : [];
-  const rest = showFeatured ? filtered.slice(featuredCount) : filtered;
+    return articles.filter((article) => {
+      /* Category */
+
+      const matchesCategory =
+        category === allLabel ||
+        article.category === category;
+
+      if (!matchesCategory) {
+        return false;
+      }
+
+      /* Empty Search */
+
+      if (!normalizedQuery) {
+        return true;
+      }
+
+      /* Full Article Text */
+
+      const bodyText = article.body
+        .map((block) => block.text)
+        .join(" ");
+
+      /* Searchable Content */
+
+      const searchableText = normalizeSearchText(
+        [
+          article.title,
+          article.category,
+          article.date ?? "",
+          bodyText,
+        ].join(" "),
+      );
+
+      return searchableText.includes(normalizedQuery);
+    });
+  }, [articles, query, category, allLabel]);
+
+  /* ========================================
+     Featured / Rest
+  ======================================== */
+
+  const showFeatured =
+    !compact && featuredCount > 0;
+
+  const featured = showFeatured
+    ? filtered.slice(0, featuredCount)
+    : [];
+
+  const rest = showFeatured
+    ? filtered.slice(featuredCount)
+    : filtered;
 
   return (
-    <section className={styles.section} dir="rtl" aria-label={title}>
+    <section
+      className={styles.section}
+      dir="rtl"
+      aria-label={title}
+    >
+      {/* ========================================
+          Toolbar
+      ======================================== */}
+
       <div className={styles.toolbar}>
+        {/* Search */}
+
         <label className={styles.search}>
-          <Search size={20} strokeWidth={1.75} aria-hidden="true" />
+          <Search
+            size={20}
+            strokeWidth={1.75}
+            aria-hidden="true"
+          />
+
           <input
             type="search"
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) =>
+              setQuery(event.target.value)
+            }
             placeholder={searchPlaceholder}
             aria-label={searchPlaceholder}
+            autoComplete="off"
           />
         </label>
 
-        <div className={styles.filters} role="tablist" aria-label="دسته‌بندی مطالب">
+        {/* Filters */}
+
+        <div
+          className={styles.filters}
+          role="tablist"
+          aria-label="دسته‌بندی مطالب"
+        >
           {categories.map((item) => (
             <button
               key={item}
@@ -183,7 +165,9 @@ export default function LatestArticles({
               role="tab"
               aria-selected={category === item}
               className={`${styles.chip} ${
-                category === item ? styles.chipActive : ""
+                category === item
+                  ? styles.chipActive
+                  : ""
               }`}
               onClick={() => setCategory(item)}
             >
@@ -193,10 +177,21 @@ export default function LatestArticles({
         </div>
       </div>
 
+      {/* ========================================
+          Heading
+      ======================================== */}
+
       <div className={styles.heading}>
-        <h2 className={styles.title}>{title}</h2>
-        <a className={styles.seeAll} href={seeAllHref}>
+        <h2 className={styles.title}>
+          {title}
+        </h2>
+
+        <Link
+          className={styles.seeAll}
+          href={seeAllHref}
+        >
           {seeAllLabel}
+
           <Image
             src="/figma/arrow/arrow-rightSide.svg"
             alt=""
@@ -205,19 +200,36 @@ export default function LatestArticles({
             unoptimized
             className={styles.seeAllArrow}
           />
-        </a>
+        </Link>
       </div>
 
+      {/* ========================================
+          Empty State
+      ======================================== */}
+
       {filtered.length === 0 ? (
-        <p className={styles.empty}>مطلبی مطابق جستجوی شما پیدا نشد.</p>
+        <p className={styles.empty}>
+          مطلبی مطابق جستجوی شما پیدا نشد.
+        </p>
       ) : (
         <>
-          {featured.length > 0 ? (
+          {/* ========================================
+              Featured Articles
+          ======================================== */}
+
+          {featured.length > 0 && (
             <ul className={styles.featuredGrid}>
               {featured.map((article) => (
                 <li key={article.id}>
-                  <Link className={styles.card} href={article.href ?? `/blog/${article.id}`}>
-                    <span className={styles.cardImageWrap}>
+                  <Link
+                    className={styles.card}
+                    href={articleHref(article)}
+                  >
+                    {/* Image */}
+
+                    <span
+                      className={styles.cardImageWrap}
+                    >
                       <Image
                         src={article.image.src}
                         alt={article.image.alt}
@@ -227,45 +239,94 @@ export default function LatestArticles({
                         className={styles.cardImage}
                         style={
                           article.image.objectPosition
-                            ? { objectPosition: article.image.objectPosition }
+                            ? {
+                                objectPosition:
+                                  article.image
+                                    .objectPosition,
+                              }
                             : undefined
                         }
                       />
                     </span>
+
+                    {/* Meta */}
+
                     <span className={styles.cardMeta}>
-                      <span className={styles.badge}>{article.category}</span>
-                      <span className={styles.metaDash} aria-hidden="true" />
-                      <span className={styles.cardDate}>{article.date}</span>
+                      <span className={styles.badge}>
+                        {article.category}
+                      </span>
+
+                      {article.date && (
+                        <>
+                          <span
+                            className={styles.metaDash}
+                            aria-hidden="true"
+                          />
+
+                          <span
+                            className={styles.cardDate}
+                          >
+                            {article.date}
+                          </span>
+                        </>
+                      )}
                     </span>
-                    <h3 className={styles.cardTitle}>{article.title}</h3>
+
+                    {/* Title */}
+
+                    <h3 className={styles.cardTitle}>
+                      {article.title}
+                    </h3>
                   </Link>
                 </li>
               ))}
             </ul>
-          ) : null}
+          )}
 
-          {rest.length > 0 ? (
+          {/* ========================================
+              Articles List
+          ======================================== */}
+
+          {rest.length > 0 && (
             <ul className={styles.list}>
               {rest.map((article) => (
-                <li key={article.id} className={styles.listItem}>
-                  <Link className={styles.item} href={article.href ?? `/blog/${article.id}`}>
+                <li
+                  key={article.id}
+                  className={styles.listItem}
+                >
+                  <Link
+                    className={styles.item}
+                    href={articleHref(article)}
+                  >
+                    {/* Thumbnail */}
+
                     <Image
                       src={article.image.src}
-                      alt=""
+                      alt={article.image.alt}
                       width={72}
                       height={72}
                       unoptimized
                       className={styles.thumb}
                     />
+
+                    {/* Content */}
+
                     <span className={styles.itemCopy}>
-                      <span className={styles.badge}>{article.category}</span>
-                      <span className={styles.itemTitle}>{article.title}</span>
+                      <span className={styles.badge}>
+                        {article.category}
+                      </span>
+
+                      <span
+                        className={styles.itemTitle}
+                      >
+                        {article.title}
+                      </span>
                     </span>
                   </Link>
                 </li>
               ))}
             </ul>
-          ) : null}
+          )}
         </>
       )}
     </section>

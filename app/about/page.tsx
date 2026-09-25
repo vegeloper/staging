@@ -13,7 +13,7 @@ import monitoringImage from "@/public/figma/monitoring.png";
 import tripCarImage from "@/public/figma/Tripcar.png";
 import sessionImage from "@/public/figma/oneSession.png";
 import carTrip2 from "@/public/figma/carTrip2.png";
-
+import monitoringImage2 from "@/public/figma/monitoring2.png";
 import InnovationSection, {
   InnovationCard,
 } from "@/components/ui/about/InnovationSection/InnovationSection";
@@ -26,12 +26,12 @@ import FutureTransportBanner from "@/components/ui/FutureTransportBanner/FutureT
 
 const firstRowCards: FeatureCard[] = [
   {
-    image: monitoringImage,
+    image: tripCarImage,
     title: "فناوری",
     description: "استفاده از راهکارهای هوشمند برای مدیریت و بهبود خدمات",
   },
   {
-    image: tripCarImage,
+    image: monitoringImage,
     title: "تجربه‌محوری",
     description: "طراحی خدمات بر اساس نیاز واقعی مسافر و راننده",
   },
@@ -39,12 +39,12 @@ const firstRowCards: FeatureCard[] = [
 
 const secondRowCards: FeatureCard[] = [
   {
-    image: sessionImage,
+    image: monitoringImage2,
     title: "پایداری",
     description: "حرکت به سمت حمل‌ونقل پاک‌تر و استفاده از ناوگان برقی",
   },
   {
-    image: monitoringImage,
+    image: sessionImage,
     title: "کیفیت و ایمنی",
     description: "اجرای استانداردهای مشخص برای ارائه خدمات قابل اعتماد",
   },
@@ -69,7 +69,7 @@ const innovationCards: InnovationCard[] = [
   {
     title: "زیرساخت ایمنی داخل خودرو",
     description:
-      "در کنار توسعه شهرهای فعال، تهران یکی از محورهای اصلی برنامه توسعه دات‌وان تریپ است و توسعه ناوگان تا مقیاس ۱۵۰ هزار خودرو برای این بازار هدف‌گذاری شده است.",
+      "بخشی از خودروهای ناوگان به دوربین داخل کابین مجهز شده‌اند تا با رعایت الزامات حریم خصوصی، امکان بررسی دقیق‌تر رخدادها و ارتقای نظارت بر کیفیت و امنیت سفر فراهم شود.",
     icon: "/figma/svgs/security-check.svg",
     iconAlt: "امنیت",
     variant: "dark",
@@ -114,66 +114,66 @@ export default function Page() {
     <>
       <Header />
 
-      <div className="mt-10 md:mt-16 lg:mt-20 lg:mb-20">
+      <div className="mt-16 md:mt-20 lg:mt-24">
         <TransportHero />
-      </div>
 
-      <div className="">
-        <FeatureSection
-          imageSide="right"
-          title="فراتر از یک سرویس درخواست خودرو"
-          image={{
-            src: monitorImage,
-            alt: "راننده دات‌وان تریپ",
-            width: 720,
-            height: 480,
-          }}
-          subTitle="یک پلتفرم یکپارچه برای مدیریت چرخه سفر"
-          description="دات‌وان تریپ صرفاً مسافر را به خودرو متصل نمی‌کند؛ بلکه تمام چرخه سفر، از ثبت درخواست و تخصیص خودرو تا کنترل عملیات، پشتیبانی، مدیریت ناوگان و تحلیل داده را در یک پلتفرم یکپارچه مدیریت می‌کند. این ساختار، امکان ارائه سرویس‌های اختصاصی به سازمان‌ها و مجموعه‌هایی را فراهم می‌کند که به کنترل، شفافیت و مقیاس‌پذیری بیشتر در مدیریت حمل‌ونقل نیاز دارند."
+        <div className="">
+          <FeatureSection
+            imageSide="right"
+            title="فراتر از یک سرویس درخواست خودرو"
+            image={{
+              src: monitorImage,
+              alt: "راننده دات‌وان تریپ",
+              width: 720,
+              height: 480,
+            }}
+            subTitle="یک پلتفرم یکپارچه برای مدیریت چرخه سفر"
+            description="دات‌وان تریپ صرفاً مسافر را به خودرو متصل نمی‌کند؛ بلکه تمام چرخه سفر، از ثبت درخواست و تخصیص خودرو تا کنترل عملیات، پشتیبانی، مدیریت ناوگان و تحلیل داده را در یک پلتفرم یکپارچه مدیریت می‌کند. این ساختار، امکان ارائه سرویس‌های اختصاصی به سازمان‌ها و مجموعه‌هایی را فراهم می‌کند که به کنترل، شفافیت و مقیاس‌پذیری بیشتر در مدیریت حمل‌ونقل نیاز دارند."
+          />
+        </div>
+        <FeatureRow
+          direction="right"
+          title="ماموریت ما؛ ساختن تجربه‌ای بهتر از شهر"
+          description="ما در تریپ به تجربه‌ای فکر می‌کنیم که با استفاده از فناوری و ناوگان مدرن، تجربه‌ای ایمن، پاکیزه و قابل اعتماد برای سفر ایجاد کنیم."
+          cards={firstRowCards}
         />
-      </div>
-      <FeatureRow
-        direction="right"
-        title="ماموریت ما؛ ساختن تجربه‌ای بهتر از شهر"
-        description="ما در تریپ به تجربه‌ای فکر می‌کنیم که با استفاده از فناوری و ناوگان مدرن، تجربه‌ای ایمن، پاکیزه و قابل اعتماد برای سفر ایجاد کنیم."
-        cards={firstRowCards}
-      />
 
-      <FeatureRow
-        direction="left"
-        title="با رویکردی هوشمند، پایدار و انسان‌محور"
-        description="از انتخاب و مدیریت ناوگان تا تجربه مسافر و همکاری با رانندگان، تلاش می‌کنیم هر بخش از زنجیره حمل‌ونقل را با استفاده از فناوری، داده و استانداردهای مشخص بهبود دهیم."
-        cards={secondRowCards}
-      />
-      <div className="lg:mt-20">
-        <FeatureSection
-          imageSide="left"
-          title="از سفر روزمره تا زیرساخت مدیریت حمل‌ونقل"
-          image={{
-            src: carTrip2,
-            alt: "راننده دات‌وان تریپ",
-            width: 720,
-            height: 480,
-          }}
-          subTitle="حمل‌ونقل برای هر سازمان، یک شکل ندارد."
-          description="دات‌وان تریپ با این نگاه شکل گرفت که الگوی حمل‌ونقل همه سازمان‌ها یکسان نیست؛ برخی مجموعه‌ها به مدیریت سفرهای روزانه کارکنان نیاز دارند، برخی به ناوگان اختصاصی و برخی به مدیریت یکپارچه حجم بالایی از سفرها. بر همین اساس، زیرساخت دات‌وان تریپ به‌گونه‌ای توسعه یافته است که متناسب با مدل فعالیت هر سازمان، طیفی از نیازها را از سفرهای موردی و سرویس کارکنان تا تأمین و مدیریت ناوگان اختصاصی پوشش دهد."
+        <FeatureRow
+          direction="left"
+          title="با رویکردی هوشمند، پایدار و انسان‌محور"
+          description="از انتخاب و مدیریت ناوگان تا تجربه مسافر و همکاری با رانندگان، تلاش می‌کنیم هر بخش از زنجیره حمل‌ونقل را با استفاده از فناوری، داده و استانداردهای مشخص بهبود دهیم."
+          cards={secondRowCards}
         />
-      </div>
+        <div className="lg:mt-20">
+          <FeatureSection
+            imageSide="left"
+            title="از سفر روزمره تا زیرساخت مدیریت حمل‌ونقل"
+            image={{
+              src: carTrip2,
+              alt: "راننده دات‌وان تریپ",
+              width: 720,
+              height: 480,
+            }}
+            subTitle="حمل‌ونقل برای هر سازمان، یک شکل ندارد."
+            description="دات‌وان تریپ با این نگاه شکل گرفت که الگوی حمل‌ونقل همه سازمان‌ها یکسان نیست؛ برخی مجموعه‌ها به مدیریت سفرهای روزانه کارکنان نیاز دارند، برخی به ناوگان اختصاصی و برخی به مدیریت یکپارچه حجم بالایی از سفرها. بر همین اساس، زیرساخت دات‌وان تریپ به‌گونه‌ای توسعه یافته است که متناسب با مدل فعالیت هر سازمان، طیفی از نیازها را از سفرهای موردی و سرویس کارکنان تا تأمین و مدیریت ناوگان اختصاصی پوشش دهد."
+          />
+        </div>
 
-      <InnovationSection
-        title="نوآوری برای نسل جدید حمل‌ونقل"
-        subtitle="ترکیبی از ناوگان مدرن، فناوری و زیرساخت عملیاتی"
-        cards={innovationCards}
-      />
-      <EcosystemSection
-        title="همه اجزای سفر، در یک اکوسیستم یکپارچه"
-        subtitle="از درخواست سفر تا مدیریت عملیات، اجزای مختلف در ارتباط با یکدیگر فعالیت می‌کنند."
-        items={ecosystemItems}
-      />
-      <div className="md:mt-30">
-        <DownloadBanner />
+        <InnovationSection
+          title="نوآوری برای نسل جدید حمل‌ونقل"
+          subtitle="ترکیبی از ناوگان مدرن، فناوری و زیرساخت عملیاتی"
+          cards={innovationCards}
+        />
+        <EcosystemSection
+          title="همه اجزای سفر، در یک اکوسیستم یکپارچه"
+          subtitle="از درخواست سفر تا مدیریت عملیات، اجزای مختلف در ارتباط با یکدیگر فعالیت می‌کنند."
+          items={ecosystemItems}
+        />
+        <div className="md:mt-30">
+          <DownloadBanner />
+        </div>
+        <FutureTransportBanner />
       </div>
-      <FutureTransportBanner />
       <Footer />
     </>
   );

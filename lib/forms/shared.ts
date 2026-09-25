@@ -143,7 +143,7 @@ export const personNameSchema = z
   .string()
   .trim()
   .min(2, "نام باید حداقل ۲ حرف باشد.")
-  .max(50, "نام نباید بیشتر از ۵۰ حرف باشد.")
+  .max(30, "نام نباید بیشتر از 30 حرف باشد.")
   .regex(NAME_PATTERN, "فقط حروف فارسی یا انگلیسی مجاز است.")
   .refine((value) => !hasUnsafeMarkup(value), "متن واردشده مجاز نیست.");
 
@@ -176,7 +176,7 @@ export const longTextSchema = (label: string) =>
     .string()
     .trim()
     .min(20, `${label} باید حداقل ۲۰ حرف باشد.`)
-    .max(2000, `${label} نباید بیشتر از ۲۰۰۰ حرف باشد.`)
+    .max(450, `${label} نباید بیشتر از ۲۰۰۰ حرف باشد.`)
     .refine((value) => !hasUnsafeMarkup(value), "متن واردشده مجاز نیست.");
 
 export const nationalIdSchema = z
