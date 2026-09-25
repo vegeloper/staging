@@ -30,6 +30,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  images: {
+    qualities: [75, 90],
+  },
   allowedDevOrigins: ["127.0.0.1", "localhost"],
   agentRules: false,
   experimental: {

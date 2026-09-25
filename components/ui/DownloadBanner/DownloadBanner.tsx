@@ -17,6 +17,7 @@ export default function DownloadBanner() {
             src={DeviceImage}
             alt="نمای اپلیکیشن دات‌وان تریپ"
             fill
+            sizes="(max-width: 768px) 230px, 320px"
             className={styles.phonesImage}
             priority
           />

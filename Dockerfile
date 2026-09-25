@@ -35,7 +35,8 @@ COPY --from=builder --chown=node:node /app/public ./public
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 
-RUN mkdir -p /app/data/resumes /app/data/media && chown -R node:node /app/data
+RUN node -e "const fs=require('fs'); for (const file of ['package.json','server.js']) { if (!fs.statSync(file).size) { console.error(file+' is empty'); process.exit(1); } } JSON.parse(fs.readFileSync('package.json','utf8'));" \
+  && mkdir -p /app/data/resumes /app/data/media && chown -R node:node /app/data
 
 USER node
 
