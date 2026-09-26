@@ -1,0 +1,22 @@
+.underline {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.link {
+  color: var(--brand, #00b7ce);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
+  background: color-mix(in srgb, var(--brand, #00b7ce) 16%, transparent);
+  border-radius: 0.28em;
+  padding: 0 0.22em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.link:hover {
+  color: var(--brand-dark, #0093a5);
+  background: color-mix(in srgb, var(--brand, #00b7ce) 28%, transparent);
+}

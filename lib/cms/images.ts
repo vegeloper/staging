@@ -11,6 +11,9 @@ export const contentImages = [
   { src: "/figma/png/image1.png", label: "تصویر ۱" },
   { src: "/figma/png/image2.png", label: "تصویر ۲" },
   { src: "/figma/png/image3.png", label: "تصویر ۳" },
+  { src: "/news/partnership-phase-two.png", label: "مرحله دوم فراخوان" },
+  { src: "/news/cars-navy.png", label: "شبکه خودروها" },
+  { src: "/news/monitor-inside-car.png", label: "مانیتور داخل خودرو" },
 ] as const;
 
 export const contentImageSrcs: readonly string[] = contentImages.map((image) => image.src);

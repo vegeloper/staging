@@ -26,6 +26,24 @@ function cloneTheme(theme: SiteTheme): SiteTheme {
   };
 }
 
+export async function publishedSiteStamp() {
+  const rows = await getDb()
+    .select({
+      key: siteDocuments.key,
+      revision: siteDocuments.revision,
+      publishedAt: siteDocuments.publishedAt,
+      updatedAt: siteDocuments.updatedAt,
+    })
+    .from(siteDocuments);
+  return rows
+    .map(
+      (row) =>
+        `${row.key}:${row.revision}:${row.publishedAt?.toISOString() ?? ""}:${row.updatedAt.toISOString()}`,
+    )
+    .sort()
+    .join("|");
+}
+
 export async function loadPublishedSite(): Promise<PublishedSite> {
   const rows = await getDb().select().from(siteDocuments);
   const result: PublishedSite = {

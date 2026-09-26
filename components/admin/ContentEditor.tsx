@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Bold, Heading, Link2, Underline } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { contentImages } from "@/lib/cms/images";
 import MediaField from "./MediaField";
 import ResetIconButton from "./ResetIconButton";
 import ShamsiDateField from "./ShamsiDateField";
+import { safeHref } from "@/lib/cms/inline";
 import { emptyContentForm, type ContentFormValues } from "@/lib/cms/input";
 import {
   categoriesForKind,
@@ -42,12 +44,63 @@ export default function ContentEditor({
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [fields, setFields] = useState<Record<string, string>>({});
+  const [linkOpen, setLinkOpen] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
 
   const categories = categoriesForKind(values.kind);
   const disabled = pending || !permissions.canEdit;
 
   function update<K extends keyof ContentFormValues>(key: K, value: ContentFormValues[K]) {
     setValues((current) => ({ ...current, [key]: value }));
+  }
+
+  function writeBody(next: string, caret?: number) {
+    update("bodyText", next);
+    requestAnimationFrame(() => {
+      const field = bodyRef.current;
+      if (!field || caret === undefined) return;
+      field.focus();
+      field.setSelectionRange(caret, caret);
+    });
+  }
+
+  function wrap(before: string, after: string) {
+    const field = bodyRef.current;
+    if (!field) return;
+    const start = field.selectionStart;
+    const end = field.selectionEnd;
+    const selected = values.bodyText.slice(start, end) || "متن";
+    const next = `${values.bodyText.slice(0, start)}${before}${selected}${after}${values.bodyText.slice(end)}`;
+    writeBody(next, start + before.length + selected.length + after.length);
+  }
+
+  function heading(level: 1 | 2 | 3 | 4 | 5) {
+    const field = bodyRef.current;
+    if (!field) return;
+    const index = field.selectionStart;
+    const source = values.bodyText;
+    const lineStart = source.lastIndexOf("\n", Math.max(0, index - 1)) + 1;
+    const lineBreak = source.indexOf("\n", index);
+    const lineEnd = lineBreak === -1 ? source.length : lineBreak;
+    const line = source.slice(lineStart, lineEnd).replace(/^#{1,5}\s+/, "").trim();
+    const next = `${source.slice(0, lineStart)}${"#".repeat(level)} ${line}${source.slice(lineEnd)}`;
+    writeBody(next, lineStart + level + 1 + line.length);
+  }
+
+  function insertLink() {
+    const raw = linkUrl.trim();
+    const href =
+      safeHref(raw) ??
+      (/^[\w.-]+\.[a-z]{2,}([/?#]\S*)?$/i.test(raw) ? safeHref(`https://${raw}`) : null);
+    if (!href) {
+      setError("نشانی پیوند معتبر نیست. مسیر داخلی را با / و نشانی بیرونی را با https:// بنویسید.");
+      return;
+    }
+    setError("");
+    wrap("[", `](${href})`);
+    setLinkOpen(false);
+    setLinkUrl("");
   }
 
   async function send(action: string) {
@@ -305,13 +358,83 @@ export default function ContentEditor({
           در فهرست مطالب محبوب نمایش داده شود
         </label>
 
+        <div className={styles.span2}>
+          <button
+            className={values.homeLead ? "button button-brand" : "button button-dark"}
+            type="button"
+            disabled={disabled}
+            aria-pressed={values.homeLead}
+            onClick={() => update("homeLead", !values.homeLead)}
+          >
+            {values.homeLead ? "این مطلب قاب بزرگ صفحه اصلی است" : "نمایش در قاب بزرگ صفحه اصلی"}
+          </button>
+          <p className={styles.meta}>
+            فقط یک خبر یا مقاله قاب بزرگ بخش «اخبار و رویدادها» را پر می‌کند. با انتخاب این دکمه، انتخاب قبلی برداشته می‌شود.
+          </p>
+        </div>
+
         <label className={styles.span2}>
           متن
+          <span className={styles.formatBar}>
+            <button type="button" disabled={disabled} onClick={() => wrap("**", "**")}>
+              <Bold size={16} aria-hidden="true" />
+              ضخیم
+            </button>
+            <button type="button" disabled={disabled} onClick={() => wrap("++", "++")}>
+              <Underline size={16} aria-hidden="true" />
+              زیرخط
+            </button>
+            <button
+              type="button"
+              disabled={disabled}
+              aria-expanded={linkOpen}
+              onClick={() => setLinkOpen((open) => !open)}
+            >
+              <Link2 size={16} aria-hidden="true" />
+              پیوند
+            </button>
+            <button type="button" disabled={disabled} onClick={() => heading(1)}>
+              <Heading size={16} aria-hidden="true" />
+              عنوان اصلی
+            </button>
+            <button type="button" disabled={disabled} onClick={() => heading(2)}>
+              H2
+            </button>
+            <button type="button" disabled={disabled} onClick={() => heading(3)}>
+              H3
+            </button>
+            <button type="button" disabled={disabled} onClick={() => heading(4)}>
+              H4
+            </button>
+            <button type="button" disabled={disabled} onClick={() => heading(5)}>
+              H5
+            </button>
+          </span>
+          {linkOpen ? (
+            <span className={styles.linkRow}>
+              <input
+                value={linkUrl}
+                disabled={disabled}
+                placeholder="/blog/slug یا https://example.com"
+                onChange={(event) => setLinkUrl(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    insertLink();
+                  }
+                }}
+              />
+              <button type="button" className="button button-brand" disabled={disabled} onClick={insertLink}>
+                ثبت پیوند
+              </button>
+            </span>
+          ) : null}
           <textarea
+            ref={bodyRef}
             value={values.bodyText}
             disabled={disabled}
             rows={14}
-            placeholder={"هر بند را با یک خط خالی جدا کنید.\nبرای تیتر، بند را با ## شروع کنید."}
+            placeholder={"هر بند را با یک خط خالی جدا کنید.\nکلمه را انتخاب کنید، سپس ضخیم، زیرخط، پیوند یا عنوان را بزنید."}
             onChange={(event) => update("bodyText", event.target.value)}
           />
           {fields.bodyText ? <small>{fields.bodyText}</small> : null}

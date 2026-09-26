@@ -2,39 +2,37 @@ import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import { connection } from "next/server";
 
 import { defaultPublishedSite, type PublishedSite } from "./defaults";
-import { loadPublishedSite } from "./store";
+import { loadPublishedSite, publishedSiteStamp } from "./store";
 
 const readCachedPublishedSite = unstable_cache(
-  async () => loadPublishedSite(),
+  async (_stamp: string) => loadPublishedSite(),
   ["published-site-settings"],
   { tags: ["site-settings"], revalidate: false },
 );
 
+function fallbackSite(): PublishedSite {
+  return {
+    ...defaultPublishedSite,
+    theme: {
+      colors: { ...defaultPublishedSite.theme.colors },
+      background: { ...defaultPublishedSite.theme.background },
+      media: { ...defaultPublishedSite.theme.media },
+    },
+  };
+}
+
 export async function getPublishedSiteSettings(): Promise<PublishedSite> {
   await connection();
   if (process.env.NEXT_PHASE === "phase-production-build" || !process.env.DATABASE_URL) {
-    return {
-      ...defaultPublishedSite,
-      theme: {
-        colors: { ...defaultPublishedSite.theme.colors },
-        background: { ...defaultPublishedSite.theme.background },
-        media: { ...defaultPublishedSite.theme.media },
-      },
-    };
+    return fallbackSite();
   }
 
   try {
-    return await readCachedPublishedSite();
+    const stamp = await publishedSiteStamp();
+    return await readCachedPublishedSite(stamp);
   } catch (error) {
     console.error("Published site settings are unavailable.", error);
-    return {
-      ...defaultPublishedSite,
-      theme: {
-        colors: { ...defaultPublishedSite.theme.colors },
-        background: { ...defaultPublishedSite.theme.background },
-        media: { ...defaultPublishedSite.theme.media },
-      },
-    };
+    return fallbackSite();
   }
 }
 

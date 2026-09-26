@@ -4,7 +4,6 @@ import FleetFeature from "@/components/ui/index/FleetFeature/FleetFeature";
 import modernFleetImage from "@/public/figma/car3.png";
 import trainedDriversImage from "@/public/figma/trainedDriversImage.png";
 import securiyImage from "@/public/figma/security.png";
-import tripStartImage from "@/public/figma/journey.png";
 import cityTransportImage from "@/public/figma/solutionImage1.png";
 import intercityImage from "@/public/figma/solutionImage2.png";
 import corporateImage from "@/public/figma/solutionImage3.png";
@@ -35,6 +34,8 @@ import FAQ, { FAQItem } from "@/components/ui/Faq/Faq";
 import Link from "next/link";
 import { listPublishedArticles } from "@/lib/cms/service";
 import { getHomepageNews } from "@/lib/news";
+import { resolvedMedia } from "@/lib/site/defaults";
+import { getPublishedSiteSettings } from "@/lib/site/public";
 const A = "/figma/";
 // faq data
 export const tripFaqItems: FAQItem[] = [
@@ -263,8 +264,9 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const homepageNews = getHomepageNews(await listPublishedArticles(), 5);
+  const heroImage = resolvedMedia((await getPublishedSiteSettings()).theme).heroImage;
   return (
-    <main dir="rtl" style={{backgroundColor:"#F6F6F6"}}>
+    <main dir="rtl">
       <Header variant="dark" />
 <section className="hero" id="home">
   <picture className="hero-picture">
@@ -377,7 +379,7 @@ export default async function Home() {
         items={securiyItems}
       />
       <TripStartHero
-        image={tripStartImage}
+        image={heroImage}
         imageAlt="شروع سفر با دات‌وان تریپ"
         eyebrow="تجربه سفر با دات‌وان"
         title="سفر، از لحظه درخواست شروع می‌شود"

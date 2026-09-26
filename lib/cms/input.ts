@@ -34,6 +34,7 @@ export const contentFormSchema = z
     imageObjectPosition: z.string().trim().max(40).default(""),
     bodyText: z.string().trim().min(1, "متن مطلب را بنویسید.").max(20_000),
     featured: z.boolean().default(false),
+    homeLead: z.boolean().default(false),
   })
   .superRefine((value, ctx) => {
     if (!categoryMatchesKind(value.kind, value.category)) {
@@ -83,6 +84,7 @@ export type ContentFormValues = {
   imageObjectPosition: string;
   bodyText: string;
   featured: boolean;
+  homeLead: boolean;
 };
 
 export const emptyContentForm: ContentFormValues = {
@@ -98,4 +100,5 @@ export const emptyContentForm: ContentFormValues = {
   imageObjectPosition: "",
   bodyText: "",
   featured: false,
+  homeLead: false,
 };

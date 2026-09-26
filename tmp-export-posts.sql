@@ -1,0 +1,1 @@
+\copy (SELECT json_agg(q) FROM (SELECT slug, kind, category, title, display_date AS "displayDate", comments_label AS "commentsLabel", likes_label AS "likesLabel", image_alt AS "imageAlt", coalesce(image_object_position, '') AS "imageObjectPosition", body FROM content_posts WHERE slug IN ('partnership-phase-two','cars-navy','monitor-inside-car')) q) TO '/tmp/starter-posts.json'

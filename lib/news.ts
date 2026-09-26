@@ -4,6 +4,7 @@ import {
   type Article,
   articleHref,
 } from "@/lib/articles";
+import { plainText } from "@/lib/cms/inline";
 
 /* ========================================
    News Item
@@ -45,15 +46,13 @@ function getArticleDescription(
     return undefined;
   }
 
-  const text = firstParagraph.text.trim();
+  const text = plainText(firstParagraph.text).trim();
 
   if (text.length <= maxLength) {
     return text;
   }
 
-  return `${text
-    .slice(0, maxLength)
-    .trim()}...`;
+  return text.slice(0, maxLength).trim();
 }
 
 /* ========================================

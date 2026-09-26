@@ -64,6 +64,7 @@ export default async function EditContentPage({
           imageObjectPosition: post.imageObjectPosition,
           bodyText: post.bodyText,
           featured: post.featured,
+          homeLead: post.homeLead,
         }}
         permissions={editorPermissions(
           { userId: user.id, role: user.role },

@@ -199,11 +199,9 @@
 }
 
 .featuredDescription {
-  display: block;
+  display: -webkit-box;
 
   margin: 10px 0 0;
-
-  max-height: calc(1.75em * 3 + 8px);
 
   overflow: hidden;
 
@@ -212,11 +210,15 @@
   font-size: clamp(13px, 0.9vw, 15px);
   font-weight: 400;
 
-  line-height: 1.75;
+  line-height: 2.06;
 
   overflow-wrap: anywhere;
 
   text-align: right;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 
@@ -347,7 +349,7 @@
   width: 100%;
   height: 100%;
 
-  min-height: 156px;
+  min-height: 172px;
 
   overflow: hidden;
 
@@ -423,13 +425,11 @@
 ======================================== */
 
 .newsDescription {
-  display: block;
+  display: -webkit-box;
 
   margin: 8px 0 0;
 
   min-width: 0;
-
-  max-height: calc(1.8em * 2 + 8px);
 
   overflow: hidden;
 
@@ -438,11 +438,15 @@
   font-size: 13px;
   font-weight: 400;
 
-  line-height: 1.8;
+  line-height: 2.06;
 
   overflow-wrap: anywhere;
 
   text-align: right;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 
@@ -587,7 +591,7 @@
     margin-top: 6px;
 
     font-size: 12px;
-    line-height: 1.8;
+    line-height: 2.06;
   }
 
   .newsCardFooter {
@@ -685,7 +689,7 @@
 
     font-size: 10px;
 
-    line-height: 1.9;
+    line-height: 2.06;
   }
 
   .featuredFooter {
@@ -730,7 +734,7 @@
     margin-top: 6px;
 
     font-size: 12px;
-    line-height: 1.8;
+    line-height: 2.06;
   }
 
   .newsCardFooter {
@@ -813,7 +817,7 @@
   .featuredDescription {
     font-size: 9.5px;
 
-    line-height: 1.8;
+    line-height: 2.06;
   }
 
   .featuredFooter {
@@ -853,7 +857,7 @@
 
     font-size: 12px;
 
-    line-height: 1.55;
+    line-height: 2.06;
 
     -webkit-line-clamp: 2;
   }

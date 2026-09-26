@@ -1,4 +1,4 @@
-import { and, count, desc, eq, ilike, notInArray, or, sql } from "drizzle-orm";
+import { and, count, desc, eq, ilike, ne, notInArray, or, sql } from "drizzle-orm";
 
 import { getDb } from "@/db";
 import { contentEvents, contentPosts, contentSettings, users } from "@/db/schema";
@@ -8,7 +8,7 @@ import { parseUuid } from "@/lib/http/body";
 import { sanitizeSearchQuery } from "@/lib/forms/shared";
 import { assertLibraryImage } from "@/lib/media/library";
 
-import { parseBody, serializeBody } from "./body";
+import { expandBlocks, parseBody, serializeBody } from "./body";
 import {
   arrangeFeeds,
   fallbackFeeds,
@@ -61,6 +61,7 @@ export type ManagedContent = {
   imageObjectPosition: string;
   bodyText: string;
   featured: boolean;
+  homeLead: boolean;
   status: ContentStatus;
   authorId: string | null;
   authorName: string;
@@ -107,13 +108,27 @@ export async function ensureStarterCatalog() {
     const [marker] = await tx
       .select({ id: contentSettings.id })
       .from(contentSettings)
-      .where(eq(contentSettings.id, "starter-catalog-content-v2"))
+      .where(eq(contentSettings.id, "starter-catalog-content-v3"))
       .limit(1);
     if (marker) return;
 
+    const [legacy] = await tx
+      .select({ id: contentSettings.id })
+      .from(contentSettings)
+      .where(eq(contentSettings.id, "starter-catalog-content-v2"))
+      .limit(1);
+
     const publishedAt = new Date();
+    const leadRank: Record<string, number> = {
+      "partnership-phase-two": 3,
+      "cars-navy": 2,
+      "monitor-inside-car": 1,
+    };
+    const stamped = (slug: string) => new Date(publishedAt.getTime() + (leadRank[slug] ?? 0) * 60_000);
     const catalog = starterCatalog();
-    for (const item of catalog) {
+    const pending = legacy ? catalog.filter((item) => item.slug in leadRank) : catalog;
+    for (const item of pending) {
+      const at = stamped(item.slug);
       await tx
         .insert(contentPosts)
         .values({
@@ -129,9 +144,12 @@ export async function ensureStarterCatalog() {
           imageObjectPosition: item.imageObjectPosition,
           body: item.body,
           featured: item.featured,
+          homeLead: item.homeLead,
           sortOrder: item.sortOrder,
           status: "approved" as const,
-          publishedAt,
+          publishedAt: at,
+          createdAt: at,
+          updatedAt: at,
         })
         .onConflictDoUpdate({
           target: contentPosts.slug,
@@ -147,27 +165,31 @@ export async function ensureStarterCatalog() {
             imageObjectPosition: item.imageObjectPosition,
             body: item.body,
             featured: item.featured,
+            homeLead: item.homeLead,
             sortOrder: item.sortOrder,
             status: "approved",
-            publishedAt,
-            updatedAt: publishedAt,
+            publishedAt: stamped(item.slug),
+            createdAt: stamped(item.slug),
+            updatedAt: stamped(item.slug),
           },
         });
     }
-    await tx
-      .delete(contentPosts)
-      .where(
-        and(
-          sql`${contentPosts.body}::text like ${"%لورم ایپسوم%"}`,
-          notInArray(
-            contentPosts.slug,
-            catalog.map((item) => item.slug),
+    if (!legacy) {
+      await tx
+        .delete(contentPosts)
+        .where(
+          and(
+            sql`${contentPosts.body}::text like ${"%لورم ایپسوم%"}`,
+            notInArray(
+              contentPosts.slug,
+              catalog.map((item) => item.slug),
+            ),
           ),
-        ),
-      );
+        );
+    }
     await tx
       .insert(contentSettings)
-      .values({ id: "starter-catalog-content-v2" })
+      .values({ id: "starter-catalog-content-v3" })
       .onConflictDoNothing();
     await tx
       .insert(contentSettings)
@@ -190,9 +212,10 @@ function rowToPublic(row: typeof contentPosts.$inferSelect): PublicArticle {
       alt: row.imageAlt,
       objectPosition: row.imageObjectPosition ?? undefined,
     },
-    body: Array.isArray(row.body) ? row.body : [],
+    body: expandBlocks(Array.isArray(row.body) ? row.body : []),
     kind: row.kind,
     featured: row.featured,
+    homeLead: row.homeLead,
     publishedAtMs: row.publishedAt?.getTime() ?? row.createdAt.getTime(),
     createdAtMs: row.createdAt.getTime(),
     updatedAtMs: row.updatedAt.getTime(),
@@ -256,6 +279,15 @@ export async function getPublishedArticle(slug: string) {
   }
 }
 
+async function claimHomeLead(
+  tx: Parameters<Parameters<ReturnType<typeof getDb>["transaction"]>[0]>[0],
+  id: string,
+  lead: boolean,
+) {
+  if (!lead) return;
+  await tx.update(contentPosts).set({ homeLead: false }).where(ne(contentPosts.id, id));
+}
+
 function postFields(input: ContentFormInput) {
   return {
     slug: input.slug,
@@ -270,6 +302,7 @@ function postFields(input: ContentFormInput) {
     imageObjectPosition: input.imageObjectPosition || null,
     body: parseBody(input.bodyText),
     featured: input.featured,
+    homeLead: input.homeLead,
     updatedAt: new Date(),
   };
 }
@@ -406,8 +439,9 @@ function toManaged(
     imageSrc: row.imageSrc,
     imageAlt: row.imageAlt,
     imageObjectPosition: row.imageObjectPosition ?? "",
-    bodyText: serializeBody(Array.isArray(row.body) ? row.body : []),
+    bodyText: serializeBody(expandBlocks(Array.isArray(row.body) ? row.body : [])),
     featured: row.featured,
+    homeLead: row.homeLead,
     status: row.status,
     authorId: row.authorId,
     authorName: authorName ?? "سایت",
@@ -478,6 +512,8 @@ export async function createManagedContent(
         })
         .returning();
 
+      await claimHomeLead(tx, created.id, input.homeLead);
+
       await tx.insert(contentEvents).values({
         postId: created.id,
         actorUserId: actor.userId,
@@ -543,8 +579,9 @@ export async function updateManagedContent(
         const [updated] = await tx
           .update(contentPosts)
           .set(postFields(input))
-          .where(eq(contentPosts.id, existing.id))
-          .returning();
+        .where(eq(contentPosts.id, existing.id))
+        .returning();
+        await claimHomeLead(tx, existing.id, input.homeLead);
         current = updated;
         await tx.insert(contentEvents).values({
           postId: existing.id,

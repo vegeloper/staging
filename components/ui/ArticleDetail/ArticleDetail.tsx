@@ -8,6 +8,7 @@ import {
   articleHref,
   type Article,
 } from "@/lib/articles";
+import RichText from "@/components/ui/RichText";
 
 import styles from "./ArticleDetail.module.css";
 
@@ -178,22 +179,22 @@ export default function ArticleDetail({
         {/* Article Body */}
 
         <div className={styles.body}>
-          {article.body.map(
-            (block, index) =>
-              block.type === "h2" ? (
-                <h2
-                  key={`${block.type}-${index}`}
-                >
-                  {block.text}
-                </h2>
-              ) : (
-                <p
-                  key={`${block.type}-${index}`}
-                >
-                  {block.text}
+          {article.body.map((block, index) => {
+            const key = `${block.type}-${index}`;
+            const content = <RichText text={block.text} />;
+            if (block.type === "title") {
+              return (
+                <p key={key} className={styles.bodyTitle}>
+                  {content}
                 </p>
-              ),
-          )}
+              );
+            }
+            if (block.type === "h2") return <h2 key={key}>{content}</h2>;
+            if (block.type === "h3") return <h3 key={key}>{content}</h3>;
+            if (block.type === "h4") return <h4 key={key}>{content}</h4>;
+            if (block.type === "h5") return <h5 key={key}>{content}</h5>;
+            return <p key={key}>{content}</p>;
+          })}
         </div>
 
         {/* ========================================

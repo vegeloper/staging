@@ -1,5 +1,7 @@
 import { articles, type Article, type ArticleBlock } from "@/lib/articles";
 
+import { extraCatalog } from "./extra-catalog";
+
 import type { ContentCategory, ContentKind } from "./workflow";
 
 const featuredSlugs = [
@@ -23,6 +25,7 @@ export type CatalogSeed = {
   imageObjectPosition: string | null;
   body: ArticleBlock[];
   featured: boolean;
+  homeLead: boolean;
   sortOrder: number;
 };
 
@@ -39,7 +42,7 @@ export function kindForCategory(category: ContentCategory): ContentKind {
 }
 
 export function starterCatalog(): CatalogSeed[] {
-  return articles.map((article, index) => {
+  const seeded = articles.map((article, index) => {
     const category = normalizeCategory(article.category);
     const featuredIndex = featuredSlugs.indexOf(article.id);
     return {
@@ -55,14 +58,17 @@ export function starterCatalog(): CatalogSeed[] {
       imageObjectPosition: article.image.objectPosition ?? null,
       body: article.body,
       featured: featuredIndex >= 0,
+      homeLead: false,
       sortOrder: featuredIndex >= 0 ? featuredIndex : 100 + index,
     };
   });
+  return [...seeded, ...extraCatalog];
 }
 
 export type PublicArticle = Article & {
   kind: ContentKind;
   featured: boolean;
+  homeLead: boolean;
   publishedAtMs: number;
   createdAtMs: number;
   updatedAtMs: number;
@@ -85,6 +91,7 @@ export function seedToPublic(item: CatalogSeed, index = 0): PublicArticle {
     body: item.body,
     kind: item.kind,
     featured: item.featured,
+    homeLead: item.homeLead,
     publishedAtMs: 0,
     createdAtMs: index,
     updatedAtMs: index,
@@ -96,7 +103,10 @@ export function orderByAddedThenModified(items: PublicArticle[]) {
   if (items.length === 0) return [];
   const byId = (left: PublicArticle, right: PublicArticle) =>
     left.id.localeCompare(right.id);
-  const lead = [...items].sort((left, right) => {
+  const chosen = items
+    .filter((item) => item.homeLead)
+    .sort((left, right) => right.updatedAtMs - left.updatedAtMs || byId(left, right))[0];
+  const lead = chosen ?? [...items].sort((left, right) => {
     const created = right.createdAtMs - left.createdAtMs;
     if (created !== 0) return created;
     const updated = right.updatedAtMs - left.updatedAtMs;

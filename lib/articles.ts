@@ -1,5 +1,5 @@
 export type ArticleBlock = {
-  type: "p" | "h2";
+  type: "p" | "title" | "h2" | "h3" | "h4" | "h5";
   text: string;
 };
 

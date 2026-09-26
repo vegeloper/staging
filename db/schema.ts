@@ -192,6 +192,7 @@ export const contentPosts = pgTable("content_posts", {
   imageObjectPosition: text("image_object_position"),
   body: jsonb("body").$type<ArticleBlock[]>().notNull(),
   featured: boolean("featured").notNull().default(false),
+  homeLead: boolean("home_lead").notNull().default(false),
   sortOrder: integer("sort_order").notNull().default(0),
   status: contentStatusEnum("status").notNull().default("draft"),
   authorId: uuid("author_id").references(() => users.id, { onDelete: "set null" }),
