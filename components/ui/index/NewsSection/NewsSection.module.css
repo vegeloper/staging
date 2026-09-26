@@ -199,9 +199,11 @@
 }
 
 .featuredDescription {
-  display: -webkit-box;
+  display: block;
 
   margin: 10px 0 0;
+
+  max-height: calc(1.75em * 3 + 8px);
 
   overflow: hidden;
 
@@ -210,14 +212,11 @@
   font-size: clamp(13px, 0.9vw, 15px);
   font-weight: 400;
 
-  line-height: 1.7;
+  line-height: 1.75;
 
   overflow-wrap: anywhere;
 
   text-align: right;
-
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
 }
 
 
@@ -424,11 +423,13 @@
 ======================================== */
 
 .newsDescription {
-  display: -webkit-box;
+  display: block;
 
   margin: 8px 0 0;
 
   min-width: 0;
+
+  max-height: calc(1.8em * 2 + 8px);
 
   overflow: hidden;
 
@@ -437,14 +438,11 @@
   font-size: 13px;
   font-weight: 400;
 
-  line-height: 1.65;
+  line-height: 1.8;
 
   overflow-wrap: anywhere;
 
   text-align: right;
-
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 
 
@@ -589,9 +587,7 @@
     margin-top: 6px;
 
     font-size: 12px;
-    line-height: 1.6;
-
-    -webkit-line-clamp: 2;
+    line-height: 1.8;
   }
 
   .newsCardFooter {
@@ -734,9 +730,7 @@
     margin-top: 6px;
 
     font-size: 12px;
-    line-height: 1.55;
-
-    -webkit-line-clamp: 2;
+    line-height: 1.8;
   }
 
   .newsCardFooter {

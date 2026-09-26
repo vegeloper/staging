@@ -6,9 +6,23 @@ export function configuredOrigin(): string {
   return new URL(raw).origin;
 }
 
+function isLoopbackHttp(origin: string) {
+  const url = new URL(origin);
+  return (
+    url.protocol === "http:" &&
+    (url.hostname === "localhost" || url.hostname === "127.0.0.1")
+  );
+}
+
 function originMatchesConfigured(origin: string) {
   try {
-    return new URL(origin).origin === configuredOrigin();
+    const configured = configuredOrigin();
+    if (new URL(origin).origin === configured) return true;
+    return (
+      process.env.NODE_ENV !== "production" &&
+      isLoopbackHttp(configured) &&
+      isLoopbackHttp(origin)
+    );
   } catch {
     return false;
   }
