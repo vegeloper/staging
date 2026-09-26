@@ -64,6 +64,8 @@ export type PublicArticle = Article & {
   kind: ContentKind;
   featured: boolean;
   publishedAtMs: number;
+  createdAtMs: number;
+  updatedAtMs: number;
   sortOrder: number;
 };
 
@@ -84,8 +86,33 @@ export function seedToPublic(item: CatalogSeed, index = 0): PublicArticle {
     kind: item.kind,
     featured: item.featured,
     publishedAtMs: 0,
+    createdAtMs: index,
+    updatedAtMs: index,
     sortOrder: item.sortOrder ?? index,
   };
+}
+
+export function orderByAddedThenModified(items: PublicArticle[]) {
+  if (items.length === 0) return [];
+  const byId = (left: PublicArticle, right: PublicArticle) =>
+    left.id.localeCompare(right.id);
+  const lead = [...items].sort((left, right) => {
+    const created = right.createdAtMs - left.createdAtMs;
+    if (created !== 0) return created;
+    const updated = right.updatedAtMs - left.updatedAtMs;
+    if (updated !== 0) return updated;
+    return byId(left, right);
+  })[0];
+  const rest = items
+    .filter((item) => item.id !== lead.id)
+    .sort((left, right) => {
+      const updated = right.updatedAtMs - left.updatedAtMs;
+      if (updated !== 0) return updated;
+      const created = right.createdAtMs - left.createdAtMs;
+      if (created !== 0) return created;
+      return byId(left, right);
+    });
+  return [lead, ...rest];
 }
 
 export function fallbackFeeds() {

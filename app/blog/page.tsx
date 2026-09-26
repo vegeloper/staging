@@ -3,14 +3,14 @@ import PopularArticles from "@/components/ui/PopularArticles/PopularArticles";
 import LatestArticles from "@/components/ui/LatestArticles/LatestArticles";
 import Footer from "@/components/ui/footer/Footer";
 
-import {
-  getLatestArticles,
-  getPopularArticles,
-} from "@/lib/articles";
+import { listPublishedArticles } from "@/lib/cms/service";
 
-export default function BlogPage() {
-  const popularArticles = getPopularArticles(5);
-  const latestArticles = getLatestArticles();
+export const dynamic = "force-dynamic";
+
+export default async function BlogPage() {
+  const published = await listPublishedArticles();
+  const popularArticles = published.slice(0, 5);
+  const latestArticles = published;
 
   return (
     <>

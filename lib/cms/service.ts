@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, ilike, notInArray, or, sql } from "drizzle-orm";
+import { and, count, desc, eq, ilike, notInArray, or, sql } from "drizzle-orm";
 
 import { getDb } from "@/db";
 import { contentEvents, contentPosts, contentSettings, users } from "@/db/schema";
@@ -13,6 +13,7 @@ import {
   arrangeFeeds,
   fallbackFeeds,
   normalizeCategory,
+  orderByAddedThenModified,
   relatedArticles,
   seedToPublic,
   starterCatalog,
@@ -193,20 +194,39 @@ function rowToPublic(row: typeof contentPosts.$inferSelect): PublicArticle {
     kind: row.kind,
     featured: row.featured,
     publishedAtMs: row.publishedAt?.getTime() ?? row.createdAt.getTime(),
+    createdAtMs: row.createdAt.getTime(),
+    updatedAtMs: row.updatedAt.getTime(),
     sortOrder: row.sortOrder,
   };
+}
+
+async function publishedRows() {
+  await ensureStarterCatalog();
+  return getDb()
+    .select()
+    .from(contentPosts)
+    .where(eq(contentPosts.status, "approved"))
+    .orderBy(desc(contentPosts.createdAt), desc(contentPosts.updatedAt));
+}
+
+export async function listPublishedArticles() {
+  if (!process.env.DATABASE_URL) {
+    return orderByAddedThenModified(starterCatalog().map(seedToPublic));
+  }
+  try {
+    const rows = await publishedRows();
+    return orderByAddedThenModified(rows.map(rowToPublic));
+  } catch (error) {
+    console.error("Published content fell back to the static catalog.", error);
+    return orderByAddedThenModified(starterCatalog().map(seedToPublic));
+  }
 }
 
 export async function getPublicFeeds() {
   if (!process.env.DATABASE_URL) return fallbackFeeds();
 
   try {
-    await ensureStarterCatalog();
-    const rows = await getDb()
-      .select()
-      .from(contentPosts)
-      .where(eq(contentPosts.status, "approved"))
-      .orderBy(desc(contentPosts.publishedAt), asc(contentPosts.sortOrder));
+    const rows = await publishedRows();
     return arrangeFeeds(rows.map(rowToPublic));
   } catch (error) {
     console.error("Published content fell back to the static catalog.", error);
@@ -223,13 +243,7 @@ export async function getPublishedArticle(slug: string) {
   }
 
   try {
-    await ensureStarterCatalog();
-    const rows = await getDb()
-      .select()
-      .from(contentPosts)
-      .where(eq(contentPosts.status, "approved"))
-      .orderBy(desc(contentPosts.publishedAt), asc(contentPosts.sortOrder));
-    const published = rows.map(rowToPublic);
+    const published = (await publishedRows()).map(rowToPublic);
     const article = published.find((item) => item.id === slug);
     if (!article) return null;
     return { article, related: relatedArticles(published, slug) };

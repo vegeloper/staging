@@ -4,11 +4,8 @@ import { notFound } from "next/navigation";
 import Header from "@/components/ui/Header/Header";
 import ArticleDetail from "@/components/ui/ArticleDetail/ArticleDetail";
 
-import {
-  articles,
-  getArticle,
-  getRelatedArticles,
-} from "@/lib/articles";
+import { getPublishedArticle } from "@/lib/cms/service";
+import { articles } from "@/lib/articles";
 
 type ArticlePageProps = {
   params: Promise<{
@@ -22,12 +19,14 @@ export function generateStaticParams() {
   }));
 }
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: ArticlePageProps): Promise<Metadata> {
   const { id } = await params;
 
-  const article = getArticle(id);
+  const article = (await getPublishedArticle(id))?.article;
 
   if (!article) {
     return {
@@ -50,9 +49,9 @@ export default async function ArticlePage({
 }: ArticlePageProps) {
   const { id } = await params;
 
-  const article = getArticle(id);
+  const published = await getPublishedArticle(id);
 
-  if (!article) {
+  if (!published) {
     notFound();
   }
 
@@ -61,11 +60,8 @@ export default async function ArticlePage({
       <Header variant="light" />
 
       <ArticleDetail
-        article={article}
-        related={getRelatedArticles(
-          article.id,
-          3,
-        )}
+        article={published.article}
+        related={published.related}
       />
     </>
   );

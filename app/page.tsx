@@ -33,7 +33,7 @@ import NewsSection, {
 import FutureTransportBanner from "@/components/ui/FutureTransportBanner/FutureTransportBanner";
 import FAQ, { FAQItem } from "@/components/ui/Faq/Faq";
 import Link from "next/link";
-import { articles } from "@/lib/articles";
+import { listPublishedArticles } from "@/lib/cms/service";
 import { getHomepageNews } from "@/lib/news";
 const A = "/figma/";
 // faq data
@@ -228,7 +228,6 @@ const solutionCards: TravelSolutionCardProps[] = [
   },
 ];
 
-const homepageNews = getHomepageNews(articles, 5);
 function BrandButton({
   children,
   subtle = false,
@@ -260,7 +259,10 @@ function SectionHeading({
   );
 }
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const homepageNews = getHomepageNews(await listPublishedArticles(), 5);
   return (
     <main dir="rtl" style={{backgroundColor:"#F6F6F6"}}>
       <Header variant="dark" />
