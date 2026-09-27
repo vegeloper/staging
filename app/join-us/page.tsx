@@ -17,7 +17,7 @@ import FAQ, {
 } from "@/components/ui/Faq/Faq";
 
 import { getDriverJobCards } from "@/lib/driverJobs";
-import { getCorporateJobCards } from "@/lib/corporateJobs";
+import { getPublicPositions } from "@/lib/jobs/service";
 
 import careerHeroImage from "@/public/figma/careerHeroImage.png";
 import driverImage from "@/public/figma/femailDrivers.png";
@@ -98,13 +98,15 @@ const tripFaqItems: FAQItem[] = [
    Page
 ======================================== */
 
-export default function Page() {
+export const dynamic = "force-dynamic";
+
+export default async function Page() {
   /*
    * همان دیتای صفحات اصلی
    * ولی در Join Us فقط 4 مورد اول
    */
   const driverJobs = getDriverJobCards().slice(0, 4);
-  const corporateJobs = getCorporateJobCards().slice(0, 4);
+  const corporateJobs = (await getPublicPositions()).slice(0, 4);
 
   return (
     <>

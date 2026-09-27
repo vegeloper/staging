@@ -2,10 +2,12 @@ import Footer from "@/components/ui/footer/Footer";
 import Header from "@/components/ui/Header/Header";
 import Positions from "@/components/ui/positions/Positions";
 
-import { getCorporateJobCards } from "@/lib/corporateJobs";
+import { getPublicPositions } from "@/lib/jobs/service";
 
-export default function CorporateJobsPage() {
-  const jobs = getCorporateJobCards();
+export const dynamic = "force-dynamic";
+
+export default async function CorporateJobsPage() {
+  const jobs = await getPublicPositions();
 
   return (
     <>
@@ -17,7 +19,7 @@ export default function CorporateJobsPage() {
           title="موقعیت‌های شغلی سازمانی"
           subtitle="فرصت‌های شغلی دات‌وان تریپ را بررسی کنید"
           jobs={jobs}
-          itemsPerPage={5}
+          itemsPerPage={8}
         />
       </main>
 

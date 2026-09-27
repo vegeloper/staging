@@ -9,10 +9,7 @@ import Header from "@/components/ui/Header/Header";
 
 import JobDetails from "@/components/ui/join-us/JobDetails/JobDetails";
 
-import {
-  corporateJobs,
-  getCorporateJob,
-} from "@/lib/corporateJobs";
+import { getPublishedPosition } from "@/lib/jobs/service";
 
 type CorporateJobPageProps = {
   params: Promise<{
@@ -25,23 +22,14 @@ type CorporateJobPageProps = {
    Static Params
 ======================================== */
 
-export function generateStaticParams() {
-  return corporateJobs.map((job) => ({
-    id: job.id,
-  }));
-}
-
-
-/* ========================================
-   Metadata
-======================================== */
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: CorporateJobPageProps): Promise<Metadata> {
   const { id } = await params;
 
-  const job = getCorporateJob(id);
+  const job = await getPublishedPosition(id);
 
   if (!job) {
     return {
@@ -70,7 +58,7 @@ export default async function CorporateJobPage({
 }: CorporateJobPageProps) {
   const { id } = await params;
 
-  const job = getCorporateJob(id);
+  const job = await getPublishedPosition(id);
 
   if (!job) {
     notFound();
