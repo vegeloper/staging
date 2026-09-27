@@ -47,6 +47,14 @@ services:
       resume-init:
         condition: service_completed_successfully
 
+  clamav:
+    # compose.yaml publishes 127.0.0.1:3310 so a laptop dev server can scan.
+    # Production reaches clamd only by the name clamav on the backend network.
+    ports: !reset []
+    security_opt:
+      - no-new-privileges:true
+    logging: *default-logging
+
   proxy:
     image: caddy:2.10-alpine
     restart: unless-stopped
@@ -77,6 +85,11 @@ volumes:
   caddy_config:
     name: dotone-trip-caddy-config
 
+# Leave backend as a normal bridge. Do not set internal: true. The app is
+# attached to edge and backend; Docker DNS returns EAI_AGAIN for clamav and
+# postgres from that pair when backend is internal, and freshclam also loses
+# outbound access to signature updates. Caddy stays on edge only. This file
+# removes the Postgres and ClamAV host ports.
 networks:
   backend:
-    internal: true
+    name: dotone-trip-backend

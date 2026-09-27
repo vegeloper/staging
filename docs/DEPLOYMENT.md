@@ -119,7 +119,7 @@ Windows laptops: use Docker Desktop, run Compose from the repo root in PowerShel
 | `scripts/generate-prod-secrets.mjs` | `npm run ops:secrets` |
 | `scripts/db-migrate.mjs` / `scripts/db-seed.mjs` | Schema and operator users |
 
-The `full` profile also starts `clamav` (definitions stay in the `clamav_data` volume; the port is not published) and `media-init`, which chowns the media volume to uid 1000 the same way `resume-init` does for resumes. The web image includes `ffmpeg` so thumbnails are small JPEGs. The first ClamAV start downloads signatures and can take several minutes before the app becomes healthy. Uploads fail closed until that scanner answers.
+The `full` profile also starts `clamav` (definitions stay in the `clamav_data` volume) and `media-init`, which chowns the media volume to uid 1000 the same way `resume-init` does for resumes. Local compose publishes ClamAV on `127.0.0.1:3310` for `npm run dev`. `compose.prod.yaml` removes that host port. The app reaches the scanner as `clamav:3310` on the `backend` network. The web image includes `ffmpeg` so thumbnails are small JPEGs. The first ClamAV start downloads signatures and can take several minutes before the app becomes healthy. Uploads fail closed until that scanner answers.
 
 ---
 
@@ -446,8 +446,8 @@ Rollback: keep the previous web image digest. `docker compose ... up -d` the old
 | `MEDIA_ROOT` | `/app/data/media` in the container. Not `public/` |
 | `MAX_MEDIA_IMAGE_BYTES` | Default `8388608` |
 | `MAX_MEDIA_VIDEO_BYTES` | Default `67108864` |
-| `CLAMAV_HOST` | `clamav` inside Compose. Unset locally to use `/var/run/clamav/clamd.ctl` when that socket exists |
-| `CLAMAV_PORT` | Default `3310`. Do not publish it |
+| `CLAMAV_HOST` | `clamav` inside Compose. The app resolves that name as IPv4. Unset locally to use `/var/run/clamav/clamd.ctl` when that socket exists |
+| `CLAMAV_PORT` | Default `3310`. Published on `127.0.0.1` only in local compose. Production removes the host port |
 | `MEDIA_HOST_PATH` | Optional host bind for the media volume |
 | `TRUST_PROXY` | `true` behind Caddy / company LB |
 | `SEED_ADMIN_PASSWORD` | Optional. Only for `db:seed`. Bootstrap does not read it |
@@ -467,8 +467,34 @@ Rollback: keep the previous web image digest. `docker compose ... up -d` the old
 | `/api/ready` 503 | Postgres down, wrong `DATABASE_URL`, or `DATABASE_SSL` mismatch |
 | National IDs garbage in admin | Wrong `PII_ENCRYPTION_KEY` |
 | Forms work, admin empty | Looking at a different database than the web container |
-| Media upload stays red: scanner unavailable | `clamav` is not healthy yet (first start downloads definitions) or `CLAMAV_HOST` does not match the sidecar |
+| Media upload stays red: scanner unavailable | `clamav` is not healthy yet, or the app cannot resolve the name `clamav` (`getaddrinfo EAI_AGAIN`). See the repair below |
 | A large video is rejected as a broken file | The body was truncated. The app allows 64 MB videos and the Next proxy buffer is 70 MB |
+
+### Scanner name does not resolve
+
+`CLAMAV_HOST` is `clamav`. The app and the migrate/seed jobs look that name up as IPv4, one DNS query at a time (`dns_opt: single-request`). `setup:fresh`, `setup:update`, `setup:prod`, `setup:prod:update`, and `setup:prod:dockerImage` all wait until the app container receives `PONG` from `clamav:3310`.
+
+Do not set `internal: true` on `backend`. The app is on `edge` and `backend`. Docker’s DNS returns `EAI_AGAIN` for names on an internal network in that layout, so the upload is refused even when the ClamAV container is healthy and its IP answers on port 3310. Writing the IP into the app container’s `/etc/hosts` lasts only until that container restarts. `internal: true` also blocks ClamAV signature downloads.
+
+On a server that is already up, from the directory that contains `compose.yaml`:
+
+```bash
+docker network inspect dotone-trip-backend --format '{{.Internal}}'
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
+docker exec dotone-trip-app-1 node -e "const n=require('net');const s=n.connect(3310,'clamav');s.on('connect',()=>s.write('zPING\0'));s.on('data',d=>{console.log(d.toString());process.exit(0)});s.on('error',e=>{console.error(e.message);process.exit(1)})"
+```
+
+`Internal` must be `false` and the node command must print `PONG`. Do not `docker compose down -v`. Do not `--force-recreate` the app while Compose is trying to replace `dotone-trip-backend`.
+
+If `Internal` is `true`, replace only that network. Volumes stay:
+
+```bash
+docker compose -f compose.yaml -f compose.prod.yaml --profile full stop app postgres clamav proxy
+docker network rm dotone-trip-backend
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
+```
+
+The next image build also retries a temporary `EAI_AGAIN` inside the scanner. The compose change above fixes the running image without a rebuild.
 
 ---
 

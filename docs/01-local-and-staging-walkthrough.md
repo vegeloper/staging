@@ -195,7 +195,7 @@ cd /opt/dotone-trip
 npm run setup:prod
 ```
 
-If the images were loaded from a tar, use `npm run setup:prod:dockerImage` instead. That does not build. Later source updates on that server: `npm run setup:prod:update`. The manual steps below are the same result when Node is not installed.
+If the images were loaded from a tar, use `npm run setup:prod:dockerImage` instead. That does not build. Later source updates on that server: `npm run setup:prod:update`. Each of those commands waits until the app container gets `PONG` from `clamav:3310`. The manual steps below are the same result when Node is not installed. Do not set `internal: true` on the `backend` network. If a live upload says the scanner is unavailable, follow the repair in `docs/DEPLOYMENT.md`. Do not `docker compose down -v`.
 
 Git clone is **optional**. Runtime does not need `app/` on the server. For a zip of compose + Caddy + images only, skip this clone and use **§Q**.
 

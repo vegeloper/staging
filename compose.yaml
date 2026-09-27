@@ -1,5 +1,13 @@
 name: dotone-trip
 
+# glibc asks Docker DNS for A and AAAA at the same time. A lost reply is
+# EAI_AGAIN, so the app cannot open clamav:3310 and a media upload is refused.
+x-name-lookup: &name-lookup
+  dns_opt:
+    - single-request
+    - timeout:2
+    - attempts:3
+
 services:
   postgres:
     image: postgres:17.11-bookworm
@@ -27,12 +35,14 @@ services:
       - backend
 
   migrate:
+    <<: *name-lookup
     build:
       context: .
       target: migrator
     restart: "no"
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      NODE_OPTIONS: --dns-result-order=ipv4first
     depends_on:
       postgres:
         condition: service_healthy
@@ -43,6 +53,7 @@ services:
       - full
 
   seed:
+    <<: *name-lookup
     build:
       context: .
       target: migrator
@@ -50,6 +61,7 @@ services:
     command: ["npm", "run", "db:seed"]
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      NODE_OPTIONS: --dns-result-order=ipv4first
       AUTH_PASSWORD_PEPPER: ${AUTH_PASSWORD_PEPPER:?AUTH_PASSWORD_PEPPER is required}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
       SEED_OPERATOR_PASSWORD: ${SEED_OPERATOR_PASSWORD:-}
@@ -112,6 +124,7 @@ services:
       - full
 
   app:
+    <<: *name-lookup
     build:
       context: .
       target: runner
@@ -129,6 +142,7 @@ services:
       MEDIA_ROOT: /app/data/media
       CLAMAV_HOST: clamav
       CLAMAV_PORT: 3310
+      NODE_OPTIONS: --dns-result-order=ipv4first
       MAX_RESUME_BYTES: ${MAX_RESUME_BYTES:-5242880}
       MAX_MEDIA_IMAGE_BYTES: ${MAX_MEDIA_IMAGE_BYTES:-8388608}
       MAX_MEDIA_VIDEO_BYTES: ${MAX_MEDIA_VIDEO_BYTES:-67108864}
@@ -153,6 +167,9 @@ services:
         condition: service_completed_successfully
       clamav:
         condition: service_healthy
+    # edge talks to Caddy, or to the published local port. backend talks to
+    # Postgres and ClamAV. Do not mark backend internal: the app is on both
+    # networks, and Docker DNS then returns EAI_AGAIN for the name clamav.
     networks:
       - edge
       - backend

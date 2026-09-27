@@ -151,7 +151,13 @@ cd /opt/dotone-trip
 docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
 ```
 
-Expect: `postgres` healthy, `resume-init` exit **0**, `migrate` exit **0**, `app` healthy, `proxy` started.
+Expect: `postgres` healthy, `resume-init` exit **0**, `migrate` exit **0**, `app` healthy, `proxy` started. `backend` must not be an internal network. Confirm the app can name the scanner:
+
+```bash
+docker exec dotone-trip-app-1 node -e "const n=require('net');const s=n.connect(3310,'clamav');s.on('connect',()=>s.write('zPING\0'));s.on('data',d=>{console.log(d.toString());process.exit(0)});s.on('error',e=>{console.error(e.message);process.exit(1)})"
+```
+
+That must print `PONG`. `EAI_AGAIN` is the repair in `docs/DEPLOYMENT.md`. Do not `down -v`.
 
 Career PDFs live in volume `dotone-trip-resumes-data`. `resume-init` chowns uid **1000** on every `up -d --no-build`. Leave `RESUME_HOST_PATH` unset. Copying an old `.env.example` with `RESUME_HOST_PATH=./data/resumes` makes that bind `root:root`; other forms work, careers **500**, logs `EACCES` on `/app/data/resumes`. Confirm:
 

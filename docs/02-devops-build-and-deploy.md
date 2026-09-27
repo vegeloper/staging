@@ -141,7 +141,13 @@ cd /opt/dotone-trip
 docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
 ```
 
-Use `--build` only for Ship C. Expect: `postgres` healthy, `resume-init` exit **0**, `migrate` exit **0**, `app` healthy, `proxy` started.
+Use `--build` only for Ship C. Expect: `postgres` healthy, `resume-init` exit **0**, `migrate` exit **0**, `app` healthy, `proxy` started. `backend` must not be an internal network. After the app is up, this must print `PONG`:
+
+```bash
+docker exec dotone-trip-app-1 node -e "const n=require('net');const s=n.connect(3310,'clamav');s.on('connect',()=>s.write('zPING\0'));s.on('data',d=>{console.log(d.toString());process.exit(0)});s.on('error',e=>{console.error(e.message);process.exit(1)})"
+```
+
+If it prints `getaddrinfo EAI_AGAIN clamav`, repair it with the steps in `docs/DEPLOYMENT.md`. Do not `down -v`.
 
 Career PDFs write to volume `dotone-trip-resumes-data`. `resume-init` chowns the mount to uid **1000** on `up` — no manual `chown`. Leave `RESUME_HOST_PATH` unset. If an old `.env` still has `RESUME_HOST_PATH=./data/resumes`, contact/admin can work while `POST /api/forms/careers` returns **500**. Logs: `Cannot write resume to /app/data/resumes (EACCES)`. Confirm:
 

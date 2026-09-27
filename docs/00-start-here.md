@@ -20,7 +20,8 @@ That command does all of the following:
 2. Runs `npm ci`.
 3. Builds and starts the stack: Postgres, migrations (including the media library), the resume volume, the media volume, ClamAV, and the web app.
 4. Waits until `http://127.0.0.1:3000/api/ready` answers. The first ClamAV start downloads virus definitions and can take several minutes. Leave the command running.
-5. Creates the admin accounts and prints three passwords once. They are not saved in `.env` or in a file.
+5. Confirms the app container can open the name `clamav` on port 3310 and gets `PONG`. Setup stops if that name does not resolve. A media upload would otherwise be refused.
+6. Creates the admin accounts and prints three passwords once. They are not saved in `.env` or in a file.
 
 Save these usernames and the printed passwords in a password manager:
 
@@ -46,7 +47,7 @@ That command:
 1. Refuses to run when `.env` is missing. A new machine uses `setup:fresh`.
 2. Runs `npm ci`.
 3. Rebuilds and starts the stack again. New SQL migrations apply. The media volume and ClamAV start if they were not there yet.
-4. Waits for `/api/ready`.
+4. Waits for `/api/ready`, then confirms the app container can reach ClamAV by the name `clamav`.
 5. Does not change admin passwords and does not rewrite `.env`.
 
 Existing Postgres data, resumes, and uploaded media stay on their Docker volumes.
@@ -56,7 +57,7 @@ Existing Postgres data, resumes, and uploaded media stay on their Docker volumes
 1. Open `http://127.0.0.1:3000`.
 2. Open `http://127.0.0.1:3000/admin/login` and sign in as `admin`.
 3. Confirm the tabs you should see, including پروفایل. Admin sees every tab. Operator sees درخواست‌ها and پروفایل. Creator sees مطالب، رسانه، and پروفایل.
-4. On a fresh ClamAV volume, wait until the clamav container is healthy before uploading media. Until then an upload shows a red “scanner unavailable” toast and the file is not stored.
+4. On a fresh ClamAV volume, wait until the clamav container is healthy before uploading media. Until then an upload shows a red “scanner unavailable” toast and the file is not stored. Setup already requires a `PONG` from inside the app container before it finishes.
 
 Useful follow-ups:
 
@@ -108,4 +109,22 @@ After a later `git pull` on the same server:
 npm run setup:prod:update
 ```
 
-That keeps the database password and encryption keys. It asks for the hostname only when `APP_HOST`, `APP_ORIGIN`, or `TRUST_PROXY` is not already set for HTTPS.
+That keeps the database password and encryption keys. It asks for the hostname only when `APP_HOST`, `APP_ORIGIN`, or `TRUST_PROXY` is not already set for HTTPS. All three production commands use `compose.yaml` and `compose.prod.yaml`, and they do not finish until the app container gets `PONG` from `clamav:3310`.
+
+`setup:prod` and `setup:prod:update` build on the server. `setup:prod:dockerImage` uses the loaded tar and does not build. The ClamAV network rules are in the compose files, so both paths get them. Do not set `internal: true` on the `backend` network. The app is on `edge` and `backend` at the same time, and Docker DNS then fails the name `clamav` with `EAI_AGAIN`. Uploads are refused. An `/etc/hosts` line inside the container is lost on the next app restart.
+
+If a server that is already up shows the scanner error, do not run `docker compose down -v` and do not recreate the network while Postgres or ClamAV is still attached to it. From the directory that contains `compose.yaml` (this server uses `/opt/staging`):
+
+```bash
+docker network inspect dotone-trip-backend --format '{{.Internal}}'
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
+docker exec dotone-trip-app-1 node -e "const n=require('net');const s=n.connect(3310,'clamav');s.on('connect',()=>s.write('zPING\0'));s.on('data',d=>{console.log(d.toString());process.exit(0)});s.on('error',e=>{console.error(e.message);process.exit(1)})"
+```
+
+The inspect line must print `false`. The node line must print `PONG`. Then upload the file again. If inspect prints `true`, stop only the attached containers, remove that network, and start again. Volumes stay:
+
+```bash
+docker compose -f compose.yaml -f compose.prod.yaml --profile full stop app postgres clamav proxy
+docker network rm dotone-trip-backend
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
+```

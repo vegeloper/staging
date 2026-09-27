@@ -167,6 +167,17 @@ function appIsReady() {
   return result.status === 0;
 }
 
+function scannerAnswers() {
+  const script =
+    "const n=require('net');const s=n.connect(3310,'clamav');const t=setTimeout(()=>{console.error('timed out');process.exit(1)},8000);s.on('connect',()=>s.write('zPING\\0'));s.on('data',d=>{clearTimeout(t);if(!String(d).includes('PONG')){console.error(String(d));process.exit(1)}process.exit(0)});s.on('error',e=>{clearTimeout(t);console.error(e.message);process.exit(1)})";
+  const result = spawnSync(
+    "docker",
+    ["compose", ...composeFiles, "--profile", "full", "exec", "-T", "app", "node", "-e", script],
+    { encoding: "utf8" },
+  );
+  return { ok: result.status === 0, detail: `${result.stdout ?? ""}${result.stderr ?? ""}`.trim() };
+}
+
 async function waitReady() {
   const values = readEnvFile(".env");
   const port = values.APP_PORT || "3000";
@@ -176,11 +187,31 @@ async function waitReady() {
   while (Date.now() < deadline) {
     if (await appIsReady()) {
       console.log("The site is up.");
+      await waitScanner();
       return;
     }
     await new Promise((resolve) => setTimeout(resolve, 5000));
   }
   console.error("The site did not become ready. Check the clamav service, then the app logs.");
+  process.exit(1);
+}
+
+async function waitScanner() {
+  console.log("Checking that the app container can reach ClamAV by the name clamav.");
+  const deadline = Date.now() + 60 * 1000;
+  let detail = "";
+  while (Date.now() < deadline) {
+    const result = scannerAnswers();
+    if (result.ok) {
+      console.log("ClamAV answered PONG from inside the app container.");
+      return;
+    }
+    detail = result.detail;
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+  }
+  console.error("The app cannot reach clamav:3310. Media uploads will be refused.");
+  if (detail) console.error(detail);
+  console.error("Keep the backend network off internal: true, and keep the app on that network. Do not run docker compose down -v. See docs/DEPLOYMENT.md.");
   process.exit(1);
 }
 

@@ -1,3 +1,4 @@
+import { lookup } from "node:dns/promises";
 import { existsSync } from "node:fs";
 import net from "node:net";
 
@@ -21,10 +22,40 @@ function scanTarget(): ScanTarget {
   return { host: "127.0.0.1", port: env.CLAMAV_PORT };
 }
 
+const LOOKUP_ATTEMPTS = 3;
+
+async function lookupIPv4(host: string): Promise<string> {
+  let last: unknown;
+  for (let attempt = 0; attempt < LOOKUP_ATTEMPTS; attempt += 1) {
+    try {
+      const { address } = await lookup(host, { family: 4 });
+      if (!address) break;
+      return address;
+    } catch (error) {
+      last = error;
+      const code = typeof error === "object" && error && "code" in error ? String((error as { code?: unknown }).code) : "";
+      if (code !== "EAI_AGAIN" || attempt === LOOKUP_ATTEMPTS - 1) break;
+      await new Promise((resolve) => setTimeout(resolve, 200 * (attempt + 1)));
+    }
+  }
+  throw last instanceof Error ? last : new Error("virus scanner unavailable");
+}
+
+async function openScanSocket(target: ScanTarget): Promise<net.Socket> {
+  if ("path" in target) return net.connect({ path: target.path });
+  const address = await lookupIPv4(target.host);
+  return net.connect(target.port, address);
+}
+
 export async function scanBuffer(buffer: Buffer): Promise<VirusScan> {
   const target = scanTarget();
+  let socket: net.Socket;
+  try {
+    socket = await openScanSocket(target);
+  } catch {
+    throw new Error("virus scanner unavailable");
+  }
   const response = await new Promise<string>((resolve, reject) => {
-    const socket = "path" in target ? net.connect({ path: target.path }) : net.connect(target.port, target.host);
     const timer = setTimeout(() => {
       socket.destroy();
       reject(new Error("ClamAV timed out"));

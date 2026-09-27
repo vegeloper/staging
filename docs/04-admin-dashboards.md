@@ -64,7 +64,7 @@ The upload area accepts a drag-and-drop or a file picked from the computer. The 
 Before anything is written:
 
 1. The bytes are identified. PNG, JPEG, GIF, WebP, MP4, and WebM are allowed. SVG is not. An `MZ`/`ELF`/script header is rejected even if the name ends in `.png` or `.mp4`. The extension must match the detected type. A PNG must end at `IEND`, and other containers must not carry a trailing payload.
-2. ClamAV scans the buffer with the INSTREAM protocol. The upload is refused when the scanner is down or when it reports a signature. Nothing infected is written to disk.
+2. ClamAV scans the buffer with the INSTREAM protocol over `clamav:3310` on the backend network. The app resolves that name as IPv4. The upload is refused when the name does not resolve, when the scanner is down, or when it reports a signature. Nothing infected is written to disk.
 
 Images are limited to 8 MB and videos to 64 MB. The same SHA-256 is not stored twice; the existing library row is reused.
 
