@@ -61,8 +61,12 @@
   margin-bottom: 7px;
 
   color: #858585;
-
-  font-size: clamp(12px, 0.72vw, 14px);
+  font-size: clamp(11.78px, 0.725vw, 13.61px);
+  
+  /* Increase by 20% on mobile/tablet, revert to original on large screens */
+  @media (min-width: 1024px) {
+    font-size: clamp(15.6px, 0.96vw, 18px);
+  }
   font-weight: 500;
 
   line-height: 1.8;
@@ -253,7 +257,7 @@
   .eyebrow {
     margin-bottom: 6px;
 
-    font-size: 10px;
+    /* font-size: 10px; */
   }
 
   .title {
@@ -320,7 +324,7 @@
   .eyebrow {
     margin-bottom: 5px;
 
-    font-size: 9px;
+    /* font-size: 9px; */
   }
 
   .title {
@@ -391,7 +395,7 @@
   }
 
   .eyebrow {
-    font-size: 8.5px;
+    /* font-size: 8.5px; */
   }
 
   .title {

@@ -7,7 +7,8 @@
 
   padding: clamp(55px, 7vw, 100px) 0;
 
-  background: #f5f5f5;
+  /* background: #f6f6f6; */
+  background: inherit;
 
   font-family: inherit;
 }
@@ -109,6 +110,8 @@
   border-radius: 20px;
 
   background: #fff;
+
+  box-shadow: 0 6px 18px rgba(23, 23, 23, 0.1);
 }
 
 
@@ -326,6 +329,8 @@
   border-radius: 18px;
 
   background: #fff;
+
+  box-shadow: 0 6px 18px rgba(23, 23, 23, 0.1);
 }
 
 
