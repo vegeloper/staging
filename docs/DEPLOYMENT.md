@@ -479,6 +479,11 @@ Rollback: keep the previous web image digest. `docker compose ... up -d` the old
 # Step by step: docs/00-start-here.md
 npm run setup:fresh
 npm run setup:update
+npm run docker:export
+npm run docker:load
+npm run setup:prod
+npm run setup:prod:dockerImage
+npm run setup:prod:update
 
 # Secrets
 npm run ops:secrets

@@ -31,7 +31,12 @@
     "docker:bootstrap": "docker compose --profile seed run --rm --build seed npm run db:bootstrap",
     "docker:bootstrap:prod": "docker compose -f compose.yaml -f compose.prod.yaml --profile seed run --rm --no-deps seed npm run db:bootstrap",
     "setup:fresh": "node scripts/setup-machine.mjs fresh",
-    "setup:update": "node scripts/setup-machine.mjs update"
+    "setup:update": "node scripts/setup-machine.mjs update",
+    "setup:prod": "node scripts/setup-machine.mjs prod",
+    "setup:prod:update": "node scripts/setup-machine.mjs prod-update",
+    "setup:prod:dockerImage": "node scripts/setup-machine.mjs prod-image",
+    "docker:export": "node scripts/export-image.mjs",
+    "docker:load": "node scripts/load-image.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

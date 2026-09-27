@@ -39,6 +39,8 @@ cp .env.example .env
 
 ## 3. SERVER — secrets (once per environment)
 
+On a git checkout with Node.js 22 there are two first installs. `npm run setup:prod` builds on the server. For a tar from `npm run docker:export`, run `npm run docker:load` on the server, then `npm run setup:prod:dockerImage`. That second command asks for `APP_HOST` and `APP_ORIGIN`, sets `TRUST_PROXY=true`, and starts Caddy from the loaded images without building. The next source release on that server is `npm run setup:prod:update`.
+
 ```bash
 docker run --rm -v /opt/dotone-trip:/app -w /app node:22-bookworm-slim node scripts/generate-prod-secrets.mjs
 ```

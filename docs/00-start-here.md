@@ -78,3 +78,34 @@ The Docker app does not reload when you edit files. To work with `npm run dev`:
 4. ClamAV is published on `127.0.0.1:3310`. With `CLAMAV_HOST` unset, the dev server uses that port when a local ClamAV socket is not present.
 
 When you want the Docker site again, stop `npm run dev` and run `npm run setup:update`.
+
+## Production server
+
+`setup:fresh` is the laptop stack. It does not start Caddy and it leaves `TRUST_PROXY=false`.
+
+On the PC that builds the image:
+
+```bash
+npm run docker:export
+```
+
+That builds `dotone-trip-app` and `dotone-trip-migrate` when they are not already built, tags the seed image, asks whether the save path is absolute or relative, and writes the `.tar` there.
+
+Copy the tar to the VPS. From the repository root on the server:
+
+```bash
+npm run docker:load
+npm run setup:prod:dockerImage
+```
+
+`docker:load` asks for the tar path, loads the three images, and stops. `setup:prod:dockerImage` then asks for the public hostname and URL, writes `.env` with `APP_HOST`, `APP_ORIGIN=https://that-host`, and `TRUST_PROXY=true`, and starts Caddy from those images. It does not build on the server. DNS for that hostname must already point at the server.
+
+To build on the VPS from the git checkout instead, skip the tar and run `npm run setup:prod`.
+
+After a later `git pull` on the same server:
+
+```bash
+npm run setup:prod:update
+```
+
+That keeps the database password and encryption keys. It asks for the hostname only when `APP_HOST`, `APP_ORIGIN`, or `TRUST_PROXY` is not already set for HTTPS.

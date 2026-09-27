@@ -128,3 +128,8 @@ If Postgres is down, or `next build` runs without `DATABASE_URL` (the Docker bui
 | `npm run docker:logs` | Follow the local `app` log. |
 | `npm run setup:fresh` | New computer: `.env`, dependencies, Docker stack, media volume, ClamAV, and admin passwords. See [00-start-here.md](00-start-here.md). |
 | `npm run setup:update` | Existing checkout: rebuild, migrate, and start media plus ClamAV. Does not rotate passwords. |
+| `npm run docker:export` | Build the app image if needed, then save `dotone-trip-images` to a path you choose. |
+| `npm run docker:load` | On the VPS, load that tar. Run this before `setup:prod:dockerImage`. |
+| `npm run setup:prod` | New VPS: asks for the public hostname and URL, sets `TRUST_PROXY=true`, builds on the server, and starts Caddy. |
+| `npm run setup:prod:dockerImage` | New VPS from a loaded tar: same `.env` and Caddy setup, without building. |
+| `npm run setup:prod:update` | Existing VPS: rebuilds with Caddy. Keeps secrets. Asks for the hostname only if HTTPS is not configured yet. |

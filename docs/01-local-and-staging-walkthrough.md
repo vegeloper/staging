@@ -188,6 +188,15 @@ Need Compose **v2.24+**. Do **not** `apt install docker.io`. Node is **not** req
 
 ## J. VPS — clone + env (new secrets)
 
+On a checkout that has Node.js 22, this replaces the hand edit below. It asks for the hostname and public URL, sets `TRUST_PROXY=true`, builds on the server, and starts Caddy:
+
+```bash
+cd /opt/dotone-trip
+npm run setup:prod
+```
+
+If the images were loaded from a tar, use `npm run setup:prod:dockerImage` instead. That does not build. Later source updates on that server: `npm run setup:prod:update`. The manual steps below are the same result when Node is not installed.
+
 Git clone is **optional**. Runtime does not need `app/` on the server. For a zip of compose + Caddy + images only, skip this clone and use **§Q**.
 
 ```bash
