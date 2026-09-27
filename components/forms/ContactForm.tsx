@@ -319,7 +319,7 @@ export default function ContactForm() {
           </div>
 
           <div className={styles.contactItems}>
-            <a href="tel:+982100000000" className={styles.contactItem}>
+            <a href="tel:+982130400" className={styles.contactItem}>
               <Phone size={20} strokeWidth={1.5} aria-hidden="true" />
 
               <span>۳۰۴۰۰</span>
