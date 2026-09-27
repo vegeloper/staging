@@ -36,7 +36,9 @@
     "setup:prod:update": "node scripts/setup-machine.mjs prod-update",
     "setup:prod:dockerImage": "node scripts/setup-machine.mjs prod-image",
     "docker:export": "node scripts/export-image.mjs",
-    "docker:load": "node scripts/load-image.mjs"
+    "docker:load": "node scripts/load-image.mjs",
+    "docker:down:keep": "docker compose -f compose.yaml -f compose.prod.yaml --profile full --profile migrate --profile seed down --remove-orphans",
+    "docker:down:remove": "docker compose -f compose.yaml -f compose.prod.yaml --profile full --profile migrate --profile seed down --remove-orphans -v --rmi all"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
