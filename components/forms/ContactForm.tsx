@@ -322,7 +322,7 @@ export default function ContactForm() {
             <a href="tel:+982100000000" className={styles.contactItem}>
               <Phone size={20} strokeWidth={1.5} aria-hidden="true" />
 
-              <span>۰۲۱۴۲۱۰۱</span>
+              <span>۳۰۴۰۰</span>
             </a>
 
             <a href="mailto:trip@dotone.ir" className={styles.contactItem}>
