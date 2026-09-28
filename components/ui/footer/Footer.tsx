@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { type MouseEvent } from "react";
 import Image from "next/image";
 import PublicImage from "@/components/site/PublicImage";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import styles from "./Footer.module.css";
 import linkdinIcon from "@/public/figma/linkdin.png";
 import telegramIcon from "@/public/figma/telegram.png";
@@ -11,6 +12,9 @@ import instagramIcon from "@/public/figma/instagram.png";
 import baleIcon from "@/public/figma/baleIcon.png";
 import { useSiteSettings } from "@/components/site/SiteSettings";
 import { resolvedMedia } from "@/lib/site/defaults";
+
+const DOWNLOAD_BANNER_HREF = "/#download-banner";
+const DOWNLOAD_BANNER_ID = "download-banner";
 
 const footerLinks = [
   {
@@ -63,9 +67,9 @@ const footerLinks = [
   {
     title: "دانلود اپلیکیشن",
     links: [
-      { label: "دانلود برای Android",href: "/#download-banner" },
-      { label: "دانلود برای iOS", href: "/#download-banner" },
-      { label: "دانلود نسخه وب اپلیکیشن", href: "/#download-banner" },
+      { label: "دانلود برای Android", href: DOWNLOAD_BANNER_HREF },
+      { label: "دانلود برای iOS", href: DOWNLOAD_BANNER_HREF },
+      { label: "دانلود نسخه وب اپلیکیشن", href: DOWNLOAD_BANNER_HREF },
 
     ],
   },
@@ -74,6 +78,22 @@ const footerLinks = [
 export default function Footer() {
   const site = useSiteSettings();
   const media = resolvedMedia(site.theme);
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const goToDownloadBanner = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+
+    if (pathname === "/") {
+      document.getElementById(DOWNLOAD_BANNER_ID)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      return;
+    }
+
+    router.push(DOWNLOAD_BANNER_HREF);
+  };
 
   return (
     <footer className={styles.footer} dir="rtl">
@@ -123,13 +143,21 @@ export default function Footer() {
             <div key={index} className={styles.linkColumn}>
               <h4 className={styles.columnTitle}>{column.title}</h4>
               <ul className={styles.linkList}>
-                {column.links.map((link) => (
-                  <li key={link.label}>
-                    <Link href={link.href} className={styles.linkItem}>
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+                {column.links.map((link) => {
+                  const isDownloadLink = link.href === DOWNLOAD_BANNER_HREF;
+
+                  return (
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        className={styles.linkItem}
+                        onClick={isDownloadLink ? goToDownloadBanner : undefined}
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
