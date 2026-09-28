@@ -125,9 +125,14 @@ If Postgres is down, or `next build` runs without `DATABASE_URL` (the Docker bui
 | `npm run docker:up` | Local full stack with the app port published. |
 | `npm run docker:deploy` | Production overlay (Caddy, read-only app). The proxy waits for the app health check. |
 | `npm run docker:down` | Stop that stack. Does not delete volumes. |
+| `npm run docker:down:keep` | Stop app, Postgres, ClamAV, Caddy, and one-shot jobs. Images and volumes stay. |
+| `npm run docker:down:remove` | Stop that stack and delete its volumes and images. Laptop wipe only. Do not run this on the live server. |
 | `npm run docker:logs` | Follow the local `app` log. |
 | `npm run setup:fresh` | New computer: `.env`, dependencies, Docker stack, media volume, ClamAV, and admin passwords. See [00-start-here.md](00-start-here.md). |
 | `npm run setup:update` | Existing checkout: rebuild, migrate, and start media plus ClamAV. Does not rotate passwords. |
+| `npm run clean:modules` | Delete `node_modules` when `npm ci` hits `EPERM` or `EBUSY`. Keeps `.env` and `package-lock.json`. Laptop: then `setup:update`. Live server: then `setup:prod:update`. |
+| `npm run clean:local` | Delete `.env`, `.env.local`, `node_modules`, and `.next`. Restores `package-lock.json` from git when it differs. Laptop only. |
+| `npm run clean:slate` | `clean:local`, then stop containers and delete Docker volumes. Then run `setup:fresh`. Laptop only. |
 | `npm run docker:export` | Build the app image if needed, then save `dotone-trip-images` to a path you choose. |
 | `npm run docker:load` | On the VPS, load that tar. Run this before `setup:prod:dockerImage`. |
 | `npm run setup:prod` | New VPS: asks for the public hostname and URL, sets `TRUST_PROXY=true`, builds on the server, and starts Caddy. |

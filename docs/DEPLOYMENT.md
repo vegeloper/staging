@@ -505,6 +505,11 @@ The next image build also retries a temporary `EAI_AGAIN` inside the scanner. Th
 # Step by step: docs/00-start-here.md
 npm run setup:fresh
 npm run setup:update
+npm run clean:modules
+npm run clean:local
+npm run clean:slate
+npm run docker:down:keep
+npm run docker:down:remove
 npm run docker:export
 npm run docker:load
 npm run setup:prod
@@ -534,6 +539,46 @@ docker compose -f compose.yaml -f compose.prod.yaml --profile full stop
 ```
 
 Postgres data survives `stop` and `down` unless you pass `-v`. **Never** `-v` on production.
+
+`clean:modules` deletes only `node_modules` (use it when `npm ci` reports `EPERM`, then run `setup:update`). `clean:local` also deletes `.env`, `.env.local`, and `.next`, and restores `package-lock.json` from git if it differs. `clean:slate` does that and then deletes containers and volumes; follow it with `setup:fresh`. `docker:down:keep` stops the stack and keeps images and volumes. `docker:down:remove` also deletes volumes and images. `clean:slate` and `docker:down:remove` are for a laptop wipe. Do not run them on the live server. `package-lock.json` is never deleted, because `npm ci` needs it.
+
+### Live server
+
+`clean:local`, `clean:slate`, and `docker:down:remove` delete `.env` or the database volume. The live Postgres volume only opens with the `.env` already on that server. Leave both in place.
+
+`clean:modules` is safe on the server. If `npm ci` or `setup:prod:update` stops with `EPERM` or `EBUSY` under `node_modules`:
+
+```bash
+cd /opt/staging
+npm run clean:modules
+npm run setup:prod:update
+```
+
+Use the directory that contains `compose.yaml` if it is not `/opt/staging`. The site runs in Docker, so the host `node_modules` can be removed without stopping Postgres first. If the folder is still locked:
+
+```bash
+sudo lsof +D node_modules
+```
+
+Stop the host process named there, then run `clean:modules` again.
+
+If `package-lock.json` on the server was edited and `npm ci` rejects it:
+
+```bash
+git checkout HEAD -- package-lock.json
+npm run setup:prod:update
+```
+
+If `setup:prod` reports that `.env` already exists, run `setup:prod:update`. That keeps the current password and encryption keys.
+
+If the Docker engine returns HTTP 500 and will not list containers:
+
+```bash
+sudo systemctl restart docker
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d
+```
+
+`docker:down:keep` stops the site and keeps images and volumes. Use it only for a full stop, then run `setup:prod:update`.
 
 ---
 

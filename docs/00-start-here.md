@@ -65,9 +65,41 @@ Useful follow-ups:
 | --- | --- |
 | `npm run docker:logs` | The site did not become ready |
 | `npm run docker:down` | Stop the stack. Volumes are kept |
+| `npm run docker:down:keep` | Stop app, Postgres, ClamAV, Caddy, and one-shot jobs. Images and volumes stay |
 | `npm run docker:bootstrap` | Rotate `admin`, `operator`, and `creator` on purpose. This prints new passwords and the old ones stop working |
+| `npm run clean:modules` | `npm ci` failed with `EPERM` while deleting `node_modules`. Then run `setup:update` |
+| `npm run clean:local` | Remove a broken local checkout’s files, then decide whether the old database volume should stay |
+| `npm run clean:slate` | Wipe this laptop and start over. Then run `setup:fresh` |
 
-`docker compose down -v` deletes the database, resumes, media, and virus definitions. Do not use it unless you mean to wipe the machine.
+## When setup is stuck
+
+`setup:fresh` stops when `.env` already exists. That checkout uses `setup:update`.
+
+If `setup:update` or `npm ci` stops with `EPERM` on a file under `node_modules` (often `lightningcss.win32-x64-msvc.node`), Windows has that file open. From the repository root:
+
+```bash
+npm run clean:modules
+npm run setup:update
+```
+
+`clean:modules` deletes only `node_modules`. `.env` and `package-lock.json` stay, on Windows and on Linux. If it still says the folder is locked, close Cursor and any terminal in this folder, then run `clean:modules` again.
+
+| Command | Removes | Leaves |
+| --- | --- | --- |
+| `npm run clean:modules` | `node_modules` | `.env`, `package-lock.json`, containers, volumes |
+| `npm run clean:local` | `.env`, `.env.local`, `node_modules`, `.next` | Containers and volumes. If `package-lock.json` differs from git, it is restored |
+| `npm run clean:slate` | The same files, then the containers and Docker volumes (database, media, resumes, virus definitions) | The git copy of `package-lock.json` |
+
+`package-lock.json` is not deleted. `npm ci` fails without it.
+
+`clean:local` does not change the database volume. A new `.env` from `setup:fresh` will not match that volume. For a real fresh start:
+
+```bash
+npm run clean:slate
+npm run setup:fresh
+```
+
+`clean:slate` and `npm run docker:down:remove` delete the database, resumes, media, and virus definitions. Use them on a laptop you mean to wipe. Do not run them on the live server.
 
 ## Optional: edit with hot reload
 
@@ -128,3 +160,42 @@ docker compose -f compose.yaml -f compose.prod.yaml --profile full stop app post
 docker network rm dotone-trip-backend
 docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d --no-build
 ```
+
+## Same install error on the live server
+
+`clean:local`, `clean:slate`, and `docker:down:remove` are laptop wipes. They delete `.env` or the database volume. On the live server the Postgres volume already contains data encrypted with the current `.env`. A new `.env` will not open it.
+
+Leave `.env` and the Docker volumes in place. `clean:modules` is safe here: it deletes only `node_modules`.
+
+If `npm ci` or `setup:prod:update` stops with `EPERM` or `EBUSY` on a file under `node_modules`, from the directory that contains `compose.yaml` (this server uses `/opt/staging`):
+
+```bash
+npm run clean:modules
+npm run setup:prod:update
+```
+
+The public site runs in Docker, so this host folder can be deleted while Postgres and Caddy keep running. `setup:prod:update` then recreates the app and keeps the current password and encryption keys.
+
+If `clean:modules` still cannot delete the folder, find the host process that has it open, stop that process, and run `clean:modules` again:
+
+```bash
+sudo lsof +D node_modules
+```
+
+If `package-lock.json` was edited on the server and `npm ci` rejects it, put back the committed file and update again:
+
+```bash
+git checkout HEAD -- package-lock.json
+npm run setup:prod:update
+```
+
+If `setup:prod` says this checkout already has a `.env`, run `setup:prod:update`. Do not delete `.env` to force `setup:prod` or `setup:fresh`.
+
+If the Docker engine returns HTTP 500 and will not list containers, restart the engine and start the same stack. Volumes stay:
+
+```bash
+sudo systemctl restart docker
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d
+```
+
+`docker:down:keep` stops the site and keeps images and volumes. Use it only when the whole stack must stop, then bring it back with `setup:prod:update`.

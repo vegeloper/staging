@@ -89,6 +89,8 @@ npm ci
 npx next dev --port 3000
 ```
 
+If `npm ci` stops with `EPERM` while deleting a file under `node_modules`, run `npm run clean:modules` and then `npm ci` again. That deletes only `node_modules`. `.env` and `package-lock.json` stay. A full laptop wipe is `npm run clean:slate`, then `npm run setup:fresh`. On the live server, `clean:modules` is still safe, then run `setup:prod:update`. Do not run `clean:local`, `clean:slate`, or `docker:down:remove` there. Details: `docs/00-start-here.md`.
+
 **Second** PowerShell (leave `next dev` running):
 
 ```powershell

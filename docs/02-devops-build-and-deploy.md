@@ -254,6 +254,26 @@ Stop without deleting data:
 docker compose -f compose.yaml -f compose.prod.yaml --profile full stop
 ```
 
+`clean:local`, `clean:slate`, and `docker:down:remove` are laptop wipes. On this server they would delete `.env` or the database volume. The volume only opens with the `.env` already here.
+
+If `npm ci` or `setup:prod:update` stops with `EPERM` or `EBUSY` under `node_modules`:
+
+```bash
+npm run clean:modules
+npm run setup:prod:update
+```
+
+`clean:modules` deletes only `node_modules`. If it is still locked, `sudo lsof +D node_modules`, stop that host process, and run `clean:modules` again. If `package-lock.json` was edited on the server, `git checkout HEAD -- package-lock.json` and then `setup:prod:update`. If `setup:prod` says `.env` already exists, run `setup:prod:update`.
+
+If the Docker engine returns HTTP 500:
+
+```bash
+sudo systemctl restart docker
+docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d
+```
+
+`docker:down:keep` stops the site and keeps volumes. Bring it back with `setup:prod:update`. Full steps are also in `docs/DEPLOYMENT.md` and `docs/00-start-here.md`.
+
 ---
 
 ## 9. Edge: Caddy vs Cloudflare vs nginx
