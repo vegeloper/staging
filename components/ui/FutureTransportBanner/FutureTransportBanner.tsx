@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function FutureTransportBanner() {
   return (
-    <section className={styles.sectionContainer} dir="rtl">
+    <section className={`${styles.sectionContainer} max-large-scale`} dir="rtl">
       <div className={styles.banner}>
         
         {/* بخش متنی سمت راست */}

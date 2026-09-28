@@ -20,7 +20,7 @@ export default function InnovationSection({
   cards,
 }: InnovationSectionProps) {
   return (
-    <section className={styles.section} dir="rtl">
+    <section className={`${styles.section} max-large-scale`} dir="rtl">
       <div className={styles.heading}>
         <h2 className={styles.title}>{title}</h2>
 

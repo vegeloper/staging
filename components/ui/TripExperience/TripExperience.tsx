@@ -42,7 +42,7 @@ const stepsData: StepItem[] = [
 
 export default function TripExperience() {
   return (
-    <section className={styles.sectionContainer} dir="rtl">
+    <section className={`${styles.sectionContainer} max-large-scale`} dir="rtl">
       <div className={styles.header}>
         <div className={styles.badge}>
  

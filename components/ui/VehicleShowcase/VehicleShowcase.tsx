@@ -154,7 +154,7 @@ export default function VehicleShowcase({
 
   return (
     <section
-      className={styles.section}
+      className={`${styles.section} max-large-scale`}
       dir="rtl"
       aria-roledescription="carousel"
       aria-label="ناوگان دات‌وان تریپ"

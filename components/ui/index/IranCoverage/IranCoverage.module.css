@@ -7,7 +7,7 @@
 
   padding: clamp(55px, 6vw, 90px) 0;
 
-  background: #f7f7f7;
+  background: inherit;
 
   font-family: inherit;
 }

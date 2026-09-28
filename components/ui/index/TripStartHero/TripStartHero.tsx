@@ -20,7 +20,7 @@ export default function TripStartHero({
   description,
 }: TripStartHeroProps) {
   return (
-    <section className={styles.section} dir="rtl">
+    <section className={`max-large-scale ${styles.section} `} dir="rtl">
       <div className={styles.heading}>
         {eyebrow && (
           <span className={styles.eyebrow}>

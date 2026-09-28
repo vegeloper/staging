@@ -1,7 +1,7 @@
 .section {
   width: 100%;
   padding: 80px 20px;
-  background-color: #ffffff;
+  background-color: inherit;
   font-family: inherit;
   margin-bottom: 100px;
 }

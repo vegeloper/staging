@@ -188,8 +188,7 @@ export default function Header({ variant = "light" }: HeaderProps) {
       {/* Mobile header */}
 
       <div className={styles.mobileMenuHeader}>
-        <span>منوی دات‌وان تریپ</span>
-
+        <span>منو</span>
         <button
           type="button"
           className={styles.mobileClose}
@@ -333,7 +332,7 @@ export default function Header({ variant = "light" }: HeaderProps) {
       <header
         className={`${styles.navShell} ${
           isLightVariant ? styles.navLight : styles.navDark
-        } ${pathname !== "/" ? styles.pageFrame : ""}`}
+        } ${pathname !== "/" ? styles.pageFrame : ""} max-large-scale`}
       >
         {/* Logo */}
 

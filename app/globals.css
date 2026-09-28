@@ -1290,8 +1290,16 @@ main {
      width: calc(100% - 32px);
     max-width: none;
   }
+
+
+
 }
 
+.max-large-scale{
+  @media (min-width:2000px) {
+    max-width: 1500px;
+  }
+}
 
 
 

@@ -19,7 +19,7 @@ export default function CareerHero({
   imageAlt = "",
 }: CareerHeroProps) {
   return (
-    <section className={styles.hero} dir="rtl">
+    <section className={`${styles.hero} `} dir="rtl">
       <div className={styles.content}>
       <div className={styles.badge}>
           <span className={styles.badgeDot} />

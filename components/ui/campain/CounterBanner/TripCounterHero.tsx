@@ -93,7 +93,7 @@ export default function TripCounterHero({
   return (
     <section
       ref={sectionRef}
-      className={styles.section}
+      className={`${styles.section} max-large-scale`}
       dir="rtl"
       style={{
         backgroundImage: `url("${backgroundImage}")`,

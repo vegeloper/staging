@@ -268,7 +268,7 @@ export default async function Home() {
   return (
     <main dir="rtl">
       <Header variant="dark" />
-<section className="hero" id="home">
+<section className="hero max-large-scale" id="home">
   <picture className="hero-picture">
     <source
       media="(max-width: 700px)"

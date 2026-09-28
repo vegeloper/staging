@@ -10,6 +10,7 @@
   width: 100%;
 
   padding-top: clamp(45px, 5vw, 75px);
+  margin: 0 auto;
 
   overflow: hidden;
 
@@ -61,17 +62,19 @@
   margin-bottom: 7px;
 
   color: #858585;
+
   font-size: clamp(11.78px, 0.725vw, 13.61px);
-  
-  /* Increase by 20% on mobile/tablet, revert to original on large screens */
-  @media (min-width: 1024px) {
-    font-size: clamp(15.6px, 0.96vw, 18px);
-  }
   font-weight: 500;
 
   line-height: 1.8;
 
   text-align: center;
+}
+
+@media (min-width: 1024px) {
+  .eyebrow {
+    font-size: clamp(15.6px, 0.96vw, 18px);
+  }
 }
 
 
@@ -127,9 +130,6 @@
 
   overflow: hidden;
 
-  /*
-    دقیقاً هم‌رنگ Background سکشن
-  */
   background: var(--section-bg);
 }
 
@@ -165,10 +165,6 @@
 
   z-index: 3;
 
-  /*
-    چند پیکسل overlap برای جلوگیری
-    از ایجاد خط بین background و تصویر
-  */
   top: -2px;
   right: 0;
   left: 0;
@@ -178,12 +174,6 @@
 
   pointer-events: none;
 
-  /*
-    #F6F6F6 = rgb(246, 246, 246)
-
-    ابتدا کاملاً همرنگ background است
-    و به مرور به تصویر واقعی می‌رسد.
-  */
   background: linear-gradient(
     to bottom,
     #f6f6f6 0%,
@@ -204,11 +194,44 @@
 
 
 /* ========================================
-   Disable old second fade
+   Bottom Fade
 ======================================== */
 
 .imageWrapper::after {
-  content: none;
+  content: "";
+
+  position: absolute;
+
+  z-index: 3;
+
+  right: 0;
+  bottom: -2px;
+  left: 0;
+
+  width: 100%;
+  height: 34%;
+
+  pointer-events: none;
+
+  /*
+    از تصویر شروع می‌شود و در پایین
+    کاملاً با Background سکشن یکی می‌شود
+  */
+  background: linear-gradient(
+    to bottom,
+    rgba(246, 246, 246, 0) 0%,
+    rgba(246, 246, 246, 0.03) 12%,
+    rgba(246, 246, 246, 0.08) 22%,
+    rgba(246, 246, 246, 0.16) 32%,
+    rgba(246, 246, 246, 0.28) 43%,
+    rgba(246, 246, 246, 0.42) 54%,
+    rgba(246, 246, 246, 0.58) 64%,
+    rgba(246, 246, 246, 0.72) 74%,
+    rgba(246, 246, 246, 0.84) 83%,
+    rgba(246, 246, 246, 0.92) 90%,
+    rgba(246, 246, 246, 0.97) 95%,
+    rgba(246, 246, 246, 1) 100%
+  );
 }
 
 
@@ -229,11 +252,12 @@
     aspect-ratio: 3.9 / 1;
   }
 
-  /*
-    روی نمایشگر بزرگ Fade کمی عمیق‌تر
-  */
   .imageWrapper::before {
     height: 64%;
+  }
+
+  .imageWrapper::after {
+    height: 36%;
   }
 }
 
@@ -256,8 +280,6 @@
 
   .eyebrow {
     margin-bottom: 6px;
-
-    /* font-size: 10px; */
   }
 
   .title {
@@ -299,6 +321,10 @@
       rgba(246, 246, 246, 0) 100%
     );
   }
+
+  .imageWrapper::after {
+    height: 32%;
+  }
 }
 
 
@@ -314,17 +340,11 @@
   .heading {
     width: 90%;
 
-    /*
-      overlap کمتر چون متن روی موبایل
-      ممکن است چند خط شود
-    */
     margin-bottom: -65px;
   }
 
   .eyebrow {
     margin-bottom: 5px;
-
-    /* font-size: 9px; */
   }
 
   .title {
@@ -354,10 +374,6 @@
     object-position: center center;
   }
 
-  /*
-    روی موبایل به دلیل ارتفاع بیشتر عکس
-    Fade متناسب با تصویر تنظیم شده
-  */
   .imageWrapper::before {
     height: 52%;
 
@@ -376,6 +392,25 @@
       rgba(246, 246, 246, 0) 100%
     );
   }
+
+  .imageWrapper::after {
+    height: 28%;
+
+    background: linear-gradient(
+      to bottom,
+      rgba(246, 246, 246, 0) 0%,
+      rgba(246, 246, 246, 0.04) 15%,
+      rgba(246, 246, 246, 0.1) 27%,
+      rgba(246, 246, 246, 0.2) 39%,
+      rgba(246, 246, 246, 0.34) 51%,
+      rgba(246, 246, 246, 0.5) 63%,
+      rgba(246, 246, 246, 0.68) 74%,
+      rgba(246, 246, 246, 0.82) 84%,
+      rgba(246, 246, 246, 0.92) 91%,
+      rgba(246, 246, 246, 0.97) 96%,
+      rgba(246, 246, 246, 1) 100%
+    );
+  }
 }
 
 
@@ -392,10 +427,6 @@
     width: 92%;
 
     margin-bottom: -52px;
-  }
-
-  .eyebrow {
-    /* font-size: 8.5px; */
   }
 
   .title {
@@ -431,6 +462,24 @@
       rgba(246, 246, 246, 0.16) 86%,
       rgba(246, 246, 246, 0.06) 94%,
       rgba(246, 246, 246, 0) 100%
+    );
+  }
+
+  .imageWrapper::after {
+    height: 26%;
+
+    background: linear-gradient(
+      to bottom,
+      rgba(246, 246, 246, 0) 0%,
+      rgba(246, 246, 246, 0.05) 16%,
+      rgba(246, 246, 246, 0.12) 29%,
+      rgba(246, 246, 246, 0.24) 42%,
+      rgba(246, 246, 246, 0.4) 55%,
+      rgba(246, 246, 246, 0.58) 68%,
+      rgba(246, 246, 246, 0.75) 79%,
+      rgba(246, 246, 246, 0.88) 88%,
+      rgba(246, 246, 246, 0.96) 95%,
+      rgba(246, 246, 246, 1) 100%
     );
   }
 }

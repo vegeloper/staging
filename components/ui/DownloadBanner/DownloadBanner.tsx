@@ -10,7 +10,7 @@ import Link from "next/link";
 
 export default function DownloadBanner() {
   return (
-    <section className={styles.sectionContainer} id="download-banner" dir="rtl">
+    <section className={`${styles.sectionContainer} max-large-scale`} id="download-banner" dir="rtl">
       <div className={styles.banner}>
         <div className={styles.imageWrapper}>
           <Image

@@ -20,7 +20,7 @@ export default function TravelSolutions({
 }: TravelSolutionsProps) {
   return (
     <section
-      className={styles.section}
+      className={`${styles.section} max-large-scale`}
       dir="rtl"
     >
       {/* Background Shade */}

@@ -26,7 +26,7 @@ export default function FeatureRow({
     <section
       className={`${styles.row} ${
         direction === "left" ? styles.reverse : ""
-      }`}
+      } max-large-scale`}
       dir="rtl"
     >
       {/* Text */}

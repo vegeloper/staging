@@ -65,7 +65,7 @@ export default function Positions(props: PositionsProps) {
   return (
     <section
       ref={sectionRef}
-      className={styles.section}
+      className={`${styles.section} max-large-scale`}
       dir="rtl"
     >
       {/* Heading */}

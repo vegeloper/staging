@@ -40,8 +40,8 @@ const footerLinks = [
     title: "توسعه کسب و کارها",
     links: [
       { label: "تبلیغات در اپلیکیشن", href: "#" },
-      { label: "تبلیغات داخل خودروها", href: "#" },
-      { label: "همکاری در تبلیغات", href: "#" },
+      { label: "تبلیغات داخل خودروها", href: "/campaign" },
+      { label: "همکاری در تبلیغات", href: "/campaign" },
     ],
   },
   {

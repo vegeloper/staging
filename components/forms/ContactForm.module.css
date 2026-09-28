@@ -12,7 +12,7 @@
 
   overflow-x: clip;
 
-  background: #fff;
+  background: inherit;
 
   font-family: inherit;
 }
