@@ -199,3 +199,11 @@ docker compose -f compose.yaml -f compose.prod.yaml --profile full up -d
 ```
 
 `docker:down:keep` stops the site and keeps images and volumes. Use it only when the whole stack must stop, then bring it back with `setup:prod:update`.
+
+## More runbooks
+
+| Document | Use it for |
+| --- | --- |
+| [05-staging-environment.md](05-staging-environment.md) | Company staging: prerequisites, install, checks, a second instance, and the handoff to production |
+| [06-production-server.md](06-production-server.md) | The live subdomain: DNS, install, and the checks that must pass before calling it done |
+| [07-backup-and-restore.md](07-backup-and-restore.md) | Backup of the database, resumes, media, and ClamAV data, then a restore drill on another port |

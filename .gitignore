@@ -34,8 +34,10 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env
 .env.local
+.env.slot
 .env.*.local
 !.env.example
+/backups/
 
 # private resume storage (keep the directory, ignore uploads)
 /data/resumes/**

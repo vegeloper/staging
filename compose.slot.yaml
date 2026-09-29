@@ -1,0 +1,33 @@
+# Second instance on the same machine. Use with compose.yaml only.
+# Do not add compose.prod.yaml: ports 80 and 443 belong to the live stack.
+#
+#   npm run ops:slot:up
+#   npm run ops:slot:restore -- backups/<stamp>
+#   npm run ops:slot:down
+#
+# Host ports for the app and Postgres come from .env.slot (APP_PORT, POSTGRES_PORT).
+# This instance does not publish ClamAV on the host. The primary project stays dotone-trip.
+
+name: ${SLOT_PREFIX:-dotone-trip-slot}
+
+services:
+  clamav:
+    # The live stack already publishes 127.0.0.1:3310. This instance reaches
+    # clamd only as the name clamav on its own backend network.
+    ports: !reset []
+
+volumes:
+  postgres_data:
+    name: ${SLOT_PREFIX:-dotone-trip-slot}-postgres-data
+  resumes_data:
+    name: ${SLOT_PREFIX:-dotone-trip-slot}-resumes-data
+  media_data:
+    name: ${SLOT_PREFIX:-dotone-trip-slot}-media-data
+  clamav_data:
+    name: ${SLOT_PREFIX:-dotone-trip-slot}-clamav-data
+
+networks:
+  edge:
+    name: ${SLOT_PREFIX:-dotone-trip-slot}-edge
+  backend:
+    name: ${SLOT_PREFIX:-dotone-trip-slot}-backend

@@ -138,3 +138,7 @@ If Postgres is down, or `next build` runs without `DATABASE_URL` (the Docker bui
 | `npm run setup:prod` | New VPS: asks for the public hostname and URL, sets `TRUST_PROXY=true`, builds on the server, and starts Caddy. |
 | `npm run setup:prod:dockerImage` | New VPS from a loaded tar: same `.env` and Caddy setup, without building. |
 | `npm run setup:prod:update` | Existing VPS: rebuilds with Caddy. Keeps secrets. Asks for the hostname only if HTTPS is not configured yet. |
+| `npm run ops:backup` | Save a logical database dump plus resume, media, and ClamAV volumes. Copies `.env` into that backup folder. |
+| `npm run ops:slot:up` | Start a second instance on ports 3001 and 5433. Does not touch the live volumes. |
+| `npm run ops:slot:restore` | Restore the latest backup into that second instance. |
+| `npm run ops:slot:down` | Stop the second instance. Add `-- --wipe` to delete only its volumes. |
