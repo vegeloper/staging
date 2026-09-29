@@ -41,40 +41,40 @@
     /* top */
     linear-gradient(
       to bottom,
-      #ffffff 0%,
-      rgba(255, 255, 255, 0.88) 3%,
-      rgba(255, 255, 255, 0.48) 8%,
-      rgba(255, 255, 255, 0.15) 14%,
+      #f6f6f6 0%,
+      rgba(246, 246, 246, 0.88) 3%,
+      rgba(246, 246, 246, 0.48) 8%,
+      rgba(246, 246, 246, 0.15) 14%,
       transparent 22%
     ),
 
     /* bottom */
     linear-gradient(
       to top,
-      #ffffff 0%,
+      #f6f6f6 0%,
       rgba(255, 255, 255, 0.95) 5%,
-      rgba(255, 255, 255, 0.65) 11%,
-      rgba(255, 255, 255, 0.25) 18%,
+      rgba(246, 246, 246, 0.65) 11%,
+      rgba(246, 246, 246, 0.25) 18%,
       transparent 30%
     ),
 
     /* left */
     linear-gradient(
       to right,
-      #ffffff 0%,
-      rgba(255, 255, 255, 0.88) 3%,
-      rgba(255, 255, 255, 0.48) 7%,
-      rgba(255, 255, 255, 0.12) 12%,
+      #f6f6f6 0%,
+      rgba(246, 246, 246, 0.88) 3%,
+      rgba(246, 246, 246, 0.48) 7%,
+      rgba(246, 246, 246, 0.12) 12%,
       transparent 19%
     ),
 
     /* right */
     linear-gradient(
       to left,
-      #ffffff 0%,
-      rgba(255, 255, 255, 0.88) 3%,
-      rgba(255, 255, 255, 0.48) 7%,
-      rgba(255, 255, 255, 0.12) 12%,
+      #f6f6f6 0%,
+      rgba(246, 246, 246, 0.88) 3%,
+      rgba(246, 246, 246, 0.48) 7%,
+      rgba(246, 246, 246, 0.12) 12%,
       transparent 19%
     );
 }
@@ -95,12 +95,12 @@
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(255, 255, 255, 0.2) 35%,
+    rgba(246, 246, 246, 0.2) 35%,
     rgba(255, 255, 255, 0.65) 72%,
-    #ffffff 100%
+    #f6f6f6 100%
   );
 
-  filter: blur(3px);
+  filter: blur(13px);
 }
 
 /* =====================================================
@@ -337,7 +337,8 @@
    * در RTL مقدار مثبت یعنی از مرکز
    * کمی به سمت چپ visually منتقلش می‌کنیم.
    */
-  transform: translateX(-24%);
+  /* transform: translateX(-24%); */
+  transform: translateX(-16.8vw);
 
   color: #111;
 
@@ -379,7 +380,7 @@
     height: 45px;
   }
   .title {
-    transform: translateX(-27%);
+    transform: translateX(-16.8vw);
   }
 }
 
@@ -414,7 +415,7 @@
   .title {
     margin-top: 0;
 
-    transform: translateX(-18%);
+    transform: translateX(-15.8vw);
 
     font-size: 17px;
   }
