@@ -107,7 +107,7 @@ export default function FAQ({
           );
         })}
       </div>
-
+{/* 
       {showMoreButton && (
         <div className={styles.moreBtnWrapper}>
           <button
@@ -118,7 +118,7 @@ export default function FAQ({
             {moreButtonText}
           </button>
         </div>
-      )}
+      )} */}
     </section>
   );
 }

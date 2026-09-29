@@ -21,7 +21,6 @@ const footerLinks = [
     title: "خدمات",
     links: [
       { label: "سفر شهری", href: "/services" },
-      { label: "سفر بین‌شهری", href: "#" },
       { label: "حمل‌ونقل سازمانی", href: "/b2b" },
       { label: "در اختیار", href: "/oncall" },
     ],
@@ -31,15 +30,12 @@ const footerLinks = [
     links: [
       { label: "درباره ما", href: "/about" },
       { label: "تماس با ما", href: "/contact-us" },
-      { label: "پرسش‌های متداول", href: "#" },
-      { label: "حریم خصوصی", href: "#" },
-      { label: "قوانین و مقررات", href: "#" },
     ],
   },
   {
     title: "توسعه کسب و کارها",
     links: [
-      { label: "تبلیغات در اپلیکیشن", href: "#" },
+      { label: "تبلیغات در اپلیکیشن", href: "/campaign" },
       { label: "تبلیغات داخل خودروها", href: "/campaign" },
       { label: "همکاری در تبلیغات", href: "/campaign" },
     ],
@@ -48,10 +44,8 @@ const footerLinks = [
     title: "اخبار و مجله",
     links: [
       { label: "آخرین اخبار", href: "/blog" },
-      { label: "رویدادها", href: "/blog" },
       { label: "توسعه ناوگان", href: "/vehicles" },
       { label: "مقالات", href: "/blog" },
-      { label: "راهنمای سفر", href: "/blog" },
     ],
   },
   {
@@ -59,9 +53,8 @@ const footerLinks = [
     links: [
       { label: "استخدام رانندگان", href: "/join-us/drivers" },
       { label: "طرح مشارکت", href: "https://apply.dotone.ir/" },
-      { label: "فرصت‌های همکاری", href: "#" },
-      { label: "شرایط همکاری", href: "#" },
-      { label: "ثبت درخواست", href: "#" },
+      { label: "فرصت‌های همکاری", href: "/join-us/organizational" },
+      { label: "ثبت درخواست", href: "/contact-us" },
     ],
   },
   {

@@ -39,12 +39,12 @@ const firstRowCards: FeatureCard[] = [
 
 const secondRowCards: FeatureCard[] = [
   {
-    image: monitoringImage2,
+    image: sessionImage,
     title: "پایداری",
     description: "حرکت به سمت حمل‌ونقل پاک‌تر و استفاده از ناوگان برقی",
   },
   {
-    image: sessionImage,
+    image: monitoringImage2,
     title: "کیفیت و ایمنی",
     description: "اجرای استانداردهای مشخص برای ارائه خدمات قابل اعتماد",
   },
