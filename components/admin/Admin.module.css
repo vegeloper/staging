@@ -1232,7 +1232,7 @@
   overflow: auto;
   padding: 20px;
   border-radius: 20px;
-  background: var(--paper, #ffffff);
+  background: var(--paper, #f6f6f6);
 }
 
 .viewer img,

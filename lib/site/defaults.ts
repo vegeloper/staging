@@ -30,7 +30,7 @@ export const defaultTheme: SiteTheme = {
     brand: "#00b7ce",
     brandDark: "#0093a5",
     ink: "#171717",
-    paper: "#ffffff",
+    paper: "#f6f6f6",
     surface: "#ffffff",
     hero: "#00b7ce",
   },
