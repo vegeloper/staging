@@ -1,21 +1,46 @@
+/* ========================================
+   Section
+======================================== */
+
 .section {
-  width: min(100% - 48px, 1120px);
+  width: calc(100% - 48px);
+  max-width: 1120px;
+
+  margin: 3vw auto;
+
   display: flex;
-  justify-self: center;
-  align-self: center;
   align-items: center;
   justify-content: center;
-  margin: 3vw 12.5vw;
-  gap: 80px;  
+
+  gap: 80px;
 
   direction: ltr;
+
+  box-sizing: border-box;
 }
 
+.section * {
+  box-sizing: border-box;
+}
+
+
+/* ========================================
+   Content
+======================================== */
+
 .content {
-  flex: 1;
+  flex: 1 1 0;
+
+  min-width: 0;
+
   direction: rtl;
   text-align: right;
 }
+
+
+/* ========================================
+   Main Title
+======================================== */
 
 .content h2 {
   margin: 0 0 16px;
@@ -26,11 +51,24 @@
   line-height: 1.6;
   font-weight: 700;
 }
-.subtitle{
+
+
+/* ========================================
+   Subtitle
+======================================== */
+
+.subtitle {
   padding-top: 10px;
   padding-bottom: 10px;
+
   font-weight: 700;
 }
+
+
+/* ========================================
+   Description
+======================================== */
+
 .description {
   margin: 0;
 
@@ -39,8 +77,14 @@
   font-size: 16px;
   font-weight: 400;
   line-height: 2;
-  padding-left:12% ;
+
+  padding-left: 12%;
 }
+
+
+/* ========================================
+   Features
+======================================== */
 
 .features {
   margin-top: 20px;
@@ -75,8 +119,8 @@
 }
 
 .features li::before {
-
   position: absolute;
+
   right: 0;
   top: 0;
 
@@ -87,8 +131,18 @@
   font-weight: 700;
 }
 
+
+/* ========================================
+   Image
+======================================== */
+
 .imageWrapper {
+  width: 360px;
+  max-width: 100%;
+
   flex: 0 0 360px;
+
+  min-width: 0;
 
   overflow: hidden;
 
@@ -99,34 +153,48 @@
   display: block;
 
   width: 100%;
+  max-width: 100%;
   height: auto;
 
   object-fit: cover;
 }
 
-/* -------------------------
+
+/* ========================================
    Image Position
-------------------------- */
+======================================== */
 
 .imageRight {
-  direction: ltr;
+  flex-direction: row;
 }
 
 .imageLeft {
   flex-direction: row-reverse;
 }
 
-/* -------------------------
-   Responsive
-------------------------- */
+
+/* ========================================
+   Tablet
+======================================== */
 
 @media (max-width: 900px) {
   .section {
+    width: calc(100% - 40px);
+    max-width: 1120px;
+
+    margin: 3vw auto;
+
     gap: 40px;
   }
 
+  .content {
+    min-width: 0;
+  }
+
   .imageWrapper {
-    flex-basis: 320px;
+    width: 320px;
+
+    flex: 0 0 320px;
   }
 
   .content h2 {
@@ -134,19 +202,41 @@
   }
 }
 
+
+/* ========================================
+   Mobile
+======================================== */
+
 @media (max-width: 700px) {
   .section,
   .imageLeft,
   .imageRight {
-    width: min(100% - 32px, 600px);
+    width: calc(100% - 32px);
+    max-width: 600px;
+
+    /*
+      مهم برای iOS:
+      سکشن دقیقاً وسط viewport قرار می‌گیرد
+    */
+    margin-left: auto;
+    margin-right: auto;
+    margin-inline: auto;
 
     flex-direction: column;
+
+    align-items: stretch;
+    justify-content: flex-start;
 
     gap: 32px;
   }
 
   .content {
     width: 100%;
+    max-width: 100%;
+
+    min-width: 0;
+
+    flex: 0 0 auto;
   }
 
   .content h2 {
@@ -155,17 +245,46 @@
   }
 
   .description {
+    width: 100%;
+
+    padding-left: 0;
+
     font-size: 13px;
   }
 
   .imageWrapper {
     width: 100%;
-    flex-basis: auto;
+    max-width: 100%;
+
+    min-width: 0;
+
+    flex: 0 0 auto;
 
     order: -1;
   }
 
   .image {
     width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+
+/* ========================================
+   Small Mobile
+======================================== */
+
+@media (max-width: 420px) {
+  .section,
+  .imageLeft,
+  .imageRight {
+    width: calc(100% - 32px);
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-inline: auto;
+
+    gap: 28px;
   }
 }

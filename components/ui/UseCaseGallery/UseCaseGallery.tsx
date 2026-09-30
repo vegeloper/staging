@@ -1,8 +1,8 @@
 import Image, { type StaticImageData } from "next/image";
 
 import styles from "./UseCaseGallery.module.css";
-import CarImage1 from "@/public/figma/taxiBeach.png"
-import CarImage2 from "@/public/figma/taxiBeach2.png"
+import CarImage1 from "@/public/figma/taxiBeach.png";
+import CarImage2 from "@/public/figma/taxiBeach2.png";
 
 export type UseCaseCard = {
   id: string;
@@ -83,7 +83,8 @@ const defaultCards: UseCaseCard[] = [
     id: "multi-stop",
     number: 3,
     title: "تأمین خودرو و راننده",
-    description: "تأمین خودرو و راننده برای بازه زمانی مشخص و برنامه‌های چندمقصدی.",
+    description:
+      "تأمین خودرو و راننده برای بازه زمانی مشخص و برنامه‌های چندمقصدی.",
     decoration: "wiggle",
   },
 ];
@@ -105,12 +106,13 @@ export default function UseCaseGallery({
       <div className={styles.grid}>
         {cards.map((card, index) => (
           <article
+            key={card.id}
+            data-number={card.number}
             className={`${styles.card} ${
               card.imageLayout === "cover" ? styles.coverCard : ""
             } ${card.featured ? styles.featuredCard : ""} ${
               card.number === 1 ? styles.imageOneCard : ""
             } ${card.number === 4 ? styles.imageFourCard : ""}`}
-            key={card.id}
           >
             {card.image && card.imageLayout === "cover" && (
               <div className={styles.coverMedia}>

@@ -1,70 +1,169 @@
+/* ========================================
+   Section
+======================================== */
+
 .section {
-  width: 95%;
+  width: calc(100% - 32px);
   max-width: 1280px;
+
   margin: 80px auto;
+
   box-sizing: border-box;
+
   font-family: inherit;
+
+  overflow-x: hidden;
 }
 
+.section *,
+.section *::before,
+.section *::after {
+  box-sizing: border-box;
+}
+
+
+/* ========================================
+   Intro
+======================================== */
+
 .intro {
-  text-align: center;
+  width: 100%;
+  max-width: 100%;
+
   margin-bottom: 78px;
+
+  text-align: center;
 }
 
 .title {
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+  margin: 0 0 8px;
+
+  color: #171717;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 24px;
   font-weight: 700;
+
   line-height: 180%;
-  color: #171717;
-  margin: 0 0 8px;
 }
 
 .lead {
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+  width: 100%;
+  max-width: 640px;
+
+  margin: 0 auto;
+
+  color: #6b7280;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 16px;
   font-weight: 400;
+
   line-height: 180%;
-  color: #6b7280;
-  margin: 0 auto;
-  max-width: 640px;
 }
 
+
+/* ========================================
+   Grid
+======================================== */
+
 .grid {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
   gap: 16px;
+
   direction: ltr;
+
+  overflow: hidden;
 }
+
+
+/* ========================================
+   Card
+======================================== */
 
 .card {
   position: relative;
-  overflow: hidden;
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 288px;
+
   display: flex;
   flex-direction: column;
-  direction: rtl;
-  min-height: 288px;
+
   padding: 20px;
+
+  overflow: hidden;
+
   border: 2px solid #f2f2f2;
   border-radius: 24px;
+
   background: transparent;
+
   color: #000;
+
+  direction: rtl;
 }
 
 .coverCard {
   padding: 0;
 }
 
+
+/* ========================================
+   Featured Card
+======================================== */
+
 .featuredCard {
   grid-column: span 2;
+
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
   direction: ltr;
 }
 
+
+/* ========================================
+   Cover Image
+======================================== */
+
 .coverMedia {
   position: relative;
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
   min-height: 100%;
+
   overflow: hidden;
 }
 
@@ -73,42 +172,84 @@
   object-fit: cover;
 }
 
+
+/* ========================================
+   Inset Image
+======================================== */
+
 .inset {
   position: relative;
+
   flex: 0 0 auto;
+
   max-width: 100%;
+  min-width: 0;
   min-height: 0;
+
   height: auto;
+
   margin: -4px -4px 16px;
+
   overflow: hidden;
+
   border-radius: 16px;
 }
+
+
+/* ========================================
+   Card Number 1
+======================================== */
 
 .imageOneCard .inset {
   position: absolute;
+
   top: 22px;
   left: 22px;
+
+  max-width: calc(100% - 44px);
+
   margin: 0;
+
   border-radius: 16px;
 }
 
+
+/* ========================================
+   Card Number 4
+======================================== */
+
 .imageFourCard .inset {
   position: absolute;
+
   top: -2px;
   left: -2px;
+
+  max-width: calc(100% + 2px);
+
   margin: 0;
+
   border-radius: inherit;
+
   border-top-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
+
+/* ========================================
+   Decorations
+======================================== */
+
 .decoration {
   position: absolute;
+
   z-index: 0;
+
   top: 0;
   left: 0;
+
   max-width: 100%;
   height: auto;
+
   pointer-events: none;
 }
 
@@ -120,15 +261,29 @@
   width: min(153px, 45%);
 }
 
+
+/* ========================================
+   Content
+======================================== */
+
 .content {
   position: absolute;
+
   inset: 0;
+
   z-index: 1;
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
+
   align-items: flex-start;
-  box-sizing: border-box;
+
   padding: 165px 24px 24px;
+
   gap: 6px;
 }
 
@@ -138,48 +293,119 @@
 
 .featuredCard .content {
   position: relative;
+
   inset: auto;
+
   grid-column: 2;
+
+  min-width: 0;
+
   direction: rtl;
 }
 
+
+/* ========================================
+   Number
+======================================== */
+
 .number {
   position: absolute;
+
   top: 22px;
   right: 22px;
+
   display: block;
+
   color: rgb(0 0 0 / 10%);
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 64px;
   font-weight: 700;
+
   line-height: 69px;
+
   letter-spacing: 0;
+
   direction: ltr;
+
   unicode-bidi: isolate;
 }
 
+
+/* ========================================
+   Card Title
+======================================== */
+
 .cardTitle {
+  max-width: 100%;
+
   margin: 0;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  color: #000;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 16px;
   font-weight: 600;
+
   line-height: 180%;
-  color: #000;
+
+  overflow-wrap: break-word;
 }
+
+
+/* ========================================
+   Caption
+======================================== */
 
 .caption {
+  max-width: 100%;
+
   margin: 0;
-  font-family: "IRANSansXFaNum", "IRANSansX", Tahoma, Arial, sans-serif;
+
+  color: #414141;
+
+  font-family:
+    "IRANSansXFaNum",
+    "IRANSansX",
+    Tahoma,
+    Arial,
+    sans-serif;
+
   font-size: 14px;
   font-weight: 400;
+
   line-height: 180%;
-  color: #414141;
+
   text-align: right;
+
+  overflow-wrap: break-word;
 }
 
+
+/* ========================================
+   Tablet
+======================================== */
+
 @media (max-width: 1024px) {
+  .section {
+    width: calc(100% - 32px);
+  }
+
   .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
   }
 
   .featuredCard {
@@ -187,41 +413,217 @@
   }
 }
 
+
+/* ========================================
+   Mobile
+======================================== */
+
 @media (max-width: 768px) {
   .section {
+    width: calc(100% - 32px);
+    max-width: 100%;
+
     margin: 40px auto;
+
+    overflow-x: hidden;
+  }
+
+  .intro {
+    margin-bottom: 40px;
   }
 
   .grid {
-    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    grid-template-columns: minmax(0, 1fr);
+
     gap: 12px;
+
+    overflow: hidden;
+  }
+
+
+  /* ========================================
+     Mobile Order
+     1 → 2 → 3 → 4 → 5
+  ======================================== */
+
+  .card[data-number="1"] {
+    order: 1;
+  }
+
+  .card[data-number="2"] {
+    order: 2;
+  }
+
+  .card[data-number="3"] {
+    order: 3;
+  }
+
+  .card[data-number="4"] {
+    order: 4;
+  }
+
+  .card[data-number="5"] {
+    order: 5;
+  }
+
+
+  /* ========================================
+     Mobile Cards
+  ======================================== */
+
+  .card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    min-height: 300px;
+
+    border-radius: 20px;
+
+    overflow: hidden;
   }
 
   .featuredCard {
     grid-column: auto;
-    grid-template-columns: 1fr;
+
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .featuredCard .content {
     grid-column: 1;
+
+    width: 100%;
+    min-width: 0;
   }
 
+
+  /* ========================================
+     Mobile Images
+  ======================================== */
+
   .coverMedia {
+    width: 100%;
+    max-width: 100%;
+
     min-height: 190px;
   }
 
-  .card {
-    min-height: 300px;
-    border-radius: 20px;
+  .imageOneCard .inset {
+    left: 16px;
+    top: 18px;
+
+    max-width: calc(100% - 32px);
+  }
+
+  .imageFourCard .inset {
+    left: 0;
+    top: 0;
+
+    max-width: 100%;
+  }
+
+  .insetImage,
+  .coverImage {
+    max-width: 100%;
+  }
+
+
+  /* ========================================
+     Mobile Content
+  ======================================== */
+
+  .content {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    padding-right: 18px;
+    padding-left: 18px;
+
+    align-items: center;
+
+    text-align: center;
   }
 
   .caption {
+    max-width: 100%;
+
     text-align: center;
+  }
+
+  .cardTitle {
+    max-width: 100%;
+
+    text-align: center;
+  }
+}
+
+
+/* ========================================
+   Small Mobile
+======================================== */
+
+@media (max-width: 480px) {
+  .section {
+    width: calc(100% - 24px);
+
+    margin: 32px auto;
+  }
+
+  .grid {
+    gap: 10px;
+  }
+
+  .card {
+    min-height: 285px;
   }
 
   .content {
-    align-items: center;
-    text-align: center;
+    padding-right: 14px;
+    padding-left: 14px;
   }
 
+  .number {
+    right: 18px;
+
+    font-size: 56px;
+  }
+
+  .imageOneCard .inset {
+    left: 12px;
+
+    max-width: calc(100% - 24px);
+  }
+}
+
+
+/* ========================================
+   Very Small Mobile
+======================================== */
+
+@media (max-width: 360px) {
+  .section {
+    width: calc(100% - 20px);
+  }
+
+  .content {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .caption {
+    font-size: 13px;
+  }
+
+  .cardTitle {
+    font-size: 15px;
+  }
 }
